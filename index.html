@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Photo Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Main Container -->
+    <div id="app-container" class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">PhotoShare</h1>
+            <p class="text-gray-600">A simple place to share your moments.</p>
+        </header>
+
+        <!-- Auth Section -->
+        <div id="auth-section" class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Join PhotoShare</h2>
+            <div id="auth-error" class="text-red-500 text-center mb-4 hidden"></div>
+            <form id="auth-form" class="space-y-4">
+                <input type="email" id="email" placeholder="Enter your email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="password" id="password" placeholder="Enter your password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button type="submit" id="login-button" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Login</button>
+                    <button type="submit" id="signup-button" class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300">Sign Up</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Gallery Section (Hidden by default) -->
+        <div id="gallery-section" class="hidden">
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-md">
+                <div>
+                    <p>Welcome, <span id="user-email" class="font-semibold"></span></p>
+                </div>
+                <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300">Logout</button>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-xl font-semibold mb-4">Upload a New Photo</h3>
+                <form id="upload-form">
+                    <input type="file" id="photo-input" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <div id="upload-feedback" class="mt-2"></div>
+                    <button type="submit" class="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                        Upload
+                    </button>
+                </form>
+            </div>
+
+            <!-- Photo Grid -->
+            <div id="photo-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Photos will be dynamically inserted here -->
+            </div>
+            <div id="loading-indicator" class="flex justify-center mt-8">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        // --- SUPABASE SETUP ---
+        const SUPABASE_URL = 'https://crlgcfskumhzmtzswpcv.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNybGdjZnNrdW1oem10enN3cGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NTY5MDgsImV4cCI6MjA3MTIzMjkwOH0.tNlqHNPPEQsykWB0JRZzfjRnYE6Gx6CwWJwNj8EkXE8';
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- DOM ELEMENTS ---
+        const authSection = document.getElementById('auth-section');
+        const gallerySection = document.getElementById('gallery-section');
+        const authForm = document.getElementById('auth-form');
+        const loginButton = document.getElementById('login-button');
+        const signupButton = document.getElementById('signup-button');
+        const logoutButton = document.getElementById('logout-button');
+        const uploadForm = document.getElementById('upload-form');
+        const photoInput = document.getElementById('photo-input');
+        const photoGrid = document.getElementById('photo-grid');
+        const userEmailSpan = document.getElementById('user-email');
+        const authError = document.getElementById('auth-error');
+        const uploadFeedback = document.getElementById('upload-feedback');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // --- AUTHENTICATION ---
+
+        // Handle user sign-up
+        signupButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await _supabase.auth.signUp({ email, password });
+            if (error) {
+                showAuthError(error.message);
+            } else {
+                showAuthError("Signup successful! Please check your email for a confirmation link.", "green");
+            }
+        });
+
+        // Handle user login
+        loginButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await _supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                showAuthError(error.message);
+            }
+        });
+
+        // Handle user logout
+        logoutButton.addEventListener('click', async () => {
+            await _supabase.auth.signOut();
+        });
+
+        // Listen for changes in authentication state (login, logout)
+        _supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                // User is logged in
+                authSection.classList.add('hidden');
+                gallerySection.classList.remove('hidden');
+                userEmailSpan.textContent = session.user.email;
+                fetchPhotos();
+            } else {
+                // User is logged out
+                authSection.classList.remove('hidden');
+                gallerySection.classList.add('hidden');
+                photoGrid.innerHTML = ''; // Clear the grid on logout
+            }
+        });
+
+        // --- PHOTO GALLERY ---
+
+        // Fetch all photos from the database and display them
+        async function fetchPhotos() {
+            loadingIndicator.style.display = 'flex';
+            const { data: photos, error } = await _supabase
+                .from('photos')
+                .select('*')
+                .order('created_at', { ascending: false }); // Show newest first
+
+            if (error) {
+                console.error('Error fetching photos:', error);
+            } else {
+                photoGrid.innerHTML = ''; // Clear existing photos before adding new ones
+                photos.forEach(addPhotoToGrid);
+            }
+            loadingIndicator.style.display = 'none';
+        }
+
+        // Add a single photo to the display grid
+        function addPhotoToGrid(photo) {
+            const photoCard = document.createElement('div');
+            photoCard.className = 'bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300';
+            
+            const img = document.createElement('img');
+            img.src = photo.image_url;
+            img.className = 'w-full h-64 object-cover';
+            img.alt = 'User uploaded photo';
+            // Fallback image in case the original fails to load
+            img.onerror = () => { img.src = `https://placehold.co/600x400/EEE/31343C?text=Image+Not+Found`; };
+
+
+            const userInfo = document.createElement('div');
+            userInfo.className = 'p-3 text-sm text-gray-600';
+            // This assumes the user's email is stored in the `user_email` column
+            userInfo.textContent = `Uploaded by: ${photo.user_email || 'Anonymous'}`;
+
+            photoCard.appendChild(img);
+            photoCard.appendChild(userInfo);
+            photoGrid.appendChild(photoCard);
+        }
+
+        // --- PHOTO UPLOAD ---
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = photoInput.files[0];
+            if (!file) {
+                showUploadFeedback("Please select a file to upload.", "red");
+                return;
+            }
+
+            const { data: userResponse } = await _supabase.auth.getUser();
+            const user = userResponse.user;
+            if (!user) {
+                showUploadFeedback("You must be logged in to upload photos.", "red");
+                return;
+            }
+
+            showUploadFeedback("Uploading...", "blue");
+            
+            // Generate a unique file path
+            const filePath = `public/${user.id}/${Date.now()}-${file.name}`;
+
+            // Upload the file to Supabase Storage
+            const { error: uploadError } = await _supabase.storage
+                .from('photo-gallery') // This must match your bucket name
+                .upload(filePath, file);
+
+            if (uploadError) {
+                console.error('Upload Error:', uploadError);
+                showUploadFeedback(`Upload failed: ${uploadError.message}`, "red");
+                return;
+            }
+
+            // Get the public URL of the uploaded file
+            const { data: urlData } = _supabase.storage
+                .from('photo-gallery')
+                .getPublicUrl(filePath);
+
+            if (!urlData.publicUrl) {
+                 showUploadFeedback("Could not get public URL.", "red");
+                 return;
+            }
+            
+            // Insert the photo's URL and user info into the 'photos' database table
+            const { error: dbError } = await _supabase
+                .from('photos')
+                .insert({
+                    user_id: user.id,
+                    user_email: user.email,
+                    image_url: urlData.publicUrl
+                });
+
+            if (dbError) {
+                console.error('Database Error:', dbError);
+                showUploadFeedback(`Database error: ${dbError.message}`, "red");
+            } else {
+                showUploadFeedback("Upload successful!", "green");
+                uploadForm.reset();
+            }
+        });
+
+        // --- REAL-TIME SUBSCRIPTION ---
+
+        // Listen for any new inserts in the 'photos' table
+        _supabase.channel('photos')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'photos' }, payload => {
+                // When a new photo is added, add it to the top of the grid
+                const newPhoto = payload.new;
+                // Prepend the new photo to the grid
+                const existingContent = photoGrid.innerHTML;
+                photoGrid.innerHTML = ''; // Clear the grid
+                addPhotoToGrid(newPhoto); // Add the new photo
+                photoGrid.innerHTML += existingContent; // Add back the old content
+            })
+            .subscribe();
+
+
+        // --- HELPER FUNCTIONS ---
+        function showAuthError(message, color = "red") {
+            authError.textContent = message;
+            authError.className = `text-${color}-500 text-center mb-4`;
+            authError.classList.remove('hidden');
+        }
+
+        function showUploadFeedback(message, color) {
+            uploadFeedback.textContent = message;
+            uploadFeedback.className = `text-${color}-600`;
+        }
+
+    </script>
+</body>
+</html>
