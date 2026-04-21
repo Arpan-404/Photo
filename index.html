@@ -3,2184 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physio - The Therapeutic Moves</title>
+    <title>Therapeutic Hub - Exercise Prototype</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load React, ReactDOM, and Babel for in-browser compilation -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <style>
-        /* Keep all your existing CSS styles exactly the same */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        header.hidden {
-            transform: translateY(-100%);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 2rem;
-            height: 60px;
-        }
-
-        .logo {
-            height: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 100%;
-            width: auto;
-        }
-
-        .logo-text {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #2c7873;
-        }
-
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .hamburger span {
-            width: 22px;
-            height: 2.5px;
-            background: #333;
-            margin: 2.5px 0;
-            transition: 0.3s;
-        }
-
-        .menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100vh;
-            background: #fff;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s;
-            padding: 2rem;
-            z-index: 1001;
-        }
-
-        .menu.active {
-            right: 0;
-        }
-
-        .menu-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 2rem;
-            cursor: pointer;
-        }
-
-        .menu ul {
-            list-style: none;
-            margin-top: 3rem;
-        }
-
-        .menu li {
-            margin: 1.5rem 0;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: #333;
-            font-size: 1.1rem;
-            display: block;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .menu a:hover {
-            color: #2c7873;
-        }
-
-        /* Page Container */
-        .page {
-            display: none;
-            min-height: 100vh;
-            padding-top: 70px;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .page-header {
-            background: linear-gradient(135deg, #2c7873 0%, #4a9d96 100%);
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .page-content {
-            padding: 3rem 0;
-        }
-
-        .back-button {
-            background: #2c7873;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .back-button:hover {
-            background: #1e5a57;
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 3/2;
-            margin-top: 60px;
-            background: linear-gradient(135deg, #2c7873 0%, #4a9d96 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(44, 120, 115, 0.7);
-            z-index: 2;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            color: white;
-            padding: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .btn-primary {
-            background: #fff;
-            color: #2c7873;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-        }
-
-        .contact-info {
-            margin-top: 2rem;
-        }
-
-        .contact-info p {
-            font-size: 1.1rem;
-            margin: 0.5rem 0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        /* Section Styles */
-        section {
-            padding: 4rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            color: #2c7873;
-        }
-
-        /* Doctors Section - Fixed Alignment */
-        .doctors-container {
-            overflow-x: auto;
-            padding: 1rem 0;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .doctors-grid {
-            display: flex;
-            gap: 1.5rem;
-            padding: 1rem;
-            min-width: max-content;
-            justify-content: flex-start;
-        }
-
-        .doctors-list {
-            display: grid;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .doctor-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: transform 0.3s;
-            cursor: pointer;
-            text-align: center;
-            padding: 1.5rem;
-            min-width: 180px;
-            flex-shrink: 0;
-        }
-
-        .doctor-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .doctor-card-horizontal {
-            display: flex;
-            align-items: center;
-            padding: 2rem;
-            gap: 2rem;
-            text-align: left;
-        }
-
-        .doctor-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #2c7873;
-            overflow: hidden;
-            position: relative;
-            flex-shrink: 0;
-            margin: 0 auto 1rem;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 12px rgba(44, 120, 115, 0.2);
-        }
-
-        .doctor-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .doctor-info {
-            flex: 1;
-            text-align: center;
-        }
-
-        .doctor-info h3 {
-            color: #2c7873;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .doctor-info p {
-            color: #666;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .doctor-fees {
-            color: #2c7873;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 1rem 0;
-        }
-
-        .btn-book {
-            background: #2c7873;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.3s;
-        }
-
-        .btn-book:hover {
-            background: #1e5a57;
-        }
-
-        /* Services Section */
-        .services {
-            background: #f8f9fa;
-            position: relative;
-        }
-
-        .services-banner {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #2c7873 0%, #4a9d96 100%);
-            margin-bottom: 3rem;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .services-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .services-grid, .services-list {
-            display: grid;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .service-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .service-card h3 {
-            color: #2c7873;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .service-card p {
-            margin-bottom: 1rem;
-        }
-
-        .service-price {
-            color: #2c7873;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 1rem 0;
-        }
-
-        .sub-services {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-        }
-
-        .sub-services h4 {
-            color: #555;
-            margin-bottom: 1rem;
-        }
-
-        .sub-service-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-
-        .sub-service-name {
-            font-weight: 500;
-        }
-
-        .sub-service-price {
-            color: #2c7873;
-            font-weight: bold;
-        }
-
-        .btn-service {
-            background: #2c7873;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-            transition: background 0.3s;
-        }
-
-        .btn-service:hover {
-            background: #1e5a57;
-        }
-
-        /* Products Section */
-        .products-grid, .products-list {
-            display: grid;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #2c7873;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2c7873;
-            margin: 1rem 0;
-        }
-
-        /* Footer */
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            margin-bottom: 2rem;
-        }
-
-        .footer-content h3 {
-            margin-bottom: 1rem;
-        }
-
-        .footer-content p {
-            margin: 0.5rem 0;
-        }
-
-        .copyright {
-            border-top: 1px solid #555;
-            padding-top: 1rem;
-            color: #ccc;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            position: absolute;
-            right: 1rem;
-            top: 1rem;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        /* Admin Panel Styles */
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 3000;
-            overflow-y: auto;
-        }
-
-        .admin-content {
-            background: white;
-            margin: 2rem;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 1000px;
-            margin: 2rem auto;
-        }
-
-        .admin-form {
-            margin-bottom: 2rem;
-        }
-
-        .admin-form h3 {
-            margin-bottom: 1rem;
-            color: #2c7873;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .btn-admin {
-            background: #2c7873;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-        }
-
-        .image-preview {
-            max-width: 200px;
-            max-height: 150px;
-            margin-top: 0.5rem;
-            border-radius: 5px;
-        }
-
-        .sub-service-management {
-            border: 1px solid #eee;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-
-        /* Real-time Update Indicator */
-        .update-indicator {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            background: #4caf50;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 999;
-        }
-
-        .update-indicator.show {
-            opacity: 1;
-        }
-
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            z-index: 4000;
-            display: none;
-        }
-
-        /* Enhanced Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            nav {
-                padding: 0.8rem 1rem;
-            }
-
-            .doctors-grid {
-                gap: 1rem;
-                padding: 0.5rem;
-                justify-content: flex-start;
-            }
-
-            .doctor-card {
-                min-width: 140px;
-                padding: 1rem;
-            }
-
-            .doctor-avatar {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-
-            .doctor-info h3 {
-                font-size: 1rem;
-            }
-
-            .doctor-info p {
-                font-size: 0.85rem;
-            }
-
-            .doctor-card-horizontal {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .services-banner {
-                height: 200px;
-            }
-
-            .page-header h1 {
-                font-size: 2rem;
-            }
-
-            .products-list {
-                grid-template-columns: 1fr;
-            }
-
-            .services-list {
-                grid-template-columns: 1fr;
-            }
-
-            .doctors-list {
-                grid-template-columns: 1fr;
-            }
-
-            .sub-service-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .products-list {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .services-list {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .doctors-list {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .doctors-grid {
-                justify-content: center;
-            }
-
-            .doctor-card {
-                min-width: 200px;
-            }
-
-            .doctor-avatar {
-                width: 120px;
-                height: 120px;
-                font-size: 3rem;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .products-list {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .doctors-grid {
-                justify-content: center;
-                gap: 2rem;
-            }
+        /* Custom print styles to ensure backgrounds and formatting look perfect when generating the PDF */
+        @media print {
+            body { background-color: white !important; }
+            .print\:hidden { display: none !important; }
+            .print\:shadow-none { box-shadow: none !important; }
+            .print\:p-0 { padding: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
 </head>
-<body>
-    <!-- Loading Indicator -->
-    <div id="loadingIndicator" class="loading">
-        <p>Loading...</p>
-    </div>
+<body class="bg-slate-50">
+    <div id="root"></div>
 
-    <!-- Real-time Update Indicator -->
-    <div id="updateIndicator" class="update-indicator">
-        Content Updated ✓
-    </div>
+    <script type="text/babel">
+        const { useState, useMemo } = React;
 
-    <!-- Header -->
-    <header id="header">
-        <nav>
-            <div class="logo" id="logoContainer">
-                <div class="logo-text" id="clinicName">Physio - The Therapeutic Moves</div>
-            </div>
-            <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Menu -->
-    <div class="menu" id="menu">
-        <div class="menu-close" onclick="toggleMenu()">&times;</div>
-        <ul>
-            <li><a onclick="showPage('home'); toggleMenu();">Home</a></li>
-            <li><a onclick="showPage('doctors-page'); toggleMenu();">Doctors</a></li>
-            <li><a onclick="showPage('services-page'); toggleMenu();">Services</a></li>
-            <li><a onclick="showPage('products-page'); toggleMenu();">Products</a></li>
-            <li><a onclick="openAdminLogin(); toggleMenu();">Admin Login</a></li>
-        </ul>
-    </div>
-
-    <!-- Home Page -->
-    <div id="home" class="page active">
-        <!-- Hero Section -->
-        <section class="hero">
-            <img id="heroBannerImage" class="hero-image" style="display: none;" alt="Hero Banner">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1 id="heroTitle">Physio - The Therapeutic Moves</h1>
-                <p id="heroTagline">"We add life in your days."</p>
-                <a href="#" class="btn-primary" onclick="bookAppointment()">Book Appointment</a>
-                <div class="contact-info">
-                    <p>📞 <span id="phoneNumber">+91 9641568109</span></p>
-                    <p>📍 <a href="#" id="locationLink" style="color: white;">Our Location</a></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Doctors Section -->
-        <section id="doctors">
-            <div class="container">
-                <h2 class="section-title">Our Doctors</h2>
-                <div class="doctors-container">
-                    <div class="doctors-grid" id="doctorsGrid">
-                        <!-- Doctors will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="services">
-            <div class="container">
-                <h2 class="section-title">Our Services</h2>
-                <div class="services-banner" id="servicesBanner">
-                    <img id="servicesBannerImage" style="display: none;" alt="Services Banner">
-                </div>
-                <div class="services-grid" id="servicesGrid">
-                    <!-- Services will be populated by JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section id="products">
-            <div class="container">
-                <h2 class="section-title">Our Products</h2>
-                <div class="products-grid" id="productsGrid">
-                    <!-- Products will be populated by JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <div class="container">
-                <div class="footer-content">
-                    <h3>Contact Us</h3>
-                    <p>📞 <span id="footerPhone">+91 9641568109</span></p>
-                    <p>✉️ Dr.ArpanDas.PT@gmail.com</p>
-                    <p>📍 <a href="#" id="footerLocation" style="color: #ccc;">Our Location</a></p>
-                </div>
-                <div class="copyright">
-                    <p>&copy; 2025 Physio - The Therapeutic Moves. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Doctors Page -->
-    <div id="doctors-page" class="page">
-        <div class="page-header">
-            <h1>Our Doctors</h1>
-            <p>Expert healthcare professionals dedicated to your recovery</p>
-        </div>
-        <div class="container">
-            <div class="page-content">
-                <button class="back-button" onclick="showPage('home')">← Back to Home</button>
-                <div class="doctors-list" id="doctorsList">
-                    <!-- Doctors list will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Services Page -->
-    <div id="services-page" class="page">
-        <div class="page-header">
-            <h1>Our Services</h1>
-            <p>Comprehensive physiotherapy and healthcare services</p>
-        </div>
-        <div class="container">
-            <div class="page-content">
-                <button class="back-button" onclick="showPage('home')">← Back to Home</button>
-                <div class="services-list" id="servicesList">
-                    <!-- Services list will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Products Page -->
-    <div id="products-page" class="page">
-        <div class="page-header">
-            <h1>Our Products</h1>
-            <p>Quality medical equipment and support products</p>
-        </div>
-        <div class="container">
-            <div class="page-content">
-                <button class="back-button" onclick="showPage('home')">← Back to Home</button>
-                <div class="products-list" id="productsList">
-                    <!-- Products list will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Doctor Detail Modal -->
-    <div id="doctorModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeDoctorModal()">&times;</span>
-            <div id="doctorDetails"></div>
-        </div>
-    </div>
-
-    <!-- Admin Login Modal -->
-    <div id="adminLoginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAdminLogin()">&times;</span>
-            <h2>Admin Login</h2>
-            <form onsubmit="adminLogin(event)">
-                <div class="form-group">
-                    <label>Username:</label>
-                    <input type="text" id="adminUsername" required>
-                </div>
-                <div class="form-group">
-                    <label>Password:</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
-                <button type="submit" class="btn-admin">Login</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Admin Panel -->
-    <div id="adminPanel" class="admin-panel">
-        <div class="admin-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Admin Panel</h2>
-                <button onclick="closeAdminPanel()" class="btn-danger">Close</button>
-            </div>
-
-            <!-- Basic Info Form -->
-            <div class="admin-form">
-                <h3>Basic Information</h3>
-                <div class="form-group">
-                    <label>Clinic Name:</label>
-                    <input type="text" id="adminClinicName" onchange="updateBasicInfoAdmin()">
-                </div>
-                <div class="form-group">
-                    <label>Tagline:</label>
-                    <input type="text" id="adminTagline" onchange="updateBasicInfoAdmin()">
-                </div>
-                <div class="form-group">
-                    <label>Phone Number:</label>
-                    <input type="text" id="adminPhone" onchange="updateBasicInfoAdmin()">
-                </div>
-                <div class="form-group">
-                    <label>Location Link:</label>
-                    <input type="url" id="adminLocation" onchange="updateBasicInfoAdmin()">
-                </div>
-                <div class="form-group">
-                    <label>Logo Image URL:</label>
-                    <input type="url" id="logoImageUrl" onchange="updateLogo()" placeholder="https://i.ibb.co/...">
-                    <img id="logoPreview" class="image-preview" style="display: none;" alt="Logo Preview">
-                </div>
-                <div class="form-group">
-                    <label>Hero Banner Image URL:</label>
-                    <input type="url" id="heroBannerUrl" onchange="updateHeroBanner()" placeholder="https://i.ibb.co/...">
-                    <img id="heroBannerPreview" class="image-preview" style="display: none;" alt="Hero Banner Preview">
-                </div>
-                <div class="form-group">
-                    <label>Services Banner Image URL:</label>
-                    <input type="url" id="servicesBannerUrl" onchange="updateServicesBanner()" placeholder="https://i.ibb.co/...">
-                    <img id="servicesBannerPreview" class="image-preview" style="display: none;" alt="Services Banner Preview">
-                </div>
-            </div>
-
-            <!-- Doctors Management -->
-            <div class="admin-form">
-                <h3>Doctors Management</h3>
-                <div id="doctorsManagement"></div>
-                <button onclick="addDoctor()" class="btn-admin">Add New Doctor</button>
-            </div>
-
-            <!-- Services Management -->
-            <div class="admin-form">
-                <h3>Services Management</h3>
-                <div id="servicesManagement"></div>
-                <button onclick="addService()" class="btn-admin">Add New Service</button>
-            </div>
-
-            <!-- Products Management -->
-            <div class="admin-form">
-                <h3>Products Management</h3>
-                <div id="productsManagement"></div>
-                <button onclick="addProduct()" class="btn-admin">Add New Product</button>
-            </div>
-
-            <!-- Messages Management -->
-            <div class="admin-form">
-                <h3>WhatsApp Messages</h3>
-                <div class="form-group">
-                    <label>Appointment Booking Message:</label>
-                    <textarea id="appointmentMessage" onchange="updateMessages()"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Doctor Booking Message Template:</label>
-                    <textarea id="doctorBookingMessage" onchange="updateMessages()" placeholder="Use {doctorName} for doctor name"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Service Booking Message Template:</label>
-                    <textarea id="serviceBookingMessage" onchange="updateMessages()" placeholder="Use {serviceName} for service name"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Product Purchase Message Template:</label>
-                    <textarea id="productPurchaseMessage" onchange="updateMessages()" placeholder="Use {productName} for product name"></textarea>
-                </div>
-            </div>
-
-            <button onclick="saveAllData()" class="btn-admin">Save All Changes</button>
-        </div>
-    </div>
-
-    <!-- Supabase JavaScript SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://ersbrubfhtakirzgcmbz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyc2JydWJmaHRha2lyemdjbWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NjY0MTcsImV4cCI6MjA3MTI0MjQxN30.XYPplO_0gClFz5_ljsls6Hrj4qBZD9EmPVJe2kPlL0c';
-        
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // WhatsApp Configuration
-        const WHATSAPP_NUMBER = '+919641568109';
-
-        // Enhanced Data Storage with Supabase
-        let clinicData = {
-            basic: {
-                name: "Physio - The Therapeutic Moves",
-                tagline: "\"We add life in your days.\"",
-                phone: "+91 9641568109",
-                email: "Dr.ArpanDas.PT@gmail.com",
-                location: "#",
-                logoImage: "",
-                heroBannerImage: "",
-                servicesBannerImage: ""
-            },
-            doctors: [
-                {
-                    id: 1,
-                    name: "Arpan Das",
-                    qualification: "BPT",
-                    fees: "₹500",
-                    description: "Experienced physiotherapist specializing in sports injuries and rehabilitation.",
-                    image: ""
-                },
-                {
-                    id: 2,
-                    name: "Jhunu Das",
-                    qualification: "DPT",
-                    fees: "₹600",
-                    description: "Expert in neurological rehabilitation and pediatric physiotherapy.",
-                    image: ""
-                },
-                {
-                    id: 3,
-                    name: "Apurba Das",
-                    qualification: "DPT",
-                    fees: "₹600",
-                    description: "Specialist in orthopedic conditions and manual therapy.",
-                    image: ""
-                }
-            ],
-            services: [
-                {
-                    id: 1,
-                    name: "Physical Therapy",
-                    description: "Comprehensive physical rehabilitation services.",
-                    price: "₹400",
-                    subServices: [
-                        { name: "Movement Therapy", price: "₹300" },
-                        { name: "Strength Training", price: "₹400" },
-                        { name: "Flexibility Training", price: "₹350" }
-                    ]
-                },
-                {
-                    id: 2,
-                    name: "Lab Tests",
-                    description: "Complete diagnostic laboratory services.",
-                    price: "₹200",
-                    subServices: [
-                        { name: "CBC", price: "₹200" },
-                        { name: "RFT", price: "₹500" },
-                        { name: "LFT", price: "₹450" },
-                        { name: "Lipid Profile", price: "₹350" }
-                    ]
-                },
-                {
-                    id: 3,
-                    name: "Sports Rehabilitation",
-                    description: "Recovery programs for sports-related injuries.",
-                    price: "₹600",
-                    subServices: [
-                        { name: "Injury Assessment", price: "₹500" },
-                        { name: "Recovery Planning", price: "₹600" },
-                        { name: "Performance Enhancement", price: "₹800" }
-                    ]
-                }
-            ],
-            products: [
-                {
-                    id: 1,
-                    name: "Lumbar Support Belt",
-                    description: "Medical grade lumbar support for back pain relief.",
-                    price: "₹1200",
-                    image: ""
-                },
-                {
-                    id: 2,
-                    name: "Knee Support Brace",
-                    description: "Adjustable knee brace for injury support and prevention.",
-                    price: "₹800",
-                    image: ""
-                }
-            ],
-            messages: {
-                appointment: "Hello, I would like to book an appointment with Physio - The Therapeutic Moves.",
-                doctorBooking: "Hello, I would like to book an appointment with Dr. {doctorName} at Physio - The Therapeutic Moves.",
-                serviceBooking: "Hello, I would like to book {serviceName} service at Physio - The Therapeutic Moves.",
-                productPurchase: "Hello, I would like to buy {productName} from Physio - The Therapeutic Moves."
-            }
+        // --- SVGs for Icons (Replacing Lucide-React for pure HTML compatibility) ---
+        const Icons = {
+            Activity: () => <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>,
+            Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
+            Search: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-3 text-slate-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+            ArrowLeft: ({className="h-5 w-5"}) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>,
+            Video: () => <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute -right-4 -bottom-4 text-blue-500 opacity-30"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>,
+            PlayCircle: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+            Stethoscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mr-2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>,
+            Plus: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M5 12h14"/><path d="M12 5v14"/></svg>,
+            Printer: ({className="h-5 w-5 mr-2"}) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14"/></svg>,
+            FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
         };
 
-        // Admin credentials
-        const adminCredentials = {
-            username: "PhysioArpan",
-            password: "PtApu@9932TM"
-        };
+        // --- MOCK DATA ---
+        const INITIAL_EXERCISES = [
+            { id: 1, name: "Pelvic Tilt", description: "Lie on your back with knees bent. Tighten your stomach muscles, flattening your lower back against the floor. Hold for 5 seconds.", imageUrl: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=400", tags: ["low back pain", "core", "lumbar"] },
+            { id: 2, name: "Knee to Chest Stretch", description: "Lie on your back. Pull one knee up to your chest until you feel a stretch in your lower back. Hold for 15-30 seconds. Repeat with the other leg.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", tags: ["low back pain", "stretching", "sciatica"] },
+            { id: 3, name: "Straight Leg Raise", description: "Lie on your back with one leg straight and the other bent. Tighten the thigh muscle of your straight leg and slowly lift it 6-10 inches off the floor.", imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400", tags: ["knee pain", "post-op", "ACL"] },
+            { id: 4, name: "Glute Bridge", description: "Lie on your back with knees bent and feet flat on the floor. Lift your hips off the floor until your knees, hips and shoulders form a straight line.", imageUrl: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&q=80&w=400", tags: ["glutes", "low back pain", "core"] },
+            { id: 5, name: "Clamshells", description: "Lie on your side with knees bent. Keeping your feet together, raise your top knee as high as you can without moving your pelvis.", imageUrl: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=400", tags: ["hip", "glutes", "IT band"] },
+            { id: 6, name: "Wall Squats", description: "Stand with your back against a wall. Slowly slide down until your knees are bent at a 45-90 degree angle. Hold for 5 seconds, then slide back up.", imageUrl: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&q=80&w=400", tags: ["knee", "quads", "strengthening"] },
+            { id: 7, name: "Calf Stretch", description: "Stand facing a wall with one foot forward and one foot back. Keep the back leg straight and heel on the floor. Lean forward into the wall.", imageUrl: "https://images.unsplash.com/photo-1554286393-27fb62ba1e98?auto=format&fit=crop&q=80&w=400", tags: ["ankle", "calf", "achilles"] },
+            { id: 8, name: "Bird Dog", description: "On all fours, extend one arm forward and the opposite leg backward. Keep your back straight. Hold for a few seconds, then switch sides.", imageUrl: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&q=80&w=400", tags: ["core", "low back pain", "balance"] },
+            { id: 9, name: "Cat-Cow Stretch", description: "Start on your hands and knees. Arch your back up towards the ceiling (Cat), then drop your belly down towards the floor (Cow).", imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400", tags: ["spine", "mobility", "low back pain"] },
+            { id: 10, name: "Heel Slides", description: "Lie on your back with legs straight. Slowly slide one heel towards your buttocks, bending the knee. Slowly slide it back out.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", tags: ["knee", "post-op", "mobility"] }
+        ];
 
-        let lastScrollTop = 0;
-        let currentPage = 'home';
-        let updateCheckInterval;
-        let supabaseChannel;
-
-        // Initialize the website
-        document.addEventListener('DOMContentLoaded', async function() {
-            showLoading(true);
-            await loadDataFromSupabase();
-            renderAllViews();
-            updateImages();
-            setupScrollHandler();
-            setupRealTimeUpdates();
-            showLoading(false);
-        });
-
-        // Loading indicator
-        function showLoading(show) {
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            loadingIndicator.style.display = show ? 'block' : 'none';
-        }
-
-        // **SUPABASE INTEGRATION FUNCTIONS**
-        
-        // Create tables if they don't exist
-        async function initializeSupabaseSchema() {
-            try {
-                // Create clinic_data table if it doesn't exist
-                const { error } = await supabase.rpc('create_clinic_table_if_not_exists');
-                if (error && !error.message.includes('already exists')) {
-                    console.error('Error creating table:', error);
-                }
-            } catch (error) {
-                console.log('Schema initialization complete or already exists');
-            }
-        }
-
-        // Load data from Supabase
-        async function loadDataFromSupabase() {
-            try {
-                await initializeSupabaseSchema();
-                
-                const { data, error } = await supabase
-                    .from('clinic_data')
-                    .select('*')
-                    .eq('id', 1)
-                    .single();
-
-                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-                    console.error('Error loading data from Supabase:', error);
-                    return;
-                }
-
-                if (data && data.content) {
-                    clinicData = data.content;
-                    console.log('Data loaded from Supabase successfully');
-                } else {
-                    // If no data exists, create initial record
-                    await saveDataToSupabase();
-                    console.log('Initial data created in Supabase');
-                }
-            } catch (error) {
-                console.error('Error in loadDataFromSupabase:', error);
-                // Fallback to localStorage if Supabase fails
-                loadFromLocalStorage();
-            }
-        }
-
-        // Save data to Supabase
-        async function saveDataToSupabase() {
-            try {
-                const { data, error } = await supabase
-                    .from('clinic_data')
-                    .upsert([
-                        {
-                            id: 1,
-                            content: clinicData,
-                            updated_at: new Date().toISOString()
-                        }
-                    ], { onConflict: 'id' });
-
-                if (error) {
-                    console.error('Error saving to Supabase:', error);
-                    // Fallback to localStorage
-                    saveToLocalStorage();
-                    return false;
-                }
-
-                // Also save to localStorage as backup
-                saveToLocalStorage();
-                console.log('Data saved to Supabase successfully');
-                return true;
-            } catch (error) {
-                console.error('Error in saveDataToSupabase:', error);
-                saveToLocalStorage();
-                return false;
-            }
-        }
-
-        // Fallback localStorage functions
-        function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('physioClinicData');
-            if (savedData) {
-                try {
-                    clinicData = JSON.parse(savedData);
-                    console.log('Data loaded from localStorage as fallback');
-                } catch (error) {
-                    console.error('Error parsing localStorage data:', error);
-                }
-            }
-        }
-
-        function saveToLocalStorage() {
-            localStorage.setItem('physioClinicData', JSON.stringify(clinicData));
-        }
-
-        // **REAL-TIME UPDATES WITH SUPABASE**
-        function setupRealTimeUpdates() {
-            // Supabase Real-time subscription
-            try {
-                supabaseChannel = supabase
-                    .channel('clinic_data_changes')
-                    .on('postgres_changes', 
-                        { 
-                            event: '*', 
-                            schema: 'public', 
-                            table: 'clinic_data' 
-                        }, 
-                        async (payload) => {
-                            console.log('Real-time update received:', payload);
-                            if (payload.new && payload.new.content) {
-                                const newDataString = JSON.stringify(payload.new.content);
-                                const currentDataString = JSON.stringify(clinicData);
-                                
-                                if (newDataString !== currentDataString) {
-                                    clinicData = payload.new.content;
-                                    renderAllViews();
-                                    updateImages();
-                                    showUpdateIndicator();
-                                }
-                            }
-                        }
-                    )
-                    .subscribe();
-            } catch (error) {
-                console.error('Error setting up real-time updates:', error);
-            }
-
-            // Fallback: localStorage events and periodic sync
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'physioClinicData' && e.newValue) {
-                    try {
-                        const newData = JSON.parse(e.newValue);
-                        if (JSON.stringify(newData) !== JSON.stringify(clinicData)) {
-                            clinicData = newData;
-                            renderAllViews();
-                            updateImages();
-                            showUpdateIndicator();
-                        }
-                    } catch (error) {
-                        console.error('Error parsing updated data:', error);
-                    }
-                }
-            });
-
-            // Periodic sync every 10 seconds as fallback
-            updateCheckInterval = setInterval(async function() {
-                try {
-                    const { data, error } = await supabase
-                        .from('clinic_data')
-                        .select('*')
-                        .eq('id', 1)
-                        .single();
-
-                    if (data && data.content) {
-                        const newDataString = JSON.stringify(data.content);
-                        const currentDataString = JSON.stringify(clinicData);
-                        
-                        if (newDataString !== currentDataString) {
-                            clinicData = data.content;
-                            renderAllViews();
-                            updateImages();
-                            showUpdateIndicator();
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error in periodic sync:', error);
-                }
-            }, 10000);
-
-            // Window focus event for immediate sync
-            window.addEventListener('focus', async function() {
-                try {
-                    await loadDataFromSupabase();
-                    renderAllViews();
-                    updateImages();
-                } catch (error) {
-                    console.error('Error on focus sync:', error);
-                }
-            });
-        }
-
-        function showUpdateIndicator() {
-            const indicator = document.getElementById('updateIndicator');
-            indicator.classList.add('show');
-            setTimeout(() => {
-                indicator.classList.remove('show');
-            }, 2000);
-        }
-
-        async function triggerDataUpdate() {
-            const success = await saveDataToSupabase();
-            if (success) {
-                showUpdateIndicator();
-                console.log('Data updated and synced across devices');
-            }
-        }
-
-        // **FIXED WHATSAPP FUNCTIONS**
-        function detectMobileDevice() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-        }
-
-        function openWhatsApp(phone, message) {
-            try {
-                // Clean phone number (remove all non-numeric characters)
-                const cleanPhone = phone.replace(/[^0-9]/g, '');
-                
-                // Encode message properly
-                const encodedMessage = encodeURIComponent(message);
-                
-                let whatsappUrl;
-                
-                if (detectMobileDevice()) {
-                    // For mobile devices, try WhatsApp protocol first
-                    whatsappUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
-                    
-                    // Attempt to open WhatsApp app
-                    window.location.href = whatsappUrl;
-                    
-                    // Fallback to web version after 2 seconds if app doesn't open
-                    setTimeout(() => {
-                        const webUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                        window.open(webUrl, '_blank');
-                    }, 2000);
-                } else {
-                    // For desktop, open web version directly
-                    whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                    window.open(whatsappUrl, '_blank');
-                }
-                
-                console.log('WhatsApp opened with message:', message);
-            } catch (error) {
-                console.error('Error opening WhatsApp:', error);
-                alert('Unable to open WhatsApp. Please try again or contact us directly at ' + phone);
-            }
-        }
-
-        function bookAppointment() {
-            const message = clinicData.messages.appointment;
-            openWhatsApp(WHATSAPP_NUMBER, message);
-        }
-
-        function bookDoctorAppointment(doctorName) {
-            const message = clinicData.messages.doctorBooking.replace('{doctorName}', doctorName);
-            openWhatsApp(WHATSAPP_NUMBER, message);
-        }
-
-        function bookService(serviceName) {
-            const message = clinicData.messages.serviceBooking.replace('{serviceName}', serviceName);
-            openWhatsApp(WHATSAPP_NUMBER, message);
-        }
-
-        function buyProduct(productName) {
-            const message = clinicData.messages.productPurchase.replace('{productName}', productName);
-            openWhatsApp(WHATSAPP_NUMBER, message);
-        }
-
-        // **RENDERING FUNCTIONS**
-        function renderAllViews() {
-            renderDoctors();
-            renderServices();
-            renderProducts();
-            renderDoctorsList();
-            renderServicesList();
-            renderProductsList();
-            updateBasicInfo();
-        }
-
-        function updateBasicInfo() {
-            // Update all basic info elements
-            const clinicNameElements = document.querySelectorAll('#clinicName, #heroTitle');
-            clinicNameElements.forEach(el => {
-                if (el) el.textContent = clinicData.basic.name;
-            });
-
-            const taglineElement = document.getElementById('heroTagline');
-            if (taglineElement) taglineElement.textContent = clinicData.basic.tagline;
-
-            const phoneElements = document.querySelectorAll('#phoneNumber, #footerPhone');
-            phoneElements.forEach(el => {
-                if (el) el.textContent = clinicData.basic.phone;
-            });
-
-            const locationElements = document.querySelectorAll('#locationLink, #footerLocation');
-            locationElements.forEach(el => {
-                if (el) el.href = clinicData.basic.location;
-            });
-        }
-
-        function renderDoctors() {
-            const doctorsGrid = document.getElementById('doctorsGrid');
-            if (!doctorsGrid) return;
-
-            doctorsGrid.innerHTML = '';
+        function App() {
+            const [role, setRole] = useState('doctor'); 
+            const [currentView, setCurrentView] = useState('doctor-dashboard'); 
+            const [exercises, setExercises] = useState(INITIAL_EXERCISES);
             
-            clinicData.doctors.forEach(doctor => {
-                const doctorCard = document.createElement('div');
-                doctorCard.className = 'doctor-card';
-                doctorCard.onclick = () => showDoctorDetails(doctor);
-                
-                doctorCard.innerHTML = `
-                    <div class="doctor-avatar">
-                        ${doctor.image ? `<img src="${doctor.image}" alt="${doctor.name}">` : doctor.name.charAt(0)}
+            const [selectedExercise, setSelectedExercise] = useState(null);
+            const [searchQuery, setSearchQuery] = useState("");
+
+            const [newExercise, setNewExercise] = useState({ name: '', description: '', imageUrl: '', tags: '' });
+            const [prescriptionData, setPrescriptionData] = useState({ patientName: '', age: '', gender: '', complaint: '', selectedExerciseIds: [] });
+
+            const handleAddExercise = (e) => {
+                e.preventDefault();
+                const newId = exercises.length > 0 ? Math.max(...exercises.map(e => e.id)) + 1 : 1;
+                const tagsArray = newExercise.tags.split(',').map(t => t.trim().toLowerCase());
+                setExercises([...exercises, { ...newExercise, id: newId, tags: tagsArray }]);
+                setNewExercise({ name: '', description: '', imageUrl: '', tags: '' });
+                alert("Exercise added successfully!");
+            };
+
+            const togglePrescriptionExercise = (id) => {
+                setPrescriptionData(prev => {
+                    const isSelected = prev.selectedExerciseIds.includes(id);
+                    return { ...prev, selectedExerciseIds: isSelected ? prev.selectedExerciseIds.filter(eId => eId !== id) : [...prev.selectedExerciseIds, id] };
+                });
+            };
+
+            const filteredExercises = useMemo(() => {
+                return exercises.filter(ex => 
+                    ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    ex.tags.some(tag => tag.includes(searchQuery.toLowerCase()))
+                );
+            }, [exercises, searchQuery]);
+
+            const Header = () => (
+                <div className="bg-white px-4 py-3 shadow-sm flex items-center justify-between sticky top-0 z-50 print:hidden">
+                    <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+                        <Icons.Activity />
+                        <span className="font-bold text-xl text-slate-800 hidden sm:block">Therapeutic Hub</span>
                     </div>
-                    <div class="doctor-info">
-                        <h3>${doctor.name}</h3>
-                        <p>${doctor.qualification}</p>
-                        <div class="doctor-fees">${doctor.fees}</div>
-                        <button class="btn-book" onclick="event.stopPropagation(); bookDoctorAppointment('${doctor.name}')">Book Now</button>
+                    <div className="flex bg-slate-100 p-1 rounded-lg">
+                        <button className={`px-3 py-1 text-sm rounded-md transition-colors ${role === 'patient' ? 'bg-white shadow text-blue-600 font-semibold' : 'text-slate-500'}`} onClick={() => { setRole('patient'); setCurrentView('home'); }}>Patient</button>
+                        <button className={`px-3 py-1 text-sm rounded-md transition-colors ${role === 'doctor' ? 'bg-white shadow text-blue-600 font-semibold' : 'text-slate-500'}`} onClick={() => { setRole('doctor'); setCurrentView('doctor-dashboard'); }}>Doctor</button>
                     </div>
-                `;
-                
-                doctorsGrid.appendChild(doctorCard);
-            });
-        }
-
-        function renderDoctorsList() {
-            const doctorsList = document.getElementById('doctorsList');
-            if (!doctorsList) return;
-
-            doctorsList.innerHTML = '';
-            
-            clinicData.doctors.forEach(doctor => {
-                const doctorCard = document.createElement('div');
-                doctorCard.className = 'doctor-card doctor-card-horizontal';
-                
-                doctorCard.innerHTML = `
-                    <div class="doctor-avatar">
-                        ${doctor.image ? `<img src="${doctor.image}" alt="${doctor.name}">` : doctor.name.charAt(0)}
-                    </div>
-                    <div class="doctor-info">
-                        <h3>${doctor.name}</h3>
-                        <p>${doctor.qualification}</p>
-                        <p>${doctor.description}</p>
-                        <div class="doctor-fees">${doctor.fees}</div>
-                        <button class="btn-book" onclick="bookDoctorAppointment('${doctor.name}')">Book Appointment</button>
-                    </div>
-                `;
-                
-                doctorsList.appendChild(doctorCard);
-            });
-        }
-
-        function renderServices() {
-            const servicesGrid = document.getElementById('servicesGrid');
-            if (!servicesGrid) return;
-
-            servicesGrid.innerHTML = '';
-            
-            clinicData.services.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                
-                let subServicesHtml = '';
-                if (service.subServices && service.subServices.length > 0) {
-                    subServicesHtml = `
-                        <div class="sub-services">
-                            <h4>Available Services:</h4>
-                            ${service.subServices.map(sub => `
-                                <div class="sub-service-item">
-                                    <span class="sub-service-name">${sub.name}</span>
-                                    <span class="sub-service-price">${sub.price}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                serviceCard.innerHTML = `
-                    <h3>${service.name}</h3>
-                    <p>${service.description}</p>
-                    <div class="service-price">Starting from ${service.price}</div>
-                    ${subServicesHtml}
-                    <button class="btn-service" onclick="bookService('${service.name}')">Book Service</button>
-                `;
-                
-                servicesGrid.appendChild(serviceCard);
-            });
-        }
-
-        function renderServicesList() {
-            const servicesList = document.getElementById('servicesList');
-            if (!servicesList) return;
-
-            servicesList.innerHTML = '';
-            
-            clinicData.services.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                
-                let subServicesHtml = '';
-                if (service.subServices && service.subServices.length > 0) {
-                    subServicesHtml = `
-                        <div class="sub-services">
-                            <h4>Available Services:</h4>
-                            ${service.subServices.map(sub => `
-                                <div class="sub-service-item">
-                                    <span class="sub-service-name">${sub.name}</span>
-                                    <span class="sub-service-price">${sub.price}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                serviceCard.innerHTML = `
-                    <h3>${service.name}</h3>
-                    <p>${service.description}</p>
-                    <div class="service-price">Starting from ${service.price}</div>
-                    ${subServicesHtml}
-                    <button class="btn-service" onclick="bookService('${service.name}')">Book Service</button>
-                `;
-                
-                servicesList.appendChild(serviceCard);
-            });
-        }
-
-        function renderProducts() {
-            const productsGrid = document.getElementById('productsGrid');
-            if (!productsGrid) return;
-
-            productsGrid.innerHTML = '';
-            
-            clinicData.products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                productCard.innerHTML = `
-                    <div class="product-image">
-                        ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '📦'}
-                    </div>
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <div class="product-price">${product.price}</div>
-                        <button class="btn-service" onclick="buyProduct('${product.name}')">Buy Now</button>
-                    </div>
-                `;
-                
-                productsGrid.appendChild(productCard);
-            });
-        }
-
-        function renderProductsList() {
-            const productsList = document.getElementById('productsList');
-            if (!productsList) return;
-
-            productsList.innerHTML = '';
-            
-            clinicData.products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                productCard.innerHTML = `
-                    <div class="product-image">
-                        ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '📦'}
-                    </div>
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <div class="product-price">${product.price}</div>
-                        <button class="btn-service" onclick="buyProduct('${product.name}')">Buy Now</button>
-                    </div>
-                `;
-                
-                productsList.appendChild(productCard);
-            });
-        }
-
-        // **UTILITY FUNCTIONS**
-        function updateImages() {
-            // Update logo
-            if (clinicData.basic.logoImage) {
-                const logoContainer = document.getElementById('logoContainer');
-                if (logoContainer) {
-                    logoContainer.innerHTML = `<img src="${clinicData.basic.logoImage}" alt="Logo" style="height: 40px;">`;
-                }
-            }
-
-            // Update hero banner
-            const heroBannerImage = document.getElementById('heroBannerImage');
-            if (heroBannerImage && clinicData.basic.heroBannerImage) {
-                heroBannerImage.src = clinicData.basic.heroBannerImage;
-                heroBannerImage.style.display = 'block';
-            }
-
-            // Update services banner
-            const servicesBannerImage = document.getElementById('servicesBannerImage');
-            if (servicesBannerImage && clinicData.basic.servicesBannerImage) {
-                servicesBannerImage.src = clinicData.basic.servicesBannerImage;
-                servicesBannerImage.style.display = 'block';
-            }
-        }
-
-        // **NAVIGATION FUNCTIONS**
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('active');
-        }
-
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-            
-            // Show selected page
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-                currentPage = pageId;
-            }
-            
-            // Close menu if open
-            const menu = document.getElementById('menu');
-            menu.classList.remove('active');
-        }
-
-        function setupScrollHandler() {
-            window.addEventListener('scroll', function() {
-                const header = document.getElementById('header');
-                const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
-                    header.classList.add('hidden');
-                } else {
-                    header.classList.remove('hidden');
-                }
-                
-                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
-            });
-        }
-
-        // **MODAL FUNCTIONS**
-        function showDoctorDetails(doctor) {
-            const modal = document.getElementById('doctorModal');
-            const details = document.getElementById('doctorDetails');
-            
-            details.innerHTML = `
-                <div style="text-align: center;">
-                    <div class="doctor-avatar" style="margin: 0 auto 1rem;">
-                        ${doctor.image ? `<img src="${doctor.image}" alt="${doctor.name}">` : doctor.name.charAt(0)}
-                    </div>
-                    <h2>${doctor.name}</h2>
-                    <p><strong>${doctor.qualification}</strong></p>
-                    <p>${doctor.description}</p>
-                    <div style="font-size: 1.5rem; color: #2c7873; margin: 1rem 0;">${doctor.fees}</div>
-                    <button class="btn-book" onclick="bookDoctorAppointment('${doctor.name}'); closeDoctorModal();">Book Appointment</button>
+                    <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-full"><Icons.Menu /></button>
                 </div>
-            `;
-            
-            modal.style.display = 'block';
-        }
+            );
 
-        function closeDoctorModal() {
-            document.getElementById('doctorModal').style.display = 'none';
-        }
-
-        // **ADMIN FUNCTIONS**
-        function openAdminLogin() {
-            document.getElementById('adminLoginModal').style.display = 'block';
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('adminLoginModal').style.display = 'none';
-            document.getElementById('adminUsername').value = '';
-            document.getElementById('adminPassword').value = '';
-        }
-
-        function adminLogin(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            if (username === adminCredentials.username && password === adminCredentials.password) {
-                closeAdminLogin();
-                openAdminPanel();
-            } else {
-                alert('Invalid credentials!');
-            }
-        }
-
-        function openAdminPanel() {
-            populateAdminPanel();
-            document.getElementById('adminPanel').style.display = 'block';
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-
-        function populateAdminPanel() {
-            // Populate basic info
-            document.getElementById('adminClinicName').value = clinicData.basic.name;
-            document.getElementById('adminTagline').value = clinicData.basic.tagline;
-            document.getElementById('adminPhone').value = clinicData.basic.phone;
-            document.getElementById('adminLocation').value = clinicData.basic.location;
-            document.getElementById('logoImageUrl').value = clinicData.basic.logoImage;
-            document.getElementById('heroBannerUrl').value = clinicData.basic.heroBannerImage;
-            document.getElementById('servicesBannerUrl').value = clinicData.basic.servicesBannerImage;
-
-            // Populate messages
-            document.getElementById('appointmentMessage').value = clinicData.messages.appointment;
-            document.getElementById('doctorBookingMessage').value = clinicData.messages.doctorBooking;
-            document.getElementById('serviceBookingMessage').value = clinicData.messages.serviceBooking;
-            document.getElementById('productPurchaseMessage').value = clinicData.messages.productPurchase;
-
-            // Populate management sections
-            populateDoctorsManagement();
-            populateServicesManagement();
-            populateProductsManagement();
-
-            // Update image previews
-            updateImagePreviews();
-        }
-
-        function updateImagePreviews() {
-            // Logo preview
-            const logoUrl = document.getElementById('logoImageUrl').value;
-            const logoPreview = document.getElementById('logoPreview');
-            if (logoUrl) {
-                logoPreview.src = logoUrl;
-                logoPreview.style.display = 'block';
-            } else {
-                logoPreview.style.display = 'none';
-            }
-
-            // Hero banner preview
-            const heroBannerUrl = document.getElementById('heroBannerUrl').value;
-            const heroBannerPreview = document.getElementById('heroBannerPreview');
-            if (heroBannerUrl) {
-                heroBannerPreview.src = heroBannerUrl;
-                heroBannerPreview.style.display = 'block';
-            } else {
-                heroBannerPreview.style.display = 'none';
-            }
-
-            // Services banner preview
-            const servicesBannerUrl = document.getElementById('servicesBannerUrl').value;
-            const servicesBannerPreview = document.getElementById('servicesBannerPreview');
-            if (servicesBannerUrl) {
-                servicesBannerPreview.src = servicesBannerUrl;
-                servicesBannerPreview.style.display = 'block';
-            } else {
-                servicesBannerPreview.style.display = 'none';
-            }
-        }
-
-        function updateBasicInfoAdmin() {
-            clinicData.basic.name = document.getElementById('adminClinicName').value;
-            clinicData.basic.tagline = document.getElementById('adminTagline').value;
-            clinicData.basic.phone = document.getElementById('adminPhone').value;
-            clinicData.basic.location = document.getElementById('adminLocation').value;
-            
-            triggerDataUpdate();
-        }
-
-        function updateLogo() {
-            clinicData.basic.logoImage = document.getElementById('logoImageUrl').value;
-            updateImagePreviews();
-            updateImages();
-            triggerDataUpdate();
-        }
-
-        function updateHeroBanner() {
-            clinicData.basic.heroBannerImage = document.getElementById('heroBannerUrl').value;
-            updateImagePreviews();
-            updateImages();
-            triggerDataUpdate();
-        }
-
-        function updateServicesBanner() {
-            clinicData.basic.servicesBannerImage = document.getElementById('servicesBannerUrl').value;
-            updateImagePreviews();
-            updateImages();
-            triggerDataUpdate();
-        }
-
-        function updateMessages() {
-            clinicData.messages.appointment = document.getElementById('appointmentMessage').value;
-            clinicData.messages.doctorBooking = document.getElementById('doctorBookingMessage').value;
-            clinicData.messages.serviceBooking = document.getElementById('serviceBookingMessage').value;
-            clinicData.messages.productPurchase = document.getElementById('productPurchaseMessage').value;
-            
-            triggerDataUpdate();
-        }
-
-        // **DOCTORS MANAGEMENT**
-        function populateDoctorsManagement() {
-            const container = document.getElementById('doctorsManagement');
-            container.innerHTML = '';
-            
-            clinicData.doctors.forEach((doctor, index) => {
-                const doctorForm = document.createElement('div');
-                doctorForm.className = 'admin-form';
-                doctorForm.innerHTML = `
-                    <h4>Doctor ${index + 1}</h4>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" value="${doctor.name}" onchange="updateDoctor(${index}, 'name', this.value)">
+            const HomeView = () => (
+                <div className="p-4 space-y-6 max-w-4xl mx-auto pb-20">
+                    <div className="relative">
+                        <Icons.Search />
+                        <input type="text" placeholder="Search..." className="w-full bg-slate-100 rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
-                    <div class="form-group">
-                        <label>Qualification:</label>
-                        <input type="text" value="${doctor.qualification}" onchange="updateDoctor(${index}, 'qualification', this.value)">
-                    </div>
-                    <div class="form-group">
-                        <label>Fees:</label>
-                        <input type="text" value="${doctor.fees}" onchange="updateDoctor(${index}, 'fees', this.value)">
-                    </div>
-                    <div class="form-group">
-                        <label>Description:</label>
-                        <textarea onchange="updateDoctor(${index}, 'description', this.value)">${doctor.description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Image URL:</label>
-                        <input type="url" value="${doctor.image}" onchange="updateDoctor(${index}, 'image', this.value)">
-                    </div>
-                    <button onclick="removeDoctor(${index})" class="btn-admin btn-danger">Remove Doctor</button>
-                `;
-                container.appendChild(doctorForm);
-            });
-        }
-
-        function updateDoctor(index, field, value) {
-            clinicData.doctors[index][field] = value;
-            triggerDataUpdate();
-        }
-
-        function addDoctor() {
-            const newId = Math.max(...clinicData.doctors.map(d => d.id)) + 1;
-            clinicData.doctors.push({
-                id: newId,
-                name: "New Doctor",
-                qualification: "Qualification",
-                fees: "₹500",
-                description: "Doctor description",
-                image: ""
-            });
-            populateDoctorsManagement();
-            triggerDataUpdate();
-        }
-
-        function removeDoctor(index) {
-            if (confirm('Are you sure you want to remove this doctor?')) {
-                clinicData.doctors.splice(index, 1);
-                populateDoctorsManagement();
-                triggerDataUpdate();
-            }
-        }
-
-        // **SERVICES MANAGEMENT**
-        function populateServicesManagement() {
-            const container = document.getElementById('servicesManagement');
-            container.innerHTML = '';
-            
-            clinicData.services.forEach((service, index) => {
-                const serviceForm = document.createElement('div');
-                serviceForm.className = 'admin-form';
-                
-                let subServicesHtml = '';
-                if (service.subServices) {
-                    subServicesHtml = service.subServices.map((sub, subIndex) => `
-                        <div class="sub-service-management">
-                            <h5>Sub-service ${subIndex + 1}</h5>
-                            <div class="form-group">
-                                <label>Name:</label>
-                                <input type="text" value="${sub.name}" onchange="updateSubService(${index}, ${subIndex}, 'name', this.value)">
+                    <div onClick={() => setCurrentView('exercise-list')} className="bg-blue-600 rounded-2xl p-6 text-white shadow-md cursor-pointer hover:bg-blue-700 transition relative overflow-hidden">
+                        <div className="relative z-10">
+                            <h2 className="text-2xl font-bold mb-2">Exercise Library</h2>
+                            <p className="text-blue-100 mb-4 max-w-[80%]">View your prescribed exercises, read instructions, and watch guided videos.</p>
+                            <div className="inline-flex items-center bg-white text-blue-600 px-4 py-2 rounded-full font-semibold text-sm">
+                                View Exercises <Icons.ArrowLeft className="ml-2 h-4 w-4 rotate-180" />
                             </div>
-                            <div class="form-group">
-                                <label>Price:</label>
-                                <input type="text" value="${sub.price}" onchange="updateSubService(${index}, ${subIndex}, 'price', this.value)">
-                            </div>
-                            <button onclick="removeSubService(${index}, ${subIndex})" class="btn-admin btn-danger">Remove Sub-service</button>
                         </div>
-                    `).join('');
-                }
-                
-                serviceForm.innerHTML = `
-                    <h4>Service ${index + 1}</h4>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" value="${service.name}" onchange="updateService(${index}, 'name', this.value)">
+                        <Icons.Video />
                     </div>
-                    <div class="form-group">
-                        <label>Description:</label>
-                        <textarea onchange="updateService(${index}, 'description', this.value)">${service.description}</textarea>
+                    <div>
+                        <h3 className="text-xl font-bold text-slate-800 mb-4">What We Offer</h3>
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                            <div className="w-24 h-24 bg-slate-200 rounded-xl overflow-hidden shrink-0">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?auto=format&fit=crop&q=80&w=200" alt="Consultation" className="w-full h-full object-cover"/>
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-slate-800">Free Physiotherapy Consultation</h4>
+                                <p className="text-sm text-slate-500 mt-1 mb-2">Physical-therapy and rehab by experts.</p>
+                                <span className="text-blue-600 text-sm font-semibold">View Details & Book →</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Price:</label>
-                        <input type="text" value="${service.price}" onchange="updateService(${index}, 'price', this.value)">
+                </div>
+            );
+
+            const PatientExerciseList = () => (
+                <div className="p-4 max-w-4xl mx-auto pb-20">
+                    <div className="flex items-center mb-6">
+                        <button onClick={() => setCurrentView('home')} className="p-2 mr-2 bg-slate-100 rounded-full text-slate-600"><Icons.ArrowLeft /></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Exercise Library</h2>
                     </div>
-                    <div class="form-group">
-                        <label>Sub-services:</label>
-                        ${subServicesHtml}
-                        <button onclick="addSubService(${index})" class="btn-admin">Add Sub-service</button>
+                    <div className="relative mb-6">
+                        <Icons.Search />
+                        <input type="text" placeholder="Search by name or symptom" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
                     </div>
-                    <button onclick="removeService(${index})" class="btn-admin btn-danger">Remove Service</button>
-                `;
-                container.appendChild(serviceForm);
-            });
-        }
-
-        function updateService(index, field, value) {
-            clinicData.services[index][field] = value;
-            triggerDataUpdate();
-        }
-
-        function updateSubService(serviceIndex, subIndex, field, value) {
-            clinicData.services[serviceIndex].subServices[subIndex][field] = value;
-            triggerDataUpdate();
-        }
-
-        function addService() {
-            const newId = Math.max(...clinicData.services.map(s => s.id)) + 1;
-            clinicData.services.push({
-                id: newId,
-                name: "New Service",
-                description: "Service description",
-                price: "₹500",
-                subServices: []
-            });
-            populateServicesManagement();
-            triggerDataUpdate();
-        }
-
-        function removeService(index) {
-            if (confirm('Are you sure you want to remove this service?')) {
-                clinicData.services.splice(index, 1);
-                populateServicesManagement();
-                triggerDataUpdate();
-            }
-        }
-
-        function addSubService(serviceIndex) {
-            if (!clinicData.services[serviceIndex].subServices) {
-                clinicData.services[serviceIndex].subServices = [];
-            }
-            clinicData.services[serviceIndex].subServices.push({
-                name: "New Sub-service",
-                price: "₹300"
-            });
-            populateServicesManagement();
-            triggerDataUpdate();
-        }
-
-        function removeSubService(serviceIndex, subIndex) {
-            if (confirm('Are you sure you want to remove this sub-service?')) {
-                clinicData.services[serviceIndex].subServices.splice(subIndex, 1);
-                populateServicesManagement();
-                triggerDataUpdate();
-            }
-        }
-
-        // **PRODUCTS MANAGEMENT**
-        function populateProductsManagement() {
-            const container = document.getElementById('productsManagement');
-            container.innerHTML = '';
-            
-            clinicData.products.forEach((product, index) => {
-                const productForm = document.createElement('div');
-                productForm.className = 'admin-form';
-                productForm.innerHTML = `
-                    <h4>Product ${index + 1}</h4>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" value="${product.name}" onchange="updateProduct(${index}, 'name', this.value)">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {filteredExercises.map(ex => (
+                            <div key={ex.id} onClick={() => { setSelectedExercise(ex); setCurrentView('exercise-detail'); }} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition flex flex-col sm:flex-row">
+                                <div className="h-48 sm:h-auto sm:w-1/3 relative">
+                                    <img src={ex.imageUrl} alt={ex.name} className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center"><Icons.PlayCircle className="text-white opacity-80" /></div>
+                                </div>
+                                <div className="p-4 sm:w-2/3 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-slate-800 mb-1">{ex.name}</h3>
+                                        <p className="text-sm text-slate-500 line-clamp-2">{ex.description}</p>
+                                    </div>
+                                    <div className="mt-3 flex flex-wrap gap-1">
+                                        {ex.tags.map(tag => <span key={tag} className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-md font-medium">{tag}</span>)}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <div class="form-group">
-                        <label>Description:</label>
-                        <textarea onchange="updateProduct(${index}, 'description', this.value)">${product.description}</textarea>
+                </div>
+            );
+
+            const PatientExerciseDetail = () => {
+                if (!selectedExercise) return null;
+                return (
+                    <div className="p-4 max-w-3xl mx-auto pb-20">
+                        <button onClick={() => setCurrentView('exercise-list')} className="flex items-center text-blue-600 font-semibold mb-4"><Icons.ArrowLeft className="h-5 w-5 mr-1" /> Back to Exercises</button>
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                            <div className="aspect-video bg-slate-900 relative flex items-center justify-center">
+                                <img src={selectedExercise.imageUrl} alt={selectedExercise.name} className="absolute inset-0 w-full h-full object-cover opacity-50" />
+                                <Icons.PlayCircle className="text-white z-10 cursor-pointer hover:scale-110 transition-transform w-16 h-16" />
+                            </div>
+                            <div className="p-6">
+                                <h2 className="text-2xl font-bold text-slate-800 mb-2">{selectedExercise.name}</h2>
+                                <p className="text-slate-600 leading-relaxed whitespace-pre-line">{selectedExercise.description}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Price:</label>
-                        <input type="text" value="${product.price}" onchange="updateProduct(${index}, 'price', this.value)">
+                );
+            };
+
+            const DoctorDashboard = () => (
+                <div className="p-4 max-w-5xl mx-auto pb-20">
+                    <div className="flex items-center mb-6">
+                        <Icons.Stethoscope />
+                        <h2 className="text-2xl font-bold text-slate-800">Doctor Dashboard</h2>
                     </div>
-                    <div class="form-group">
-                        <label>Image URL:</label>
-                        <input type="url" value="${product.image}" onchange="updateProduct(${index}, 'image', this.value)">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Prescription Card */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 order-2 md:order-1">
+                            <h3 className="text-lg font-bold text-slate-800 mb-1">Generate Prescription</h3>
+                            <p className="text-sm text-slate-500 mb-6">Select exercises to create a printable PDF sheet.</p>
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Patient Name" value={prescriptionData.patientName} onChange={e => setPrescriptionData({...prescriptionData, patientName: e.target.value})} className="col-span-2 text-sm border border-slate-200 rounded-lg p-2" />
+                                    <input type="number" placeholder="Age" value={prescriptionData.age} onChange={e => setPrescriptionData({...prescriptionData, age: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2" />
+                                    <select value={prescriptionData.gender} onChange={e => setPrescriptionData({...prescriptionData, gender: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2 bg-white">
+                                        <option value="">Gender</option><option value="M">Male</option><option value="F">Female</option>
+                                    </select>
+                                    <input type="text" placeholder="Diagnosis" value={prescriptionData.complaint} onChange={e => setPrescriptionData({...prescriptionData, complaint: e.target.value})} className="col-span-2 text-sm border border-slate-200 rounded-lg p-2" />
+                                </div>
+                                <div className="mt-4 border-t border-slate-100 pt-4">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <h4 className="font-semibold text-sm text-slate-700">Select Exercises</h4>
+                                        <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{prescriptionData.selectedExerciseIds.length} Selected</span>
+                                    </div>
+                                    <div className="h-64 overflow-y-auto space-y-2 border border-slate-100 rounded-lg p-2 bg-slate-50">
+                                        {exercises.map(ex => (
+                                            <label key={ex.id} className={`flex items-start p-2 rounded-lg cursor-pointer transition-colors border ${prescriptionData.selectedExerciseIds.includes(ex.id) ? 'bg-blue-50 border-blue-200' : 'bg-white border-transparent hover:bg-slate-100'}`}>
+                                                <input type="checkbox" className="mt-1 rounded text-blue-600 focus:ring-blue-500" checked={prescriptionData.selectedExerciseIds.includes(ex.id)} onChange={() => togglePrescriptionExercise(ex.id)} />
+                                                <div className="ml-3 flex-1">
+                                                    <p className="text-sm font-semibold text-slate-800">{ex.name}</p>
+                                                    <p className="text-xs text-slate-500 line-clamp-1">{ex.tags.join(', ')}</p>
+                                                </div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                                <button onClick={() => setCurrentView('print-prescription')} disabled={prescriptionData.selectedExerciseIds.length === 0} className="w-full mt-4 bg-blue-600 text-white rounded-xl py-3 font-bold shadow hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <Icons.Printer /> Generate Printable Sheet
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Database Card */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 order-1 md:order-2">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-bold text-slate-800">Exercise Database</h3>
+                                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">{exercises.length} Total</span>
+                            </div>
+                            <form onSubmit={handleAddExercise} className="space-y-4 mb-6 bg-slate-50 p-4 rounded-xl">
+                                <h4 className="font-semibold text-sm text-slate-700">Add New Exercise</h4>
+                                <input required type="text" placeholder="Exercise Name" value={newExercise.name} onChange={e => setNewExercise({...newExercise, name: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
+                                <textarea required placeholder="Description" value={newExercise.description} onChange={e => setNewExercise({...newExercise, description: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" rows="2" />
+                                <input required type="url" placeholder="Image URL" value={newExercise.imageUrl} onChange={e => setNewExercise({...newExercise, imageUrl: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
+                                <input type="text" placeholder="Tags (comma separated)" value={newExercise.tags} onChange={e => setNewExercise({...newExercise, tags: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
+                                <button type="submit" className="w-full bg-slate-800 text-white rounded-lg py-2 text-sm font-semibold hover:bg-slate-700 flex items-center justify-center">
+                                    <Icons.Plus /> Save Exercise
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <button onclick="removeProduct(${index})" class="btn-admin btn-danger">Remove Product</button>
-                `;
-                container.appendChild(productForm);
-            });
+                </div>
+            );
+
+            const PrintPrescriptionView = () => {
+                const prescribedExercises = exercises.filter(ex => prescriptionData.selectedExerciseIds.includes(ex.id));
+                const count = prescribedExercises.length;
+                const today = new Date().toLocaleDateString('en-GB');
+
+                const getGridConfig = (c) => {
+                    if (c <= 2) return { gridClass: 'grid-cols-1 gap-6', layout: 'row', imgClass: 'w-1/3 h-48 sm:border-r border-slate-200 border-b-0', textClass: 'text-sm mb-4', titleClass: 'text-lg mb-2', repsClass: 'p-3 text-sm' };
+                    if (c <= 4) return { gridClass: 'grid-cols-2 gap-4', layout: 'col', imgClass: 'w-full h-48 border-b border-slate-200', textClass: 'text-sm mb-3 line-clamp-4', titleClass: 'text-base mb-1', repsClass: 'p-2 text-xs' };
+                    if (c <= 6) return { gridClass: 'grid-cols-2 gap-4', layout: 'col', imgClass: 'w-full h-40 border-b border-slate-200', textClass: 'text-xs mb-2 line-clamp-3', titleClass: 'text-sm mb-1', repsClass: 'p-2 text-xs' };
+                    return { gridClass: 'grid-cols-3 gap-3', layout: 'col', imgClass: 'w-full h-28 border-b border-slate-200', textClass: 'text-[11px] leading-snug mb-2 line-clamp-3', titleClass: 'text-xs font-bold mb-1', repsClass: 'p-1 text-[10px]' };
+                };
+
+                const config = getGridConfig(count);
+
+                return (
+                    <div className="bg-slate-200 min-h-screen pt-8 pb-20 print:bg-white print:p-0">
+                        <div className="max-w-4xl mx-auto mb-4 flex justify-between items-center print:hidden px-4">
+                            <button onClick={() => setCurrentView('doctor-dashboard')} className="flex items-center text-slate-600 hover:text-slate-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-sm"><Icons.ArrowLeft className="h-5 w-5 mr-1" /> Edit</button>
+                            <button onClick={() => window.print()} className="flex items-center text-white bg-blue-600 hover:bg-blue-700 font-semibold px-6 py-2 rounded-lg shadow-sm"><Icons.Printer /> Print to PDF</button>
+                        </div>
+                        <div className="bg-white max-w-[21cm] min-h-[29.7cm] mx-auto shadow-lg print:shadow-none p-8 sm:p-12 text-slate-900 flex flex-col">
+                            <div className="flex justify-between items-start border-b-2 border-blue-800 pb-4 mb-6">
+                                <div>
+                                    <h1 className="text-3xl font-bold text-blue-800 italic">Dr. Arpan Das (PT)</h1>
+                                    <p className="text-blue-700 font-semibold text-sm">BPT (KPC Medical College and Hospital)</p>
+                                    <p className="text-blue-700 font-semibold text-sm">Consultant Physiotherapist</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-bold text-blue-800 flex items-center justify-end"><Icons.FileText /> +91 9641568109</p>
+                                    <p className="text-sm font-semibold text-slate-600 mt-2">Date: <span className="underline">{today}</span></p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap justify-between items-center bg-blue-50 border border-blue-100 p-3 rounded mb-6 text-sm font-semibold">
+                                <span className="w-full sm:w-auto mb-2 sm:mb-0"><span className="text-blue-800">Patient:</span> {prescriptionData.patientName || '________________'}</span>
+                                <span><span className="text-blue-800">Age:</span> {prescriptionData.age || '____'}</span>
+                                <span><span className="text-blue-800">Sex:</span> {prescriptionData.gender || '____'}</span>
+                                <span><span className="text-blue-800">ID:</span> #{Math.floor(Math.random() * 9000) + 1000}</span>
+                            </div>
+                            {prescriptionData.complaint && (
+                                <div className="mb-6">
+                                    <h3 className="text-blue-800 font-bold text-sm mb-1">Diagnosis / Chief Complaint :-</h3>
+                                    <p className="text-slate-800 text-sm pl-2">{prescriptionData.complaint}</p>
+                                </div>
+                            )}
+                            <div className="flex-1">
+                                <h3 className="text-blue-800 font-bold mb-4 text-lg border-b border-slate-200 pb-1">Prescribed Exercise Plan :-</h3>
+                                <div className={`grid ${config.gridClass}`}>
+                                    {prescribedExercises.map((ex, index) => (
+                                        <div key={ex.id} className={`flex ${config.layout === 'row' ? 'flex-col sm:flex-row' : 'flex-col'} border border-slate-200 rounded-lg overflow-hidden break-inside-avoid bg-white`}>
+                                            <div className={`${config.imgClass} shrink-0 bg-slate-50 flex items-center justify-center p-2`}>
+                                                <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain rounded" />
+                                            </div>
+                                            <div className="p-3 flex-1 flex flex-col justify-between">
+                                                <div>
+                                                    <h4 className={`font-bold text-slate-900 flex items-start ${config.titleClass}`}>
+                                                        <span className="bg-blue-800 text-white rounded-full w-5 h-5 inline-flex items-center justify-center text-[10px] mr-1.5 shrink-0 mt-0.5">{index + 1}</span>
+                                                        {ex.name}
+                                                    </h4>
+                                                    <p className={`text-slate-700 whitespace-pre-line ${config.textClass}`}>{ex.description}</p>
+                                                </div>
+                                                <div className={`bg-slate-50 border border-slate-200 rounded grid grid-cols-3 gap-1 text-center font-semibold text-slate-700 ${config.repsClass}`}>
+                                                    <div><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Sets</span>3</div>
+                                                    <div className="border-l border-r border-slate-200"><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Reps</span>10</div>
+                                                    <div><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Freq</span>2x/Day</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="mt-8 pt-4 flex justify-end break-inside-avoid">
+                                <div className="text-center">
+                                    <div className="w-40 border-b border-slate-400 mb-1"></div>
+                                    <p className="font-bold text-xs text-slate-800">Physiotherapist Signature</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <main>
+                    <Header />
+                    {currentView === 'home' && <HomeView />}
+                    {currentView === 'exercise-list' && <PatientExerciseList />}
+                    {currentView === 'exercise-detail' && <PatientExerciseDetail />}
+                    {currentView === 'doctor-dashboard' && <DoctorDashboard />}
+                    {currentView === 'print-prescription' && <PrintPrescriptionView />}
+                </main>
+            );
         }
 
-        function updateProduct(index, field, value) {
-            clinicData.products[index][field] = value;
-            triggerDataUpdate();
-        }
-
-        function addProduct() {
-            const newId = Math.max(...clinicData.products.map(p => p.id)) + 1;
-            clinicData.products.push({
-                id: newId,
-                name: "New Product",
-                description: "Product description",
-                price: "₹500",
-                image: ""
-            });
-            populateProductsManagement();
-            triggerDataUpdate();
-        }
-
-        function removeProduct(index) {
-            if (confirm('Are you sure you want to remove this product?')) {
-                clinicData.products.splice(index, 1);
-                populateProductsManagement();
-                triggerDataUpdate();
-            }
-        }
-
-        async function saveAllData() {
-            showLoading(true);
-            const success = await saveDataToSupabase();
-            showLoading(false);
-            
-            if (success) {
-                alert('All changes saved successfully!');
-                renderAllViews();
-                updateImages();
-            } else {
-                alert('Error saving data. Please try again.');
-            }
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            const doctorModal = document.getElementById('doctorModal');
-            const adminLoginModal = document.getElementById('adminLoginModal');
-            
-            if (event.target === doctorModal) {
-                closeDoctorModal();
-            }
-            if (event.target === adminLoginModal) {
-                closeAdminLogin();
-            }
-        }
-
-        // Cleanup function for page unload
-        window.addEventListener('beforeunload', function() {
-            if (supabaseChannel) {
-                supabase.removeChannel(supabaseChannel);
-            }
-            if (updateCheckInterval) {
-                clearInterval(updateCheckInterval);
-            }
-        });
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
+
