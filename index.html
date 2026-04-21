@@ -14,7 +14,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* Custom print styles to ensure backgrounds and formatting look perfect when generating the PDF */
+        /* Custom print styles */
         @media print {
             body { background-color: white !important; }
             .print\:hidden { display: none !important; }
@@ -30,32 +30,26 @@
     <script type="text/babel">
         const { useState, useMemo } = React;
 
-        // --- SVGs for Icons (Replacing Lucide-React for pure HTML compatibility) ---
+        // --- SVGs for Icons ---
         const Icons = {
             Activity: () => <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>,
             Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
-            Search: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-3 text-slate-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+            Search: ({className="absolute left-3 top-3 text-slate-400 w-5 h-5"}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
             ArrowLeft: ({className="h-5 w-5"}) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>,
-            Video: () => <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute -right-4 -bottom-4 text-blue-500 opacity-30"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>,
             PlayCircle: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
             Stethoscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mr-2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>,
             Plus: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M5 12h14"/><path d="M12 5v14"/></svg>,
             Printer: ({className="h-5 w-5 mr-2"}) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14"/></svg>,
-            FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+            FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>,
+            Edit: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
+            Trash: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
         };
 
         // --- MOCK DATA ---
         const INITIAL_EXERCISES = [
-            { id: 1, name: "Pelvic Tilt", description: "Lie on your back with knees bent. Tighten your stomach muscles, flattening your lower back against the floor. Hold for 5 seconds.", imageUrl: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=400", tags: ["low back pain", "core", "lumbar"] },
-            { id: 2, name: "Knee to Chest Stretch", description: "Lie on your back. Pull one knee up to your chest until you feel a stretch in your lower back. Hold for 15-30 seconds. Repeat with the other leg.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", tags: ["low back pain", "stretching", "sciatica"] },
-            { id: 3, name: "Straight Leg Raise", description: "Lie on your back with one leg straight and the other bent. Tighten the thigh muscle of your straight leg and slowly lift it 6-10 inches off the floor.", imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400", tags: ["knee pain", "post-op", "ACL"] },
-            { id: 4, name: "Glute Bridge", description: "Lie on your back with knees bent and feet flat on the floor. Lift your hips off the floor until your knees, hips and shoulders form a straight line.", imageUrl: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&q=80&w=400", tags: ["glutes", "low back pain", "core"] },
-            { id: 5, name: "Clamshells", description: "Lie on your side with knees bent. Keeping your feet together, raise your top knee as high as you can without moving your pelvis.", imageUrl: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=400", tags: ["hip", "glutes", "IT band"] },
-            { id: 6, name: "Wall Squats", description: "Stand with your back against a wall. Slowly slide down until your knees are bent at a 45-90 degree angle. Hold for 5 seconds, then slide back up.", imageUrl: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&q=80&w=400", tags: ["knee", "quads", "strengthening"] },
-            { id: 7, name: "Calf Stretch", description: "Stand facing a wall with one foot forward and one foot back. Keep the back leg straight and heel on the floor. Lean forward into the wall.", imageUrl: "https://images.unsplash.com/photo-1554286393-27fb62ba1e98?auto=format&fit=crop&q=80&w=400", tags: ["ankle", "calf", "achilles"] },
-            { id: 8, name: "Bird Dog", description: "On all fours, extend one arm forward and the opposite leg backward. Keep your back straight. Hold for a few seconds, then switch sides.", imageUrl: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&q=80&w=400", tags: ["core", "low back pain", "balance"] },
-            { id: 9, name: "Cat-Cow Stretch", description: "Start on your hands and knees. Arch your back up towards the ceiling (Cat), then drop your belly down towards the floor (Cow).", imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400", tags: ["spine", "mobility", "low back pain"] },
-            { id: 10, name: "Heel Slides", description: "Lie on your back with legs straight. Slowly slide one heel towards your buttocks, bending the knee. Slowly slide it back out.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", tags: ["knee", "post-op", "mobility"] }
+            { id: 1, name: "Pelvic Tilt", description: "Lie on your back with knees bent. Tighten your stomach muscles, flattening your lower back against the floor. Hold for 5 seconds.", imageUrl: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["low back pain", "core", "lumbar"] },
+            { id: 2, name: "Knee to Chest Stretch", description: "Lie on your back. Pull one knee up to your chest until you feel a stretch in your lower back. Hold for 15-30 seconds. Repeat with the other leg.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["low back pain", "stretching", "sciatica"] },
+            { id: 3, name: "Straight Leg Raise", description: "Lie on your back with one leg straight and the other bent. Tighten the thigh muscle of your straight leg and slowly lift it 6-10 inches off the floor.", imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["knee pain", "post-op", "ACL"] }
         ];
 
         function App() {
@@ -63,125 +57,227 @@
             const [currentView, setCurrentView] = useState('doctor-dashboard'); 
             const [exercises, setExercises] = useState(INITIAL_EXERCISES);
             
+            // Search state for Patient View
             const [selectedExercise, setSelectedExercise] = useState(null);
             const [searchQuery, setSearchQuery] = useState("");
 
-            const [newExercise, setNewExercise] = useState({ name: '', description: '', imageUrl: '', tags: '' });
-            const [prescriptionData, setPrescriptionData] = useState({ patientName: '', age: '', gender: '', complaint: '', selectedExerciseIds: [] });
+            // Search state for Doctor View (Prescription Generation)
+            const [doctorSearchQuery, setDoctorSearchQuery] = useState("");
+            
+            // Search state for Doctor View (Database Management)
+            const [databaseSearchQuery, setDatabaseSearchQuery] = useState("");
 
-            const handleAddExercise = (e) => {
+            // Form states
+            const [editingId, setEditingId] = useState(null);
+            const [newExercise, setNewExercise] = useState({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
+            
+            // Prescription Data
+            const [prescriptionData, setPrescriptionData] = useState({ 
+                patientName: '', 
+                age: '', 
+                gender: '', 
+                complaint: '', 
+                selectedExerciseIds: [],
+                exerciseParams: {} 
+            });
+
+            // Handlers
+            const handleImageUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    setNewExercise({ ...newExercise, imageUrl: url });
+                }
+            };
+
+            const handleVideoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    setNewExercise({ ...newExercise, videoUrl: url });
+                }
+            };
+
+            const handleAddOrUpdateExercise = (e) => {
                 e.preventDefault();
-                const newId = exercises.length > 0 ? Math.max(...exercises.map(e => e.id)) + 1 : 1;
-                const tagsArray = newExercise.tags.split(',').map(t => t.trim().toLowerCase());
-                setExercises([...exercises, { ...newExercise, id: newId, tags: tagsArray }]);
-                setNewExercise({ name: '', description: '', imageUrl: '', tags: '' });
-                alert("Exercise added successfully!");
+                const tagsArray = typeof newExercise.tags === 'string' ? newExercise.tags.split(',').map(t => t.trim().toLowerCase()) : newExercise.tags;
+                
+                let finalImageUrl = newExercise.imageUrl || 'https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?auto=format&fit=crop&q=80&w=400';
+                
+                if (editingId) {
+                    // Update existing exercise
+                    setExercises(exercises.map(ex => ex.id === editingId ? { ...newExercise, imageUrl: finalImageUrl, id: editingId, tags: tagsArray } : ex));
+                    alert("Exercise updated successfully!");
+                    setEditingId(null);
+                } else {
+                    // Add new exercise
+                    const newId = exercises.length > 0 ? Math.max(...exercises.map(ex => ex.id)) + 1 : 1;
+                    setExercises([{ ...newExercise, imageUrl: finalImageUrl, id: newId, tags: tagsArray }, ...exercises]);
+                    alert("Exercise added successfully!");
+                }
+                
+                // Reset form
+                setNewExercise({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
+            };
+
+            const handleEditClick = (ex) => {
+                setEditingId(ex.id);
+                setNewExercise({
+                    name: ex.name,
+                    description: ex.description,
+                    imageUrl: ex.imageUrl,
+                    videoUrl: ex.videoUrl || '',
+                    tags: ex.tags.join(', ')
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const handleDeleteClick = (id) => {
+                if (window.confirm("Are you sure you want to delete this exercise? This action cannot be undone.")) {
+                    setExercises(exercises.filter(ex => ex.id !== id));
+                    setPrescriptionData(prev => {
+                        const newIds = prev.selectedExerciseIds.filter(eId => eId !== id);
+                        const newParams = { ...prev.exerciseParams };
+                        delete newParams[id];
+                        return { ...prev, selectedExerciseIds: newIds, exerciseParams: newParams };
+                    });
+                    if (editingId === id) {
+                        setEditingId(null);
+                        setNewExercise({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
+                    }
+                }
+            };
+
+            const cancelEdit = () => {
+                setEditingId(null);
+                setNewExercise({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
             };
 
             const togglePrescriptionExercise = (id) => {
                 setPrescriptionData(prev => {
                     const isSelected = prev.selectedExerciseIds.includes(id);
-                    return { ...prev, selectedExerciseIds: isSelected ? prev.selectedExerciseIds.filter(eId => eId !== id) : [...prev.selectedExerciseIds, id] };
+                    let newIds = [...prev.selectedExerciseIds];
+                    let newParams = { ...prev.exerciseParams };
+
+                    if (isSelected) {
+                        newIds = newIds.filter(eId => eId !== id);
+                        delete newParams[id];
+                    } else {
+                        newIds.push(id);
+                        newParams[id] = { reps: '10', sets: '3', freq: '2x/Day', note: '' };
+                    }
+
+                    return { ...prev, selectedExerciseIds: newIds, exerciseParams: newParams };
                 });
             };
 
-            const filteredExercises = useMemo(() => {
+            const handleParamChange = (id, field, value) => {
+                setPrescriptionData(prev => ({
+                    ...prev,
+                    exerciseParams: {
+                        ...prev.exerciseParams,
+                        [id]: { ...prev.exerciseParams[id], [field]: value }
+                    }
+                }));
+            };
+
+            // Filters
+            const filteredPatientExercises = useMemo(() => {
                 return exercises.filter(ex => 
                     ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     ex.tags.some(tag => tag.includes(searchQuery.toLowerCase()))
                 );
             }, [exercises, searchQuery]);
 
-            const Header = () => (
+            const filteredDoctorExercises = useMemo(() => {
+                return exercises.filter(ex => 
+                    ex.name.toLowerCase().includes(doctorSearchQuery.toLowerCase()) ||
+                    ex.tags.some(tag => tag.includes(doctorSearchQuery.toLowerCase()))
+                );
+            }, [exercises, doctorSearchQuery]);
+            
+            const filteredDatabaseExercises = useMemo(() => {
+                return exercises.filter(ex => 
+                    ex.name.toLowerCase().includes(databaseSearchQuery.toLowerCase()) ||
+                    ex.tags.some(tag => tag.includes(databaseSearchQuery.toLowerCase()))
+                );
+            }, [exercises, databaseSearchQuery]);
+
+
+            // --- RENDER FUNCTIONS ---
+            const renderHeader = () => (
                 <div className="bg-white px-4 py-3 shadow-sm flex items-center justify-between sticky top-0 z-50 print:hidden">
-                    <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+                    <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentView(role === 'doctor' ? 'doctor-dashboard' : 'exercise-list')}>
                         <Icons.Activity />
                         <span className="font-bold text-xl text-slate-800 hidden sm:block">Therapeutic Hub</span>
                     </div>
                     <div className="flex bg-slate-100 p-1 rounded-lg">
-                        <button className={`px-3 py-1 text-sm rounded-md transition-colors ${role === 'patient' ? 'bg-white shadow text-blue-600 font-semibold' : 'text-slate-500'}`} onClick={() => { setRole('patient'); setCurrentView('home'); }}>Patient</button>
+                        <button className={`px-3 py-1 text-sm rounded-md transition-colors ${role === 'patient' ? 'bg-white shadow text-blue-600 font-semibold' : 'text-slate-500'}`} onClick={() => { setRole('patient'); setCurrentView('exercise-list'); }}>Patient</button>
                         <button className={`px-3 py-1 text-sm rounded-md transition-colors ${role === 'doctor' ? 'bg-white shadow text-blue-600 font-semibold' : 'text-slate-500'}`} onClick={() => { setRole('doctor'); setCurrentView('doctor-dashboard'); }}>Doctor</button>
                     </div>
                     <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-full"><Icons.Menu /></button>
                 </div>
             );
 
-            const HomeView = () => (
-                <div className="p-4 space-y-6 max-w-4xl mx-auto pb-20">
-                    <div className="relative">
-                        <Icons.Search />
-                        <input type="text" placeholder="Search..." className="w-full bg-slate-100 rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-                    <div onClick={() => setCurrentView('exercise-list')} className="bg-blue-600 rounded-2xl p-6 text-white shadow-md cursor-pointer hover:bg-blue-700 transition relative overflow-hidden">
-                        <div className="relative z-10">
-                            <h2 className="text-2xl font-bold mb-2">Exercise Library</h2>
-                            <p className="text-blue-100 mb-4 max-w-[80%]">View your prescribed exercises, read instructions, and watch guided videos.</p>
-                            <div className="inline-flex items-center bg-white text-blue-600 px-4 py-2 rounded-full font-semibold text-sm">
-                                View Exercises <Icons.ArrowLeft className="ml-2 h-4 w-4 rotate-180" />
-                            </div>
-                        </div>
-                        <Icons.Video />
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-4">What We Offer</h3>
-                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
-                            <div className="w-24 h-24 bg-slate-200 rounded-xl overflow-hidden shrink-0">
-                                <img src="https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?auto=format&fit=crop&q=80&w=200" alt="Consultation" className="w-full h-full object-cover"/>
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-slate-800">Free Physiotherapy Consultation</h4>
-                                <p className="text-sm text-slate-500 mt-1 mb-2">Physical-therapy and rehab by experts.</p>
-                                <span className="text-blue-600 text-sm font-semibold">View Details & Book →</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-
-            const PatientExerciseList = () => (
+            const renderPatientExerciseList = () => (
                 <div className="p-4 max-w-4xl mx-auto pb-20">
                     <div className="flex items-center mb-6">
-                        <button onClick={() => setCurrentView('home')} className="p-2 mr-2 bg-slate-100 rounded-full text-slate-600"><Icons.ArrowLeft /></button>
-                        <h2 className="text-2xl font-bold text-slate-800">Exercise Library</h2>
+                        <h2 className="text-3xl font-bold text-slate-800">Exercise Library</h2>
                     </div>
                     <div className="relative mb-6">
                         <Icons.Search />
                         <input type="text" placeholder="Search by name or symptom" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {filteredExercises.map(ex => (
+                        {filteredPatientExercises.map(ex => (
                             <div key={ex.id} onClick={() => { setSelectedExercise(ex); setCurrentView('exercise-detail'); }} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition flex flex-col sm:flex-row">
                                 <div className="h-48 sm:h-auto sm:w-1/3 relative">
                                     <img src={ex.imageUrl} alt={ex.name} className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center"><Icons.PlayCircle className="text-white opacity-80" /></div>
+                                    {ex.videoUrl && <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center"><Icons.PlayCircle className="text-white opacity-80" /></div>}
                                 </div>
-                                <div className="p-4 sm:w-2/3 flex flex-col justify-between">
+                                <div className="p-4 sm:w-2/3 flex flex-col justify-center">
                                     <div>
                                         <h3 className="font-bold text-lg text-slate-800 mb-1">{ex.name}</h3>
                                         <p className="text-sm text-slate-500 line-clamp-2">{ex.description}</p>
                                     </div>
-                                    <div className="mt-3 flex flex-wrap gap-1">
-                                        {ex.tags.map(tag => <span key={tag} className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-md font-medium">{tag}</span>)}
-                                    </div>
                                 </div>
                             </div>
                         ))}
+                        {filteredPatientExercises.length === 0 && <p className="col-span-full text-center text-slate-500 py-10">No exercises found.</p>}
                     </div>
                 </div>
             );
 
-            const PatientExerciseDetail = () => {
+            const renderPatientExerciseDetail = () => {
                 if (!selectedExercise) return null;
+                
+                let isYoutube = selectedExercise.videoUrl && (selectedExercise.videoUrl.includes('youtube.com') || selectedExercise.videoUrl.includes('youtu.be'));
+                let youtubeEmbedUrl = "";
+                if (isYoutube) {
+                    let videoId = selectedExercise.videoUrl.split('v=')[1];
+                    if(!videoId) videoId = selectedExercise.videoUrl.split('youtu.be/')[1];
+                    if(videoId) {
+                        const ampersandPosition = videoId.indexOf('&');
+                        if(ampersandPosition !== -1) videoId = videoId.substring(0, ampersandPosition);
+                        youtubeEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    }
+                }
+
                 return (
                     <div className="p-4 max-w-3xl mx-auto pb-20">
                         <button onClick={() => setCurrentView('exercise-list')} className="flex items-center text-blue-600 font-semibold mb-4"><Icons.ArrowLeft className="h-5 w-5 mr-1" /> Back to Exercises</button>
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                            <div className="aspect-video bg-slate-900 relative flex items-center justify-center">
-                                <img src={selectedExercise.imageUrl} alt={selectedExercise.name} className="absolute inset-0 w-full h-full object-cover opacity-50" />
-                                <Icons.PlayCircle className="text-white z-10 cursor-pointer hover:scale-110 transition-transform w-16 h-16" />
+                            <div className="aspect-video bg-slate-900 relative flex items-center justify-center w-full">
+                                {isYoutube && youtubeEmbedUrl ? (
+                                    <iframe className="w-full h-full" src={youtubeEmbedUrl} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                ) : selectedExercise.videoUrl ? (
+                                    <video className="w-full h-full" controls src={selectedExercise.videoUrl} poster={selectedExercise.imageUrl}></video>
+                                ) : (
+                                    <img src={selectedExercise.imageUrl} alt={selectedExercise.name} className="absolute inset-0 w-full h-full object-cover opacity-80" />
+                                )}
                             </div>
                             <div className="p-6">
-                                <h2 className="text-2xl font-bold text-slate-800 mb-2">{selectedExercise.name}</h2>
+                                <h2 className="text-2xl font-bold text-slate-800 mb-4">{selectedExercise.name}</h2>
                                 <p className="text-slate-600 leading-relaxed whitespace-pre-line">{selectedExercise.description}</p>
                             </div>
                         </div>
@@ -189,71 +285,193 @@
                 );
             };
 
-            const DoctorDashboard = () => (
+            const renderDoctorDashboard = () => (
                 <div className="p-4 max-w-5xl mx-auto pb-20">
                     <div className="flex items-center mb-6">
                         <Icons.Stethoscope />
                         <h2 className="text-2xl font-bold text-slate-800">Doctor Dashboard</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Prescription Card */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 order-2 md:order-1">
+
+                    <div className="flex flex-col space-y-6">
+                        {/* --- TOP SECTION: GENERATE PRESCRIPTION --- */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                             <h3 className="text-lg font-bold text-slate-800 mb-1">Generate Prescription</h3>
-                            <p className="text-sm text-slate-500 mb-6">Select exercises to create a printable PDF sheet.</p>
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Patient Name" value={prescriptionData.patientName} onChange={e => setPrescriptionData({...prescriptionData, patientName: e.target.value})} className="col-span-2 text-sm border border-slate-200 rounded-lg p-2" />
-                                    <input type="number" placeholder="Age" value={prescriptionData.age} onChange={e => setPrescriptionData({...prescriptionData, age: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2" />
-                                    <select value={prescriptionData.gender} onChange={e => setPrescriptionData({...prescriptionData, gender: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2 bg-white">
-                                        <option value="">Gender</option><option value="M">Male</option><option value="F">Female</option>
-                                    </select>
-                                    <input type="text" placeholder="Diagnosis" value={prescriptionData.complaint} onChange={e => setPrescriptionData({...prescriptionData, complaint: e.target.value})} className="col-span-2 text-sm border border-slate-200 rounded-lg p-2" />
+                            <p className="text-sm text-slate-500 mb-6">Fill patient details and select exercises below to create a printable PDF sheet.</p>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <input type="text" placeholder="Patient Name" value={prescriptionData.patientName} onChange={e => setPrescriptionData({...prescriptionData, patientName: e.target.value})} className="col-span-2 text-sm border border-slate-200 rounded-lg p-2.5" />
+                                <input type="number" placeholder="Age" value={prescriptionData.age} onChange={e => setPrescriptionData({...prescriptionData, age: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2.5" />
+                                <select value={prescriptionData.gender} onChange={e => setPrescriptionData({...prescriptionData, gender: e.target.value})} className="text-sm border border-slate-200 rounded-lg p-2.5 bg-white">
+                                    <option value="">Gender</option><option value="M">Male</option><option value="F">Female</option>
+                                </select>
+                                <input type="text" placeholder="Diagnosis / Chief Complaint" value={prescriptionData.complaint} onChange={e => setPrescriptionData({...prescriptionData, complaint: e.target.value})} className="col-span-2 md:col-span-4 text-sm border border-slate-200 rounded-lg p-2.5" />
+                            </div>
+
+                            <div className="border-t border-slate-100 pt-4">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h4 className="font-semibold text-slate-700">Select Exercises <span className="ml-2 text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{prescriptionData.selectedExerciseIds.length} Selected</span></h4>
                                 </div>
-                                <div className="mt-4 border-t border-slate-100 pt-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h4 className="font-semibold text-sm text-slate-700">Select Exercises</h4>
-                                        <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{prescriptionData.selectedExerciseIds.length} Selected</span>
-                                    </div>
-                                    <div className="h-64 overflow-y-auto space-y-2 border border-slate-100 rounded-lg p-2 bg-slate-50">
-                                        {exercises.map(ex => (
-                                            <label key={ex.id} className={`flex items-start p-2 rounded-lg cursor-pointer transition-colors border ${prescriptionData.selectedExerciseIds.includes(ex.id) ? 'bg-blue-50 border-blue-200' : 'bg-white border-transparent hover:bg-slate-100'}`}>
-                                                <input type="checkbox" className="mt-1 rounded text-blue-600 focus:ring-blue-500" checked={prescriptionData.selectedExerciseIds.includes(ex.id)} onChange={() => togglePrescriptionExercise(ex.id)} />
-                                                <div className="ml-3 flex-1">
-                                                    <p className="text-sm font-semibold text-slate-800">{ex.name}</p>
-                                                    <p className="text-xs text-slate-500 line-clamp-1">{ex.tags.join(', ')}</p>
-                                                </div>
-                                            </label>
-                                        ))}
-                                    </div>
+                                
+                                <div className="relative mb-3">
+                                    <Icons.Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+                                    <input type="text" placeholder="Search by name or symptom (e.g., knee, back)..." value={doctorSearchQuery} onChange={(e) => setDoctorSearchQuery(e.target.value)} className="w-full text-sm border border-slate-200 rounded-lg py-2 pl-8 pr-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                                 </div>
-                                <button onClick={() => setCurrentView('print-prescription')} disabled={prescriptionData.selectedExerciseIds.length === 0} className="w-full mt-4 bg-blue-600 text-white rounded-xl py-3 font-bold shadow hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                
+                                <div className="h-[400px] overflow-y-auto border border-slate-100 rounded-lg p-2 bg-slate-50 grid grid-cols-1 lg:grid-cols-2 gap-3">
+                                    {filteredDoctorExercises.map(ex => {
+                                        const isSelected = prescriptionData.selectedExerciseIds.includes(ex.id);
+                                        return (
+                                            <div key={ex.id} className={`flex flex-col p-3 rounded-lg transition-colors border ${isSelected ? 'bg-blue-50 border-blue-300 shadow-sm' : 'bg-white border-transparent hover:bg-slate-100'}`}>
+                                                <label className="flex items-start cursor-pointer">
+                                                    <input type="checkbox" className="mt-1 rounded text-blue-600 focus:ring-blue-500" checked={isSelected} onChange={() => togglePrescriptionExercise(ex.id)} />
+                                                    <div className="ml-3 flex-1 min-w-0">
+                                                        <p className="text-sm font-semibold text-slate-800 truncate">{ex.name}</p>
+                                                        <p className="text-xs text-slate-500 truncate">{ex.tags.join(', ')}</p>
+                                                    </div>
+                                                </label>
+                                                
+                                                {/* Customized Inputs (Visible only when checked) */}
+                                                {isSelected && (
+                                                    <div className="mt-3 ml-7 space-y-3 border-t border-blue-200 pt-3">
+                                                        <div className="grid grid-cols-3 gap-2">
+                                                            <div>
+                                                                <label className="block text-[10px] font-bold text-blue-800 uppercase mb-1">Reps</label>
+                                                                <input type="text" value={prescriptionData.exerciseParams[ex.id]?.reps || ''} onChange={(e) => handleParamChange(ex.id, 'reps', e.target.value)} placeholder="e.g. 10" className="w-full text-xs p-1.5 border border-blue-200 rounded bg-white focus:outline-none focus:border-blue-500" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[10px] font-bold text-blue-800 uppercase mb-1">Sets</label>
+                                                                <input type="text" value={prescriptionData.exerciseParams[ex.id]?.sets || ''} onChange={(e) => handleParamChange(ex.id, 'sets', e.target.value)} placeholder="e.g. 3" className="w-full text-xs p-1.5 border border-blue-200 rounded bg-white focus:outline-none focus:border-blue-500" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[10px] font-bold text-blue-800 uppercase mb-1">Freq</label>
+                                                                <input type="text" value={prescriptionData.exerciseParams[ex.id]?.freq || ''} onChange={(e) => handleParamChange(ex.id, 'freq', e.target.value)} placeholder="e.g. 2x/Day" className="w-full text-xs p-1.5 border border-blue-200 rounded bg-white focus:outline-none focus:border-blue-500" />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-blue-800 uppercase mb-1">Custom Instructions (Optional)</label>
+                                                            <textarea 
+                                                                value={prescriptionData.exerciseParams[ex.id]?.note || ''} 
+                                                                onChange={(e) => handleParamChange(ex.id, 'note', e.target.value)} 
+                                                                placeholder="e.g., Hold stretch for 5 seconds..." 
+                                                                className="w-full text-xs p-2 border border-blue-200 rounded bg-white focus:outline-none focus:border-blue-500"
+                                                                rows="2"
+                                                            ></textarea>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                    {filteredDoctorExercises.length === 0 && <p className="col-span-full text-center text-xs text-slate-500 py-4">No exercises match your search.</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="mt-6">
+                                <button onClick={() => setCurrentView('print-prescription')} disabled={prescriptionData.selectedExerciseIds.length === 0} className="w-full md:w-auto px-8 bg-blue-600 text-white rounded-xl py-3 font-bold shadow hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                                     <Icons.Printer /> Generate Printable Sheet
                                 </button>
                             </div>
                         </div>
 
-                        {/* Database Card */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 order-1 md:order-2">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-bold text-slate-800">Exercise Database</h3>
-                                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">{exercises.length} Total</span>
+                        {/* --- BOTTOM SECTION: DATABASE & ADD FORM --- */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            
+                            {/* Add/Edit Exercise Form */}
+                            <div className={`bg-white p-6 rounded-2xl shadow-sm border ${editingId ? 'border-blue-400 ring-1 ring-blue-400' : 'border-slate-100'}`}>
+                                <h3 className="text-lg font-bold text-slate-800 mb-4">{editingId ? 'Edit Exercise' : 'Add New Exercise'}</h3>
+                                <form onSubmit={handleAddOrUpdateExercise} className="space-y-4">
+                                    <input required type="text" placeholder="Exercise Name" value={newExercise.name} onChange={e => setNewExercise({...newExercise, name: e.target.value})} className="w-full text-sm border border-slate-200 rounded-lg p-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                                    <textarea required placeholder="Database Description (Visible to patients in App)" value={newExercise.description} onChange={e => setNewExercise({...newExercise, description: e.target.value})} className="w-full text-sm border border-slate-200 rounded-lg p-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" rows="2" />
+                                    <input type="text" placeholder="Tags (comma separated e.g. lower back, knee)" value={newExercise.tags} onChange={e => setNewExercise({...newExercise, tags: e.target.value})} className="w-full text-sm border border-slate-200 rounded-lg p-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                                    
+                                    {/* Media Section */}
+                                    <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Media</h4>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase">Image</label>
+                                            <input type="url" placeholder="Paste Image URL (Optional)" value={newExercise.imageUrl} onChange={e => setNewExercise({...newExercise, imageUrl: e.target.value})} className="w-full text-sm border border-slate-200 rounded-lg p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                                            <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                                <span className="text-xs text-slate-400 font-bold">OR</span>
+                                                <input type="file" accept="image/*" onChange={handleImageUpload} className="file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 text-xs cursor-pointer" />
+                                            </div>
+                                            {newExercise.imageUrl && <img src={newExercise.imageUrl} alt="preview" className="h-16 w-16 object-cover rounded shadow-sm mt-1" />}
+                                        </div>
+                                        <hr className="border-slate-200" />
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase">Video Tutorial</label>
+                                            <input type="url" placeholder="Paste YouTube / Video URL (Optional)" value={newExercise.videoUrl} onChange={e => setNewExercise({...newExercise, videoUrl: e.target.value})} className="w-full text-sm border border-slate-200 rounded-lg p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                                            <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                                <span className="text-xs text-slate-400 font-bold">OR</span>
+                                                <input type="file" accept="video/*" onChange={handleVideoUpload} className="file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 text-xs cursor-pointer" />
+                                            </div>
+                                            {newExercise.videoUrl && <div className="text-xs text-green-600 font-semibold mt-1">✓ Video attached</div>}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex space-x-2">
+                                        <button type="submit" className="flex-1 bg-slate-800 text-white rounded-xl py-3 text-sm font-semibold hover:bg-slate-700 flex items-center justify-center transition shadow-sm">
+                                            {editingId ? "Update Exercise" : <><Icons.Plus /> Add to Database</>}
+                                        </button>
+                                        {editingId && (
+                                            <button type="button" onClick={cancelEdit} className="px-4 bg-slate-200 text-slate-700 rounded-xl py-3 text-sm font-semibold hover:bg-slate-300 transition">
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
+                                </form>
                             </div>
-                            <form onSubmit={handleAddExercise} className="space-y-4 mb-6 bg-slate-50 p-4 rounded-xl">
-                                <h4 className="font-semibold text-sm text-slate-700">Add New Exercise</h4>
-                                <input required type="text" placeholder="Exercise Name" value={newExercise.name} onChange={e => setNewExercise({...newExercise, name: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
-                                <textarea required placeholder="Description" value={newExercise.description} onChange={e => setNewExercise({...newExercise, description: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" rows="2" />
-                                <input required type="url" placeholder="Image URL" value={newExercise.imageUrl} onChange={e => setNewExercise({...newExercise, imageUrl: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
-                                <input type="text" placeholder="Tags (comma separated)" value={newExercise.tags} onChange={e => setNewExercise({...newExercise, tags: e.target.value})} className="w-full text-sm border-slate-200 rounded-lg p-2" />
-                                <button type="submit" className="w-full bg-slate-800 text-white rounded-lg py-2 text-sm font-semibold hover:bg-slate-700 flex items-center justify-center">
-                                    <Icons.Plus /> Save Exercise
-                                </button>
-                            </form>
+
+                            {/* Database List */}
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-lg font-bold text-slate-800">Current Exercises</h3>
+                                    <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">{exercises.length} Total</span>
+                                </div>
+                                
+                                {/* --- NEW SEARCH BAR FOR DATABASE LIST --- */}
+                                <div className="relative mb-4">
+                                    <Icons.Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search database..." 
+                                        value={databaseSearchQuery} 
+                                        onChange={(e) => setDatabaseSearchQuery(e.target.value)} 
+                                        className="w-full text-sm border border-slate-200 rounded-lg py-2 pl-8 pr-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
+                                    />
+                                </div>
+                                
+                                <div className="flex-1 overflow-y-auto space-y-3 pr-2" style={{maxHeight: '650px'}}>
+                                    {filteredDatabaseExercises.map(ex => (
+                                        <div key={ex.id} className="flex items-center justify-between border border-slate-100 rounded-xl p-3 bg-white shadow-sm hover:border-slate-300 transition">
+                                            <div className="flex items-center flex-1 min-w-0 mr-2">
+                                                <img src={ex.imageUrl} className="w-12 h-12 rounded-lg object-cover mr-4" alt="" />
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-bold text-sm text-slate-800 truncate">{ex.name}</p>
+                                                    <p className="text-xs text-slate-500 truncate mt-0.5">{ex.tags.join(', ')}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Action Buttons (Edit & Delete) */}
+                                            <div className="flex items-center space-x-1 shrink-0">
+                                                <button onClick={() => handleEditClick(ex)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition" title="Edit">
+                                                    <Icons.Edit />
+                                                </button>
+                                                <button onClick={() => handleDeleteClick(ex.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition" title="Delete">
+                                                    <Icons.Trash />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {filteredDatabaseExercises.length === 0 && <p className="text-center text-sm text-slate-500 py-4">No exercises match your search.</p>}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             );
 
-            const PrintPrescriptionView = () => {
+            const renderPrintPrescriptionView = () => {
                 const prescribedExercises = exercises.filter(ex => prescriptionData.selectedExerciseIds.includes(ex.id));
                 const count = prescribedExercises.length;
                 const today = new Date().toLocaleDateString('en-GB');
@@ -300,27 +518,46 @@
                             <div className="flex-1">
                                 <h3 className="text-blue-800 font-bold mb-4 text-lg border-b border-slate-200 pb-1">Prescribed Exercise Plan :-</h3>
                                 <div className={`grid ${config.gridClass}`}>
-                                    {prescribedExercises.map((ex, index) => (
-                                        <div key={ex.id} className={`flex ${config.layout === 'row' ? 'flex-col sm:flex-row' : 'flex-col'} border border-slate-200 rounded-lg overflow-hidden break-inside-avoid bg-white`}>
-                                            <div className={`${config.imgClass} shrink-0 bg-slate-50 flex items-center justify-center p-2`}>
-                                                <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain rounded" />
-                                            </div>
-                                            <div className="p-3 flex-1 flex flex-col justify-between">
-                                                <div>
-                                                    <h4 className={`font-bold text-slate-900 flex items-start ${config.titleClass}`}>
-                                                        <span className="bg-blue-800 text-white rounded-full w-5 h-5 inline-flex items-center justify-center text-[10px] mr-1.5 shrink-0 mt-0.5">{index + 1}</span>
-                                                        {ex.name}
-                                                    </h4>
-                                                    <p className={`text-slate-700 whitespace-pre-line ${config.textClass}`}>{ex.description}</p>
+                                    {prescribedExercises.map((ex, index) => {
+                                        const customNote = prescriptionData.exerciseParams[ex.id]?.note;
+                                        return (
+                                            <div key={ex.id} className={`flex ${config.layout === 'row' ? 'flex-col sm:flex-row' : 'flex-col'} border border-slate-200 rounded-lg overflow-hidden break-inside-avoid bg-white`}>
+                                                <div className={`${config.imgClass} shrink-0 bg-slate-50 flex items-center justify-center p-2`}>
+                                                    <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain rounded" />
                                                 </div>
-                                                <div className={`bg-slate-50 border border-slate-200 rounded grid grid-cols-3 gap-1 text-center font-semibold text-slate-700 ${config.repsClass}`}>
-                                                    <div><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Sets</span>3</div>
-                                                    <div className="border-l border-r border-slate-200"><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Reps</span>10</div>
-                                                    <div><span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Freq</span>2x/Day</div>
+                                                <div className="p-3 flex-1 flex flex-col justify-between">
+                                                    <div>
+                                                        <h4 className={`font-bold text-slate-900 flex items-start ${config.titleClass}`}>
+                                                            <span className="bg-blue-800 text-white rounded-full w-5 h-5 inline-flex items-center justify-center text-[10px] mr-1.5 shrink-0 mt-0.5">{index + 1}</span>
+                                                            {ex.name}
+                                                        </h4>
+                                                        
+                                                        {/* Replaced default description with custom note if available */}
+                                                        {customNote && (
+                                                            <p className={`text-slate-700 whitespace-pre-line font-medium ${config.textClass}`}>
+                                                                * {customNote}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    <div className={`bg-slate-50 border border-slate-200 rounded grid grid-cols-3 gap-1 text-center font-semibold text-slate-700 ${config.repsClass} mt-2`}>
+                                                        <div>
+                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Reps</span>
+                                                            {prescriptionData.exerciseParams[ex.id]?.reps}
+                                                        </div>
+                                                        <div className="border-l border-r border-slate-200">
+                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Sets</span>
+                                                            {prescriptionData.exerciseParams[ex.id]?.sets}
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Freq</span>
+                                                            {prescriptionData.exerciseParams[ex.id]?.freq}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                             <div className="mt-8 pt-4 flex justify-end break-inside-avoid">
@@ -336,12 +573,11 @@
 
             return (
                 <main>
-                    <Header />
-                    {currentView === 'home' && <HomeView />}
-                    {currentView === 'exercise-list' && <PatientExerciseList />}
-                    {currentView === 'exercise-detail' && <PatientExerciseDetail />}
-                    {currentView === 'doctor-dashboard' && <DoctorDashboard />}
-                    {currentView === 'print-prescription' && <PrintPrescriptionView />}
+                    {renderHeader()}
+                    {currentView === 'exercise-list' && renderPatientExerciseList()}
+                    {currentView === 'exercise-detail' && renderPatientExerciseDetail()}
+                    {currentView === 'doctor-dashboard' && renderDoctorDashboard()}
+                    {currentView === 'print-prescription' && renderPrintPrescriptionView()}
                 </main>
             );
         }
@@ -351,4 +587,3 @@
     </script>
 </body>
 </html>
-
