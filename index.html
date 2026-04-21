@@ -14,13 +14,16 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* Custom print styles */
+        /* Custom print styles to maximize page space */
         @media print {
             body { background-color: white !important; }
             .print\:hidden { display: none !important; }
             .print\:shadow-none { box-shadow: none !important; }
             .print\:p-0 { padding: 0 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            
+            /* Remove standard page margins to fit more content */
+            @page { margin: 1cm; }
         }
     </style>
 </head>
@@ -57,20 +60,18 @@
             const [currentView, setCurrentView] = useState('doctor-dashboard'); 
             const [exercises, setExercises] = useState(INITIAL_EXERCISES);
             
-            // Search state for Patient View
-            const [selectedExercise, setSelectedExercise] = useState(null);
+            // Search states
             const [searchQuery, setSearchQuery] = useState("");
-
-            // Search state for Doctor View (Prescription Generation)
             const [doctorSearchQuery, setDoctorSearchQuery] = useState("");
-            
-            // Search state for Doctor View (Database Management)
             const [databaseSearchQuery, setDatabaseSearchQuery] = useState("");
 
             // Form states
             const [editingId, setEditingId] = useState(null);
             const [newExercise, setNewExercise] = useState({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
             
+            // Patient view state
+            const [selectedExercise, setSelectedExercise] = useState(null);
+
             // Prescription Data
             const [prescriptionData, setPrescriptionData] = useState({ 
                 patientName: '', 
@@ -105,18 +106,15 @@
                 let finalImageUrl = newExercise.imageUrl || 'https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?auto=format&fit=crop&q=80&w=400';
                 
                 if (editingId) {
-                    // Update existing exercise
                     setExercises(exercises.map(ex => ex.id === editingId ? { ...newExercise, imageUrl: finalImageUrl, id: editingId, tags: tagsArray } : ex));
                     alert("Exercise updated successfully!");
                     setEditingId(null);
                 } else {
-                    // Add new exercise
                     const newId = exercises.length > 0 ? Math.max(...exercises.map(ex => ex.id)) + 1 : 1;
                     setExercises([{ ...newExercise, imageUrl: finalImageUrl, id: newId, tags: tagsArray }, ...exercises]);
                     alert("Exercise added successfully!");
                 }
                 
-                // Reset form
                 setNewExercise({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
             };
 
@@ -428,7 +426,6 @@
                                     <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">{exercises.length} Total</span>
                                 </div>
                                 
-                                {/* --- NEW SEARCH BAR FOR DATABASE LIST --- */}
                                 <div className="relative mb-4">
                                     <Icons.Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
                                     <input 
@@ -451,7 +448,6 @@
                                                 </div>
                                             </div>
                                             
-                                            {/* Action Buttons (Edit & Delete) */}
                                             <div className="flex items-center space-x-1 shrink-0">
                                                 <button onClick={() => handleEditClick(ex)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition" title="Edit">
                                                     <Icons.Edit />
@@ -471,99 +467,109 @@
                 </div>
             );
 
+            // --- COMPACT PRINT VIEW ---
             const renderPrintPrescriptionView = () => {
                 const prescribedExercises = exercises.filter(ex => prescriptionData.selectedExerciseIds.includes(ex.id));
-                const count = prescribedExercises.length;
                 const today = new Date().toLocaleDateString('en-GB');
-
-                const getGridConfig = (c) => {
-                    if (c <= 2) return { gridClass: 'grid-cols-1 gap-6', layout: 'row', imgClass: 'w-1/3 h-48 sm:border-r border-slate-200 border-b-0', textClass: 'text-sm mb-4', titleClass: 'text-lg mb-2', repsClass: 'p-3 text-sm' };
-                    if (c <= 4) return { gridClass: 'grid-cols-2 gap-4', layout: 'col', imgClass: 'w-full h-48 border-b border-slate-200', textClass: 'text-sm mb-3 line-clamp-4', titleClass: 'text-base mb-1', repsClass: 'p-2 text-xs' };
-                    if (c <= 6) return { gridClass: 'grid-cols-2 gap-4', layout: 'col', imgClass: 'w-full h-40 border-b border-slate-200', textClass: 'text-xs mb-2 line-clamp-3', titleClass: 'text-sm mb-1', repsClass: 'p-2 text-xs' };
-                    return { gridClass: 'grid-cols-3 gap-3', layout: 'col', imgClass: 'w-full h-28 border-b border-slate-200', textClass: 'text-[11px] leading-snug mb-2 line-clamp-3', titleClass: 'text-xs font-bold mb-1', repsClass: 'p-1 text-[10px]' };
-                };
-
-                const config = getGridConfig(count);
 
                 return (
                     <div className="bg-slate-200 min-h-screen pt-8 pb-20 print:bg-white print:p-0">
+                        {/* Print Controls (Hidden on Print) */}
                         <div className="max-w-4xl mx-auto mb-4 flex justify-between items-center print:hidden px-4">
                             <button onClick={() => setCurrentView('doctor-dashboard')} className="flex items-center text-slate-600 hover:text-slate-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-sm"><Icons.ArrowLeft className="h-5 w-5 mr-1" /> Edit</button>
                             <button onClick={() => window.print()} className="flex items-center text-white bg-blue-600 hover:bg-blue-700 font-semibold px-6 py-2 rounded-lg shadow-sm"><Icons.Printer /> Print to PDF</button>
                         </div>
-                        <div className="bg-white max-w-[21cm] min-h-[29.7cm] mx-auto shadow-lg print:shadow-none p-8 sm:p-12 text-slate-900 flex flex-col">
-                            <div className="flex justify-between items-start border-b-2 border-blue-800 pb-4 mb-6">
+                        
+                        {/* Print Document */}
+                        <div className="bg-white max-w-[21cm] min-h-[29.7cm] mx-auto print:shadow-none p-6 sm:p-8 text-slate-900 flex flex-col">
+                            
+                            {/* Header (Tighter spacing) */}
+                            <div className="flex justify-between items-start border-b-2 border-blue-800 pb-2 mb-3">
                                 <div>
-                                    <h1 className="text-3xl font-bold text-blue-800 italic">Dr. Arpan Das (PT)</h1>
-                                    <p className="text-blue-700 font-semibold text-sm">BPT (KPC Medical College and Hospital)</p>
-                                    <p className="text-blue-700 font-semibold text-sm">Consultant Physiotherapist</p>
+                                    <h1 className="text-2xl font-bold text-blue-800 italic">Dr. Arpan Das (PT)</h1>
+                                    <p className="text-blue-700 font-semibold text-[11px]">BPT (KPC Medical College and Hospital)</p>
+                                    <p className="text-blue-700 font-semibold text-[11px]">Consultant Physiotherapist</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-bold text-blue-800 flex items-center justify-end"><Icons.FileText /> +91 9641568109</p>
-                                    <p className="text-sm font-semibold text-slate-600 mt-2">Date: <span className="underline">{today}</span></p>
+                                    <p className="font-bold text-blue-800 flex items-center justify-end text-xs"><Icons.FileText /> +91 9641568109</p>
+                                    <p className="text-[11px] font-semibold text-slate-600 mt-1">Date: <span className="underline">{today}</span></p>
                                 </div>
                             </div>
-                            <div className="flex flex-wrap justify-between items-center bg-blue-50 border border-blue-100 p-3 rounded mb-6 text-sm font-semibold">
-                                <span className="w-full sm:w-auto mb-2 sm:mb-0"><span className="text-blue-800">Patient:</span> {prescriptionData.patientName || '________________'}</span>
+                            
+                            {/* Patient Info (Tighter padding) */}
+                            <div className="flex flex-wrap justify-between items-center bg-blue-50 p-2 rounded mb-3 text-xs font-semibold">
+                                <span><span className="text-blue-800">Patient:</span> {prescriptionData.patientName || '________________'}</span>
                                 <span><span className="text-blue-800">Age:</span> {prescriptionData.age || '____'}</span>
                                 <span><span className="text-blue-800">Sex:</span> {prescriptionData.gender || '____'}</span>
                                 <span><span className="text-blue-800">ID:</span> #{Math.floor(Math.random() * 9000) + 1000}</span>
                             </div>
+                            
+                            {/* Diagnosis */}
                             {prescriptionData.complaint && (
-                                <div className="mb-6">
-                                    <h3 className="text-blue-800 font-bold text-sm mb-1">Diagnosis / Chief Complaint :-</h3>
-                                    <p className="text-slate-800 text-sm pl-2">{prescriptionData.complaint}</p>
+                                <div className="mb-3">
+                                    <h3 className="text-blue-800 font-bold text-xs mb-0.5">Diagnosis / Chief Complaint :-</h3>
+                                    <p className="text-slate-800 text-xs pl-1">{prescriptionData.complaint}</p>
                                 </div>
                             )}
-                            <div className="flex-1">
-                                <h3 className="text-blue-800 font-bold mb-4 text-lg border-b border-slate-200 pb-1">Prescribed Exercise Plan :-</h3>
-                                <div className={`grid ${config.gridClass}`}>
+
+                            {/* Exercises (Strict 3-Column Compact Layout) */}
+                            <div className="flex-1 mt-2">
+                                <h3 className="text-blue-800 font-bold mb-3 text-sm border-b border-slate-200 pb-1">Prescribed Exercise Plan :-</h3>
+                                
+                                <div className="grid grid-cols-3 gap-x-3 gap-y-5">
                                     {prescribedExercises.map((ex, index) => {
                                         const customNote = prescriptionData.exerciseParams[ex.id]?.note;
                                         return (
-                                            <div key={ex.id} className={`flex ${config.layout === 'row' ? 'flex-col sm:flex-row' : 'flex-col'} border border-slate-200 rounded-lg overflow-hidden break-inside-avoid bg-white`}>
-                                                <div className={`${config.imgClass} shrink-0 bg-slate-50 flex items-center justify-center p-2`}>
-                                                    <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain rounded" />
+                                            <div key={ex.id} className="flex flex-col break-inside-avoid">
+                                                
+                                                {/* Compact Image (No Border) */}
+                                                <div className="h-24 sm:h-28 w-full shrink-0 flex items-center justify-center mb-1">
+                                                    {/* mix-blend-multiply removes white backgrounds from images on print */}
+                                                    <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain mix-blend-multiply" />
                                                 </div>
-                                                <div className="p-3 flex-1 flex flex-col justify-between">
+                                                
+                                                {/* Compact Text & Params */}
+                                                <div className="flex-1 flex flex-col justify-between">
                                                     <div>
-                                                        <h4 className={`font-bold text-slate-900 flex items-start ${config.titleClass}`}>
-                                                            <span className="bg-blue-800 text-white rounded-full w-5 h-5 inline-flex items-center justify-center text-[10px] mr-1.5 shrink-0 mt-0.5">{index + 1}</span>
+                                                        <h4 className="font-bold text-slate-900 flex items-start text-[11px] leading-tight mb-1">
+                                                            <span className="bg-blue-800 text-white rounded-full w-3.5 h-3.5 inline-flex items-center justify-center text-[7px] mr-1 shrink-0 mt-0.5">{index + 1}</span>
                                                             {ex.name}
                                                         </h4>
-                                                        
-                                                        {/* Replaced default description with custom note if available */}
                                                         {customNote && (
-                                                            <p className={`text-slate-700 whitespace-pre-line font-medium ${config.textClass}`}>
+                                                            <p className="text-slate-700 whitespace-pre-line font-medium text-[9px] leading-tight">
                                                                 * {customNote}
                                                             </p>
                                                         )}
                                                     </div>
                                                     
-                                                    <div className={`bg-slate-50 border border-slate-200 rounded grid grid-cols-3 gap-1 text-center font-semibold text-slate-700 ${config.repsClass} mt-2`}>
-                                                        <div>
-                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Reps</span>
-                                                            {prescriptionData.exerciseParams[ex.id]?.reps}
+                                                    {/* Tiny Reps/Sets/Freq section (No outer border, just top separator) */}
+                                                    <div className="flex justify-between text-center font-semibold text-slate-700 mt-1 pt-1.5 border-t border-slate-200">
+                                                        <div className="flex-1">
+                                                            <span className="block text-[7px] text-slate-400 uppercase">Reps</span>
+                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.reps || '-'}</span>
                                                         </div>
-                                                        <div className="border-l border-r border-slate-200">
-                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Sets</span>
-                                                            {prescriptionData.exerciseParams[ex.id]?.sets}
+                                                        <div className="flex-1 border-l border-r border-slate-200">
+                                                            <span className="block text-[7px] text-slate-400 uppercase">Sets</span>
+                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.sets || '-'}</span>
                                                         </div>
-                                                        <div>
-                                                            <span className="block text-[8px] sm:text-[10px] text-slate-500 uppercase">Freq</span>
-                                                            {prescriptionData.exerciseParams[ex.id]?.freq}
+                                                        <div className="flex-1">
+                                                            <span className="block text-[7px] text-slate-400 uppercase">Freq</span>
+                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.freq || '-'}</span>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
                                             </div>
                                         );
                                     })}
                                 </div>
                             </div>
-                            <div className="mt-8 pt-4 flex justify-end break-inside-avoid">
+
+                            {/* Footer Signature */}
+                            <div className="mt-8 pt-2 flex justify-end break-inside-avoid">
                                 <div className="text-center">
-                                    <div className="w-40 border-b border-slate-400 mb-1"></div>
-                                    <p className="font-bold text-xs text-slate-800">Physiotherapist Signature</p>
+                                    <div className="w-32 border-b border-slate-400 mb-1"></div>
+                                    <p className="font-bold text-[10px] text-slate-800">Physiotherapist Signature</p>
                                 </div>
                             </div>
                         </div>
