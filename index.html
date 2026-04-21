@@ -14,7 +14,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* Custom print styles to maximize page space */
+        /* Custom print styles to maximize page space and ensure clean rendering */
         @media print {
             body { background-color: white !important; }
             .print\:hidden { display: none !important; }
@@ -22,7 +22,7 @@
             .print\:p-0 { padding: 0 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
-            /* Remove standard page margins to fit more content */
+            /* Remove standard page margins to fit more content perfectly */
             @page { margin: 1cm; }
         }
     </style>
@@ -45,14 +45,17 @@
             Printer: ({className="h-5 w-5 mr-2"}) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14"/></svg>,
             FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>,
             Edit: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
-            Trash: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Trash: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>,
+            Phone: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
         };
 
         // --- MOCK DATA ---
         const INITIAL_EXERCISES = [
             { id: 1, name: "Pelvic Tilt", description: "Lie on your back with knees bent. Tighten your stomach muscles, flattening your lower back against the floor. Hold for 5 seconds.", imageUrl: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["low back pain", "core", "lumbar"] },
             { id: 2, name: "Knee to Chest Stretch", description: "Lie on your back. Pull one knee up to your chest until you feel a stretch in your lower back. Hold for 15-30 seconds. Repeat with the other leg.", imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["low back pain", "stretching", "sciatica"] },
-            { id: 3, name: "Straight Leg Raise", description: "Lie on your back with one leg straight and the other bent. Tighten the thigh muscle of your straight leg and slowly lift it 6-10 inches off the floor.", imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["knee pain", "post-op", "ACL"] }
+            { id: 3, name: "Straight Leg Raise", description: "Lie on your back with one leg straight and the other bent. Tighten the thigh muscle of your straight leg and slowly lift it 6-10 inches off the floor.", imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["knee pain", "post-op", "ACL"] },
+            { id: 4, name: "Glute Bridge", description: "Lie on your back with knees bent and feet flat on the floor. Lift your hips off the floor.", imageUrl: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["glutes", "low back pain", "core"] },
+            { id: 5, name: "Clamshells", description: "Lie on your side with knees bent. Keeping your feet together, raise your top knee as high as you can without moving your pelvis.", imageUrl: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=400", videoUrl: "", tags: ["hip", "glutes", "IT band"] }
         ];
 
         function App() {
@@ -60,8 +63,11 @@
             const [currentView, setCurrentView] = useState('doctor-dashboard'); 
             const [exercises, setExercises] = useState(INITIAL_EXERCISES);
             
-            // Search states
+            // Search state for Patient View
+            const [selectedExercise, setSelectedExercise] = useState(null);
             const [searchQuery, setSearchQuery] = useState("");
+
+            // Search state for Doctor View
             const [doctorSearchQuery, setDoctorSearchQuery] = useState("");
             const [databaseSearchQuery, setDatabaseSearchQuery] = useState("");
 
@@ -69,9 +75,6 @@
             const [editingId, setEditingId] = useState(null);
             const [newExercise, setNewExercise] = useState({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
             
-            // Patient view state
-            const [selectedExercise, setSelectedExercise] = useState(null);
-
             // Prescription Data
             const [prescriptionData, setPrescriptionData] = useState({ 
                 patientName: '', 
@@ -102,7 +105,6 @@
             const handleAddOrUpdateExercise = (e) => {
                 e.preventDefault();
                 const tagsArray = typeof newExercise.tags === 'string' ? newExercise.tags.split(',').map(t => t.trim().toLowerCase()) : newExercise.tags;
-                
                 let finalImageUrl = newExercise.imageUrl || 'https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?auto=format&fit=crop&q=80&w=400';
                 
                 if (editingId) {
@@ -114,7 +116,6 @@
                     setExercises([{ ...newExercise, imageUrl: finalImageUrl, id: newId, tags: tagsArray }, ...exercises]);
                     alert("Exercise added successfully!");
                 }
-                
                 setNewExercise({ name: '', description: '', imageUrl: '', videoUrl: '', tags: '' });
             };
 
@@ -328,7 +329,7 @@
                                                     </div>
                                                 </label>
                                                 
-                                                {/* Customized Inputs (Visible only when checked) */}
+                                                {/* Customized Inputs */}
                                                 {isSelected && (
                                                     <div className="mt-3 ml-7 space-y-3 border-t border-blue-200 pt-3">
                                                         <div className="grid grid-cols-3 gap-2">
@@ -467,7 +468,7 @@
                 </div>
             );
 
-            // --- COMPACT PRINT VIEW ---
+            // --- HIGHLY COMPACT, BORDERLESS PRINT VIEW ---
             const renderPrintPrescriptionView = () => {
                 const prescribedExercises = exercises.filter(ex => prescriptionData.selectedExerciseIds.includes(ex.id));
                 const today = new Date().toLocaleDateString('en-GB');
@@ -481,82 +482,84 @@
                         </div>
                         
                         {/* Print Document */}
-                        <div className="bg-white max-w-[21cm] min-h-[29.7cm] mx-auto print:shadow-none p-6 sm:p-8 text-slate-900 flex flex-col">
+                        <div className="bg-white max-w-[21cm] min-h-[29.7cm] mx-auto print:shadow-none p-6 sm:p-10 text-slate-900 flex flex-col font-sans">
                             
-                            {/* Header (Tighter spacing) */}
-                            <div className="flex justify-between items-start border-b-2 border-blue-800 pb-2 mb-3">
+                            {/* Header matched perfectly to user's uploaded image style */}
+                            <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h1 className="text-2xl font-bold text-blue-800 italic">Dr. Arpan Das (PT)</h1>
-                                    <p className="text-blue-700 font-semibold text-[11px]">BPT (KPC Medical College and Hospital)</p>
-                                    <p className="text-blue-700 font-semibold text-[11px]">Consultant Physiotherapist</p>
+                                    <h1 className="text-3xl font-bold text-[#1e3a8a] italic tracking-tight" style={{fontFamily: 'Georgia, serif'}}>Dr. Arpan Das (PT)</h1>
+                                    <p className="text-[#1e3a8a] font-bold text-[11px] mt-1">BPT (KPC Medical College and Hospital)</p>
+                                    <p className="text-[#1e3a8a] font-bold text-[11px]">Consultant Physiotherapist</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-bold text-blue-800 flex items-center justify-end text-xs"><Icons.FileText /> +91 9641568109</p>
-                                    <p className="text-[11px] font-semibold text-slate-600 mt-1">Date: <span className="underline">{today}</span></p>
+                                    <p className="font-bold text-[#1e3a8a] flex items-center justify-end text-sm"><Icons.Phone /> +91 9641568109</p>
+                                    <div className="flex items-center justify-end mt-4 text-[11px] font-bold text-[#1e3a8a]">
+                                        <span className="mr-2">Date:</span> 
+                                        <span className="border-b border-[#1e3a8a] pb-0.5 px-2 text-black">{today}</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            {/* Patient Info (Tighter padding) */}
-                            <div className="flex flex-wrap justify-between items-center bg-blue-50 p-2 rounded mb-3 text-xs font-semibold">
-                                <span><span className="text-blue-800">Patient:</span> {prescriptionData.patientName || '________________'}</span>
-                                <span><span className="text-blue-800">Age:</span> {prescriptionData.age || '____'}</span>
-                                <span><span className="text-blue-800">Sex:</span> {prescriptionData.gender || '____'}</span>
-                                <span><span className="text-blue-800">ID:</span> #{Math.floor(Math.random() * 9000) + 1000}</span>
+                            {/* Patient Info Row (Deep Blue borders and labels) */}
+                            <div className="flex justify-between items-end border-t border-b border-[#1e3a8a] py-2 mb-8 text-[11px] font-bold">
+                                <div className="flex-1 flex items-end">
+                                    <span className="text-[#1e3a8a] mr-2">Patient's name:</span>
+                                    <span className="text-black">{prescriptionData.patientName}</span>
+                                </div>
+                                <div className="w-24 flex items-end">
+                                    <span className="text-[#1e3a8a] mr-2">Age:</span>
+                                    <span className="text-black">{prescriptionData.age}</span>
+                                </div>
+                                <div className="w-32 flex items-end">
+                                    <span className="text-[#1e3a8a] mr-2">Gender:</span>
+                                    <span className="text-black">{prescriptionData.gender === 'M' ? 'Male' : prescriptionData.gender === 'F' ? 'Female' : ''}</span>
+                                </div>
+                                <div className="w-24 flex items-end justify-end">
+                                    <span className="text-[#1e3a8a] mr-2">UPID:</span>
+                                    <span className="text-black">{Math.floor(Math.random() * 9000) + 1000}</span>
+                                </div>
                             </div>
                             
                             {/* Diagnosis */}
                             {prescriptionData.complaint && (
-                                <div className="mb-3">
-                                    <h3 className="text-blue-800 font-bold text-xs mb-0.5">Diagnosis / Chief Complaint :-</h3>
-                                    <p className="text-slate-800 text-xs pl-1">{prescriptionData.complaint}</p>
+                                <div className="mb-6 text-center">
+                                    <p className="text-slate-800 text-xs font-bold"><span className="text-[#1e3a8a]">Diagnosis:</span> {prescriptionData.complaint}</p>
                                 </div>
                             )}
 
-                            {/* Exercises (Strict 3-Column Compact Layout) */}
-                            <div className="flex-1 mt-2">
-                                <h3 className="text-blue-800 font-bold mb-3 text-sm border-b border-slate-200 pb-1">Prescribed Exercise Plan :-</h3>
-                                
-                                <div className="grid grid-cols-3 gap-x-3 gap-y-5">
+                            {/* Exercises Grid (Strict 3-Column Compact Layout, NO borders) */}
+                            <div className="flex-1">
+                                <div className="grid grid-cols-3 gap-x-6 gap-y-10">
                                     {prescribedExercises.map((ex, index) => {
-                                        const customNote = prescriptionData.exerciseParams[ex.id]?.note;
+                                        const params = prescriptionData.exerciseParams[ex.id] || {};
+                                        const customNote = params.note;
+                                        
                                         return (
-                                            <div key={ex.id} className="flex flex-col break-inside-avoid">
+                                            <div key={ex.id} className="flex flex-col items-center text-center break-inside-avoid">
                                                 
                                                 {/* Compact Image (No Border) */}
-                                                <div className="h-24 sm:h-28 w-full shrink-0 flex items-center justify-center mb-1">
+                                                <div className="h-32 sm:h-40 w-full flex items-center justify-center mb-2">
                                                     {/* mix-blend-multiply removes white backgrounds from images on print */}
                                                     <img src={ex.imageUrl} alt={ex.name} className="max-w-full max-h-full object-contain mix-blend-multiply" />
                                                 </div>
                                                 
-                                                {/* Compact Text & Params */}
-                                                <div className="flex-1 flex flex-col justify-between">
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-900 flex items-start text-[11px] leading-tight mb-1">
-                                                            <span className="bg-blue-800 text-white rounded-full w-3.5 h-3.5 inline-flex items-center justify-center text-[7px] mr-1 shrink-0 mt-0.5">{index + 1}</span>
-                                                            {ex.name}
-                                                        </h4>
-                                                        {customNote && (
-                                                            <p className="text-slate-700 whitespace-pre-line font-medium text-[9px] leading-tight">
-                                                                * {customNote}
-                                                            </p>
-                                                        )}
+                                                {/* Compact Text Data below image */}
+                                                <div className="w-full px-1">
+                                                    <h4 className="font-bold text-slate-800 text-[11px] mb-1">{ex.name}</h4>
+                                                    
+                                                    {/* Reps/Sets/Freq Line */}
+                                                    <div className="flex justify-center items-center space-x-2 text-[9px] font-bold text-[#1e3a8a] mb-1">
+                                                        {params.reps && <span>Reps: <span className="text-black">{params.reps}</span></span>}
+                                                        {params.sets && <span>Sets: <span className="text-black">{params.sets}</span></span>}
+                                                        {params.freq && <span>Freq: <span className="text-black">{params.freq}</span></span>}
                                                     </div>
                                                     
-                                                    {/* Tiny Reps/Sets/Freq section (No outer border, just top separator) */}
-                                                    <div className="flex justify-between text-center font-semibold text-slate-700 mt-1 pt-1.5 border-t border-slate-200">
-                                                        <div className="flex-1">
-                                                            <span className="block text-[7px] text-slate-400 uppercase">Reps</span>
-                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.reps || '-'}</span>
-                                                        </div>
-                                                        <div className="flex-1 border-l border-r border-slate-200">
-                                                            <span className="block text-[7px] text-slate-400 uppercase">Sets</span>
-                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.sets || '-'}</span>
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <span className="block text-[7px] text-slate-400 uppercase">Freq</span>
-                                                            <span className="text-[9px] leading-none">{prescriptionData.exerciseParams[ex.id]?.freq || '-'}</span>
-                                                        </div>
-                                                    </div>
+                                                    {/* Custom Instructions */}
+                                                    {customNote && (
+                                                        <p className="text-[9px] text-slate-600 leading-tight font-medium">
+                                                            {customNote}
+                                                        </p>
+                                                    )}
                                                 </div>
                                                 
                                             </div>
@@ -565,13 +568,6 @@
                                 </div>
                             </div>
 
-                            {/* Footer Signature */}
-                            <div className="mt-8 pt-2 flex justify-end break-inside-avoid">
-                                <div className="text-center">
-                                    <div className="w-32 border-b border-slate-400 mb-1"></div>
-                                    <p className="font-bold text-[10px] text-slate-800">Physiotherapist Signature</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 );
