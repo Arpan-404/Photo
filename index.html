@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranju Manna | Minimal Anime Resume</title>
-    <!-- Google Fonts: Nunito for a soft, rounded, friendly anime aesthetic -->
+    <title>Ranju Manna | Creative Animator Resume</title>
+    <!-- Google Fonts: Nunito for a friendly, modern anime aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- SOFT PASTEL COLOR PALETTE --- */
+        /* --- FRESH, LIGHT COLOR PALETTE (No Pink, No Dark Shades) --- */
         :root {
-            --bg-color: #f8fafc;
-            --sidebar-bg: #F0F4F8; /* Very light, soft pastel baby blue */
-            --main-bg: #FFFFFF;
-            --text-main: #334155; /* Soft dark slate instead of harsh black */
-            --text-light: #64748b;
-            --accent-blue: #7DD3FC; /* Soft pastel sky blue */
-            --accent-pink: #FDA4AF; /* Soft pastel pink */
-            --accent-yellow: #FEF08A; /* Soft pastel yellow */
+            --bg-color: #f1f5f9;
+            --sidebar-bg: #e0f2fe; /* Very light sky blue */
+            --main-bg: #ffffff;
+            --text-main: #334155; /* Soft slate, readable but not harsh black */
+            --text-light: #475569;
+            --accent-blue: #38bdf8; /* Bright Sky Blue */
+            --accent-mint: #34d399; /* Fresh Mint Green */
+            --accent-yellow: #fcd34d; /* Sunny Yellow */
         }
 
         * {
@@ -42,138 +42,139 @@
         /* --- UI CONTROLS (Hidden on Print) --- */
         .controls-container {
             background: white;
-            padding: 15px 25px;
+            padding: 20px 30px;
             border-radius: 16px;
-            border: 2px dashed var(--accent-pink);
+            border: 2px dashed var(--accent-blue);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             z-index: 100;
             text-align: center;
             max-width: 700px;
         }
 
-        .controls-text { font-size: 14px; color: var(--text-main); font-weight: 600; }
-        .controls-warning { font-size: 12px; color: #e11d48; font-weight: 700; background: #ffe4e6; padding: 8px 15px; border-radius: 8px; }
+        .controls-text { font-size: 15px; color: var(--text-main); font-weight: 700; }
+        .controls-warning { font-size: 13px; color: #0369a1; font-weight: 700; background: #e0f2fe; padding: 10px 15px; border-radius: 8px; }
 
         .print-btn {
-            background: var(--accent-pink);
+            background: var(--accent-blue);
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 12px 28px;
             border-radius: 20px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(253, 164, 175, 0.4);
+            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.4);
         }
 
-        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(253, 164, 175, 0.6); }
+        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(56, 189, 248, 0.6); }
 
         /* --- EDITABLE ELEMENTS --- */
-        [contenteditable="true"] { outline: none; border-radius: 4px; transition: all 0.2s; }
-        [contenteditable="true"]:hover { background: rgba(125, 211, 252, 0.15); box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.4); cursor: text; }
-        [contenteditable="true"]:focus { background: rgba(125, 211, 252, 0.15); box-shadow: 0 0 0 2px var(--accent-blue); }
+        [contenteditable="true"] { outline: none; border-radius: 6px; transition: all 0.2s; }
+        [contenteditable="true"]:hover { background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4); cursor: text; }
+        [contenteditable="true"]:focus { background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 0 2px var(--accent-blue); }
 
-        /* --- RESUME A4 CONTAINER (Strictly Sized to prevent cut-offs) --- */
+        /* --- RESUME A4 CONTAINER --- */
         .resume-wrapper {
             width: 210mm;
-            height: 297mm;
+            height: 297mm; /* Exactly A4 size */
             background-color: var(--main-bg);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             display: flex;
             position: relative;
-            overflow: hidden; /* Prevents spilling to a second page */
-            border-radius: 12px; /* Soft edges for screen viewing */
+            overflow: hidden;
+            border-radius: 12px;
         }
 
-        /* --- SIDEBAR (Light Pastel Blue) --- */
+        /* --- SIDEBAR (Light Sky Blue) --- */
         .sidebar {
-            width: 35%;
+            width: 36%;
             height: 100%;
             background-color: var(--sidebar-bg);
-            padding: 12mm 8mm;
+            padding: 15mm 10mm;
             display: flex;
             flex-direction: column;
             position: relative;
         }
 
-        /* Cute Profile Picture */
+        /* Profile Picture (Bigger) */
         .profile-pic {
-            width: 38mm;
-            height: 38mm;
-            border-radius: 30%; /* Squircle shape, popular in anime/kawaii UI */
-            border: 4px solid white;
-            margin: 0 auto 8mm auto;
+            width: 45mm;
+            height: 45mm;
+            border-radius: 25px; /* Squircle */
+            border: 5px solid white;
+            margin: 0 auto 10mm auto;
             overflow: hidden;
             cursor: pointer;
             position: relative;
             background: var(--accent-blue);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
         .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .profile-pic::after {
             content: 'Change Photo';
             position: absolute; inset: 0; background: rgba(0,0,0,0.5);
-            color: white; font-size: 11px; font-weight: 700;
+            color: white; font-size: 13px; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.2s;
         }
         .profile-pic:hover::after { opacity: 1; }
 
-        /* Sidebar Headers */
+        /* Sidebar Headers (Bigger) */
         .sidebar-title {
-            font-size: 13px;
-            font-weight: 800;
+            font-size: 15px;
+            font-weight: 900;
             color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .sidebar-title::before {
-            content: '✨'; /* Sparkle emoji for anime touch */
-            font-size: 12px;
-        }
-
-        /* Contact Details */
-        .contact-item {
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            margin-top: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 10px;
-            font-size: 11px;
-            font-weight: 600;
+        }
+        .sidebar-title::before {
+            content: '✨';
+            font-size: 14px;
+        }
+
+        /* Contact Details (Bigger) */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 700;
             color: var(--text-light);
             word-break: break-word;
         }
         .contact-icon {
-            color: var(--accent-pink);
-            font-size: 12px;
-            width: 16px;
+            color: var(--accent-blue);
+            font-size: 14px;
+            width: 20px;
             text-align: center;
         }
 
         /* Progress Bars */
-        .skill-item { margin-bottom: 10px; }
-        .skill-name { font-size: 11px; margin-bottom: 4px; display: block; font-weight: 700; color: var(--text-main); }
+        .skill-item { margin-bottom: 15px; }
+        .skill-name { font-size: 13px; margin-bottom: 6px; display: block; font-weight: 800; color: var(--text-main); }
         .progress-bar-bg {
-            width: 100%; height: 8px;
+            width: 100%; height: 10px;
             background: white;
             border-radius: 10px;
             cursor: pointer;
             position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .progress-bar-fill {
             height: 100%;
@@ -183,38 +184,31 @@
             transition: width 0.3s ease;
         }
 
-        /* Expertise Pills */
-        .expertise-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        /* Expertise Pills (Bigger) */
+        .expertise-container { display: flex; flex-wrap: wrap; gap: 8px; }
         .expertise-pill {
             background: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 800;
             color: var(--text-main);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        /* Cute Mascot at bottom of sidebar */
-        .mascot-container {
-            margin-top: auto;
-            display: flex;
-            justify-content: center;
-            opacity: 0.8;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
         /* --- MAIN CONTENT (White) --- */
         .main-content {
-            width: 65%;
+            width: 64%;
             height: 100%;
-            padding: 12mm 12mm;
+            padding: 15mm 12mm;
             display: flex;
             flex-direction: column;
             background: var(--main-bg);
         }
 
+        /* Name & Role (Bigger) */
         .header-name {
-            font-size: 38px;
+            font-size: 46px;
             font-weight: 900;
             color: var(--text-main);
             line-height: 1.1;
@@ -223,97 +217,109 @@
         }
 
         .header-role {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--accent-pink);
-            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            margin-top: 5px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            background: #fff1f2;
+            background: var(--accent-blue);
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 6px 16px;
+            border-radius: 8px;
         }
 
+        /* Summary Text (Bigger font, more padding) */
         .summary-text {
-            font-size: 11.5px;
+            font-size: 13.5px;
             color: var(--text-light);
             font-weight: 600;
-            line-height: 1.6;
+            line-height: 1.7;
             text-align: justify;
-            margin-bottom: 20px;
-            padding: 12px;
+            margin-bottom: 25px;
+            padding: 16px;
             background: #f8fafc;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-blue);
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-mint);
         }
 
         /* Section Titles */
         .content-title {
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 900;
             color: var(--text-main);
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .content-title .icon-box {
             background: var(--accent-blue);
             color: white;
-            width: 24px; height: 24px;
+            width: 30px; height: 30px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            font-size: 11px;
+            border-radius: 8px; /* Slightly squared for modern look */
+            font-size: 14px;
         }
 
-        /* Compact Timeline */
+        /* Timeline (Bigger spacing and fonts) */
         .timeline {
             position: relative;
-            padding-left: 15px;
-            margin-bottom: 20px; /* Reduced gap so it all fits */
+            padding-left: 20px;
+            margin-bottom: 25px; 
         }
         .timeline::before {
             content: '';
             position: absolute;
-            left: 5px; top: 4px; bottom: 0;
-            width: 2px;
+            left: 8px; top: 6px; bottom: 0;
+            width: 3px;
             background: #e2e8f0;
-            border-radius: 2px;
+            border-radius: 3px;
         }
-        .timeline-item { position: relative; margin-bottom: 15px; }
+        .timeline-item { position: relative; margin-bottom: 20px; }
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -14.5px; top: 4px;
-            width: 10px; height: 10px;
+            left: -17.5px; top: 6px;
+            width: 12px; height: 12px;
             border-radius: 50%;
             background: white;
-            border: 2px solid var(--accent-blue);
+            border: 3px solid var(--accent-blue);
         }
 
-        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
-        .item-title { font-size: 13.5px; font-weight: 800; color: var(--text-main); }
-        .item-date { font-size: 10px; font-weight: 700; color: var(--accent-pink); }
-        .item-subtitle { font-size: 12px; font-weight: 700; color: var(--accent-blue); margin-bottom: 6px; }
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+        .item-title { font-size: 15px; font-weight: 900; color: var(--text-main); }
+        .item-date { font-size: 12px; font-weight: 800; color: var(--text-main); background: var(--accent-yellow); padding: 2px 10px; border-radius: 12px; }
+        .item-subtitle { font-size: 14px; font-weight: 800; color: var(--accent-mint); margin-bottom: 8px; }
         
         .item-list { list-style: none; padding-left: 0; }
         .item-list li {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-light);
-            line-height: 1.4;
-            margin-bottom: 4px;
+            line-height: 1.5;
+            margin-bottom: 6px;
             position: relative;
-            padding-left: 14px;
+            padding-left: 18px;
         }
         .item-list li::before {
-            content: '✿'; /* Cute flower bullet point */
+            content: '✦'; /* Cool star bullet point */
             position: absolute;
             left: 0; top: 0px;
-            color: var(--accent-pink);
-            font-size: 10px;
+            color: var(--accent-mint);
+            font-size: 12px;
+        }
+
+        /* --- ANIME MASCOT ILLUSTRATION (Fills Bottom Space) --- */
+        .mascot-filler {
+            margin-top: auto; /* Pushes to the bottom */
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            opacity: 0.9;
+            padding-top: 20px;
         }
 
         /* --- STRICT PRINT RULES --- */
@@ -328,10 +334,9 @@
                 width: 210mm !important;
                 height: 297mm !important;
             }
-            .sidebar { width: 35% !important; float: left; }
-            .main-content { width: 65% !important; float: left; }
+            .sidebar { width: 36% !important; float: left; }
+            .main-content { width: 64% !important; float: left; }
 
-            /* Remove hover outlines */
             [contenteditable="true"]:hover, [contenteditable="true"]:focus {
                 box-shadow: none !important; background: transparent !important;
             }
@@ -344,20 +349,20 @@
     <!-- Controls -->
     <div class="controls-container no-print">
         <div class="controls-text">
-            <i class="fas fa-magic"></i> Minimal Anime Layout - Click text to edit, click bars to change skills!
+            <i class="fas fa-paint-brush"></i> Enhanced Animator Resume - Bigger fonts, cooler colors, and a mascot!
         </div>
         <div class="controls-warning">
-            ⚠️ IMPORTANT: When printing/saving as PDF, check the box for "Background graphics" in your settings so the pastel colors show up!
+            ⚠️ IMPORTANT: When saving to PDF, check the "Background graphics" box so the colors & graphics print correctly!
         </div>
         <button class="print-btn" onclick="window.print()">
-            <i class="fas fa-file-pdf"></i> Save / Print PDF
+            <i class="fas fa-file-pdf"></i> Download Resume as PDF
         </button>
     </div>
 
     <!-- RESUME -->
     <div class="resume-wrapper">
         
-        <!-- SIDEBAR (Light Pastel) -->
+        <!-- SIDEBAR (Sky Blue) -->
         <div class="sidebar">
             
             <div class="profile-pic" onclick="changeImage()">
@@ -378,29 +383,29 @@
                 <span contenteditable="true">ranjumanna400@gmail.com</span>
             </div>
 
-            <div class="sidebar-title" contenteditable="true">Software</div>
+            <div class="sidebar-title" contenteditable="true">Software Skills</div>
             <div class="skill-item">
                 <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
                 <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 90%; background: #FDA4AF;"></div>
+                    <div class="progress-bar-fill" style="width: 90%; background: #38bdf8;"></div>
                 </div>
             </div>
             <div class="skill-item">
                 <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
                 <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 80%; background: #7DD3FC;"></div>
+                    <div class="progress-bar-fill" style="width: 80%; background: #34d399;"></div>
                 </div>
             </div>
             <div class="skill-item">
                 <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
                 <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 85%; background: #FCD34D;"></div>
+                    <div class="progress-bar-fill" style="width: 85%; background: #fcd34d;"></div>
                 </div>
             </div>
             <div class="skill-item">
                 <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
                 <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 75%; background: #C4B5FD;"></div>
+                    <div class="progress-bar-fill" style="width: 75%; background: #a78bfa;"></div>
                 </div>
             </div>
 
@@ -420,22 +425,6 @@
                 <span class="expertise-pill" contenteditable="true">Bengali</span>
                 <span class="expertise-pill" contenteditable="true">Hindi</span>
                 <span class="expertise-pill" contenteditable="true">English</span>
-            </div>
-
-            <!-- Cute SVG Mascot (Smiling Cloud) -->
-            <div class="mascot-container">
-                <svg width="80" height="60" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Cloud Body -->
-                    <path d="M 25 45 A 15 15 0 0 1 25 15 A 20 20 0 0 1 65 10 A 18 18 0 0 1 85 45 Z" fill="#FFFFFF"/>
-                    <!-- Eyes -->
-                    <circle cx="45" cy="30" r="3" fill="#334155"/>
-                    <circle cx="65" cy="30" r="3" fill="#334155"/>
-                    <!-- Blush -->
-                    <ellipse cx="38" cy="34" rx="4" ry="2.5" fill="#FDA4AF" opacity="0.6"/>
-                    <ellipse cx="72" cy="34" rx="4" ry="2.5" fill="#FDA4AF" opacity="0.6"/>
-                    <!-- Smile -->
-                    <path d="M 52 32 Q 55 36 58 32" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
-                </svg>
             </div>
         </div>
 
@@ -465,13 +454,13 @@
                         <li contenteditable="true">Edited promotional videos, reels, and social media content.</li>
                         <li contenteditable="true">Worked on animation projects using Adobe Animate and Spine 2D.</li>
                         <li contenteditable="true">Designed and edited visual content for clients and online media.</li>
-                        <li contenteditable="true">Collaborated with creative teams to improve video quality and engagement.</li>
+                        <li contenteditable="true">Collaborated with creative teams to improve video quality.</li>
                     </ul>
                 </div>
             </div>
 
             <div class="content-title">
-                <div class="icon-box" style="background: #FDA4AF;"><i class="fas fa-star"></i></div>
+                <div class="icon-box" style="background: #34d399;"><i class="fas fa-star"></i></div>
                 <span contenteditable="true">Professional Training</span>
             </div>
             <div class="timeline">
@@ -490,13 +479,12 @@
                 </div>
             </div>
 
-            <!-- Education moved to the bottom as requested -->
             <div class="content-title">
-                <div class="icon-box" style="background: #FCD34D; color: #334155;"><i class="fas fa-graduation-cap"></i></div>
+                <div class="icon-box" style="background: #fcd34d; color: #334155;"><i class="fas fa-graduation-cap"></i></div>
                 <span contenteditable="true">Education</span>
             </div>
             <div class="timeline" style="margin-bottom: 0;">
-                <div class="timeline-item" style="margin-bottom: 10px;">
+                <div class="timeline-item" style="margin-bottom: 12px;">
                     <div class="item-header">
                         <div class="item-title" contenteditable="true">Higher Secondary Education</div>
                         <div class="item-date" contenteditable="true">2021</div>
@@ -510,6 +498,55 @@
                     </div>
                     <div class="item-subtitle" style="margin-bottom: 0;" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
                 </div>
+            </div>
+
+            <!-- Anime Cat Animator Mascot (Fills the empty space at the bottom right) -->
+            <div class="mascot-filler">
+                <svg width="180" height="140" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Desk/Tablet -->
+                    <rect x="20" y="120" width="160" height="15" rx="5" fill="#cbd5e1" />
+                    <rect x="30" y="115" width="140" height="5" fill="#94a3b8" />
+                    <circle cx="150" cy="127.5" r="3" fill="#ffffff" />
+                    
+                    <!-- Cat Body -->
+                    <path d="M 60 120 Q 60 70 100 70 Q 140 70 140 120 Z" fill="#334155" />
+                    <!-- Cat Tummy -->
+                    <path d="M 75 120 Q 75 90 100 90 Q 125 90 125 120 Z" fill="#f1f5f9" />
+                    
+                    <!-- Ears -->
+                    <polygon points="65,75 50,40 85,60" fill="#334155" />
+                    <polygon points="63,70 55,48 78,60" fill="#fcd34d" />
+                    <polygon points="135,75 150,40 115,60" fill="#334155" />
+                    <polygon points="137,70 145,48 122,60" fill="#fcd34d" />
+                    
+                    <!-- Cat Face -->
+                    <circle cx="85" cy="85" r="5" fill="#ffffff" />
+                    <circle cx="115" cy="85" r="5" fill="#ffffff" />
+                    <!-- Sparkles in eyes -->
+                    <circle cx="87" cy="83" r="1.5" fill="#38bdf8" />
+                    <circle cx="117" cy="83" r="1.5" fill="#38bdf8" />
+                    <!-- Nose & Mouth -->
+                    <polygon points="98,92 102,92 100,95" fill="#f472b6" />
+                    <path d="M 95 97 Q 100 100 100 95 Q 100 100 105 97" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+                    <!-- Whiskers -->
+                    <line x1="60" y1="85" x2="75" y2="87" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                    <line x1="62" y1="92" x2="73" y2="92" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                    <line x1="140" y1="85" x2="125" y2="87" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                    <line x1="138" y1="92" x2="127" y2="92" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+
+                    <!-- Arm & Pen -->
+                    <path d="M 120 100 Q 140 110 135 125" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+                    <path d="M 120 100 Q 140 110 135 125" fill="none" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" />
+                    <!-- Stylus Pen -->
+                    <line x1="125" y1="125" x2="105" y2="105" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+                    <polygon points="105,105 102,102 108,103" fill="#fcd34d" />
+                    
+                    <!-- Floating Magic/Stars -->
+                    <path d="M 150 60 L 153 50 L 163 47 L 153 44 L 150 34 L 147 44 L 137 47 L 147 50 Z" fill="#fcd34d" />
+                    <path d="M 40 55 L 42 48 L 49 46 L 42 44 L 40 37 L 38 44 L 31 46 L 38 48 Z" fill="#34d399" />
+                    <circle cx="165" cy="70" r="3" fill="#38bdf8" />
+                    <circle cx="45" cy="75" r="2" fill="#fcd34d" />
+                </svg>
             </div>
 
         </div>
@@ -536,4 +573,3 @@
     </script>
 </body>
 </html>
-
