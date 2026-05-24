@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranju Manna | Editable Professional Resume</title>
+    <title>Ranju Manna | Creative Resume</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- CSS VARIABLES --- */
         :root {
-            --bg-color: #e2e2e2;
-            --resume-bg: #ffffff;
-            --text-main: #222222;
-            --text-light: #555555;
-            --beige: #E6DFD3;
-            --beige-light: #F2EFE9;
-            --dot-active: #D4C9B8;
-            --dot-inactive: #EBEBEB;
-            --line-color: #E0E0E0;
-            --primary: #7B52F4;
+            --bg-color: #f0f2f5;
+            --sidebar-bg: #1a1c23;
+            --sidebar-text: #e2e8f0;
+            --main-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --accent: #00f2fe; /* Creative Cyan Accent */
+            --accent-dark: #0284c7;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            /* Force exact colors during print */
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
 
         body {
@@ -38,513 +40,428 @@
             padding: 40px 20px;
         }
 
-        /* --- UI Controls (Hidden on Print) --- */
+        /* --- UI CONTROLS (Hidden on Print) --- */
         .controls-container {
             background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-bottom: 30px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             z-index: 100;
+            border-top: 4px solid var(--accent-dark);
+            max-width: 800px;
+            text-align: center;
         }
 
-        .controls-text {
-            font-size: 14px;
-            color: var(--text-light);
-        }
-
-        .controls-text strong {
-            color: var(--text-main);
-        }
+        .controls-text { font-size: 15px; color: var(--text-dark); }
+        .controls-warning { font-size: 13px; color: #dc2626; font-weight: 600; background: #fee2e2; padding: 8px 15px; border-radius: 6px; }
 
         .print-btn {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--accent-dark), #0369a1);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 30px;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
         }
 
-        .print-btn:hover {
-            background-color: #653de0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(123, 82, 244, 0.4);
-        }
+        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); }
 
-        /* --- Editable Element Styles --- */
-        [contenteditable="true"] {
-            outline: none;
-            transition: all 0.2s;
-            border-radius: 4px;
-        }
+        /* --- EDITABLE ELEMENTS --- */
+        [contenteditable="true"] { outline: none; border-radius: 4px; transition: all 0.2s; }
+        [contenteditable="true"]:hover { box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.3); background: rgba(0, 242, 254, 0.05); cursor: text; }
+        [contenteditable="true"]:focus { box-shadow: 0 0 0 2px var(--accent); background: rgba(0, 242, 254, 0.05); }
 
-        [contenteditable="true"]:hover {
-            background-color: rgba(123, 82, 244, 0.05);
-            box-shadow: 0 0 0 2px rgba(123, 82, 244, 0.2);
-            cursor: text;
-        }
-
-        [contenteditable="true"]:focus {
-            background-color: rgba(123, 82, 244, 0.05);
-            box-shadow: 0 0 0 2px rgba(123, 82, 244, 0.5);
-        }
-
-        /* --- Resume A4 Container --- */
+        /* --- RESUME A4 CONTAINER --- */
         .resume-wrapper {
-            background-color: var(--resume-bg);
             width: 210mm;
-            min-height: 297mm;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            height: 297mm;
+            background-color: var(--main-bg);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            display: flex;
             position: relative;
-            padding: 12mm 15mm; /* Margins for the A4 page */
             overflow: hidden;
         }
 
-        /* --- Header Section --- */
-        .header {
+        /* --- SIDEBAR (LEFT) --- */
+        .sidebar {
+            width: 35%;
+            height: 100%;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 12mm 8mm;
             display: flex;
-            gap: 40px;
+            flex-direction: column;
+        }
+
+        .profile-pic {
+            width: 40mm;
+            height: 40mm;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            margin: 0 auto 10mm auto;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .profile-pic::after {
+            content: 'Change Photo';
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.6);
+            color: white; font-size: 11px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .profile-pic:hover::after { opacity: 1; }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        /* Contact Section */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            word-break: break-all;
+        }
+
+        .contact-icon {
+            width: 24px; height: 24px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Skills Progress Bars */
+        .skill-item { margin-bottom: 12px; }
+        .skill-name { font-size: 11.5px; margin-bottom: 5px; display: block; font-weight: 500; }
+        .progress-bar-bg {
+            width: 100%; height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+            border-radius: 3px;
+            width: 80%; /* Default */
+            transition: width 0.3s ease;
+        }
+
+        /* Expertise Pills */
+        .expertise-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .expertise-pill {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 10px;
+            color: #cbd5e1;
+        }
+
+        /* --- MAIN CONTENT (RIGHT) --- */
+        .main-content {
+            width: 65%;
+            height: 100%;
+            padding: 12mm 12mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-name {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-role {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--accent-dark);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .summary-text {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.7;
+            text-align: justify;
+            margin-bottom: 30px;
+            padding-left: 15px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .content-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-title i { color: var(--accent-dark); }
+
+        /* Timeline Styling */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
             margin-bottom: 30px;
         }
 
-        .profile-img-container {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background-color: var(--beige-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            border: 8px solid var(--beige);
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .profile-img-container:hover::after {
-            content: 'Click to Change Image';
-            position: absolute;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 11px;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .header-info {
-            flex-grow: 1;
-            padding-top: 10px;
-        }
-
-        .header-info h1 {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--text-main);
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .header-info h2 {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-light);
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 11px;
-            color: var(--text-main);
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--line-color);
-            padding-bottom: 15px;
-        }
-
-        .contact-info div {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .profile-section h3 {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .profile-section p {
-            font-size: 11px;
-            line-height: 1.6;
-            color: var(--text-light);
-            text-align: justify;
-        }
-
-        /* --- Main Content Columns --- */
-        .main-content {
-            display: flex;
-            gap: 30px;
-            position: relative;
-        }
-
-        /* Vertical Divider */
-        .main-content::after {
+        .timeline::before {
             content: '';
             position: absolute;
-            left: 33%;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background-color: var(--line-color);
+            left: 5px; top: 5px; bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
         }
 
-        .column.left {
-            width: 33%;
-            padding-right: 15px;
+        .timeline-item { position: relative; margin-bottom: 20px; }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -21px; top: 5px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--accent-dark);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--accent-dark);
         }
 
-        .column.right {
-            width: 67%;
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .item-title { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .item-date { font-size: 11px; font-weight: 600; color: var(--accent-dark); background: #f0f9ff; padding: 2px 8px; border-radius: 12px; }
+        .item-subtitle { font-size: 13px; font-weight: 500; color: var(--text-light); margin-bottom: 8px; }
+        
+        .item-list { list-style: none; padding-left: 0; }
+        .item-list li {
+            font-size: 11.5px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 6px;
+            position: relative;
             padding-left: 15px;
         }
-
-        /* --- Section Styling --- */
-        .section-title {
-            background-color: var(--beige);
-            border-radius: 20px;
-            padding: 8px 15px;
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--text-main);
-            margin-bottom: 20px;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-
-        .column.left .section-title { width: 100%; }
-        .column.right .section-title { width: 60%; margin-left: auto; margin-right: 0; }
-
-        /* --- Lists Styling --- */
-        .bullet-list {
-            list-style: none;
-            margin-bottom: 25px;
-        }
-
-        .bullet-list li {
-            font-size: 11px;
-            color: var(--text-light);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            line-height: 1.4;
-        }
-
-        .bullet-list li::before {
-            content: '•';
-            font-size: 16px;
-            color: var(--text-main);
-            line-height: 0.8;
-        }
-
-        /* --- Skills Highlight with Interactive Dots --- */
-        .skills-list {
-            list-style: none;
-            margin-bottom: 25px;
-        }
-
-        .skills-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--text-light);
-            margin-bottom: 12px;
-        }
-
-        .skill-name {
-            width: 65%;
-        }
-
-        .dots {
-            display: flex;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background-color: var(--dot-inactive);
-            transition: background-color 0.2s;
-        }
-
-        .dot.active {
-            background-color: var(--dot-active);
-        }
-
-        .dot:hover {
-            transform: scale(1.2);
-        }
-
-        /* --- Right Column Specifics (Timeline) --- */
-        .timeline-item {
-            margin-bottom: 20px;
-            padding-left: 5px;
-        }
-
-        .timeline-item h4 {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 3px;
-        }
-
-        .timeline-item h5 {
-            font-size: 11px;
-            font-weight: 500;
-            font-style: italic;
-            color: var(--text-light);
-            margin-bottom: 3px;
-        }
-
-        .timeline-item .date {
-            font-size: 10px;
-            color: var(--text-light);
-            margin-bottom: 8px;
-        }
-
-        .timeline-item ul {
-            list-style: none;
-            padding-left: 2px;
-        }
-
-        .timeline-item ul li {
-            font-size: 10.5px;
-            color: var(--text-light);
-            line-height: 1.5;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            text-align: justify;
-        }
-
-        .timeline-item ul li::before {
-            content: '•';
+        .item-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0; top: -1px;
+            color: var(--accent-dark);
             font-size: 14px;
-            color: var(--text-main);
-            line-height: 1;
         }
 
-        /* --- PRINT MEDIA QUERIES (CRITICAL FOR SHARP PDF) --- */
+        /* --- STRICT PRINT RULES (PREVENTS BREAKING) --- */
         @media print {
-            /* Hide UI elements */
-            .controls-container, .no-print {
-                display: none !important;
-            }
-
-            /* Reset body and wrapper for native print sizing */
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-            }
-
+            .controls-container, .no-print { display: none !important; }
+            body { margin: 0; padding: 0; background: white; align-items: flex-start; }
+            
+            /* Enforce Exact Dimensions & Colors */
             .resume-wrapper {
-                box-shadow: none;
-                margin: 0;
-                padding: 12mm 15mm;
-                width: 210mm;
-                height: 297mm;
+                margin: 0 !important;
+                box-shadow: none !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                page-break-after: avoid;
+                page-break-before: avoid;
             }
 
-            /* Force A4 Size */
-            @page {
-                size: A4 portrait;
-                margin: 0; 
-            }
+            .sidebar { width: 35% !important; float: left; }
+            .main-content { width: 65% !important; float: left; }
 
-            /* Remove editable hover states */
+            /* Remove hover outlines */
             [contenteditable="true"]:hover, [contenteditable="true"]:focus {
-                box-shadow: none;
-                background-color: transparent;
+                box-shadow: none !important; background: transparent !important;
             }
 
-            /* Prevent layout breaks */
-            .main-content, .column {
-                page-break-inside: avoid;
-            }
+            @page { size: A4 portrait; margin: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- UI Controls -->
+    <!-- Instructions & Print Controls -->
     <div class="controls-container no-print">
         <div class="controls-text">
-            <i class="fas fa-magic"></i> <strong>Interactive Resume:</strong> Click on any text to edit it. Click the dots to change skill levels.
+            <h2><i class="fas fa-magic"></i> Interactive Creative Resume</h2>
+            <p style="margin-top: 5px;">Click on <strong>any text</strong> to edit. Click your <strong>photo</strong> to change it. Click the <strong>progress bars</strong> to adjust skill levels.</p>
+        </div>
+        <div class="controls-warning">
+            CRITICAL: When the print menu opens, you MUST check the box for "Background graphics" (in More settings), otherwise the dark sidebar will turn white!
         </div>
         <button class="print-btn" onclick="window.print()">
-            <i class="fas fa-file-pdf"></i> Save as PDF / Print
+            <i class="fas fa-file-pdf"></i> Save as PDF
         </button>
     </div>
 
-    <!-- Resume Content (A4 Format) -->
+    <!-- RESUME A4 Container -->
     <div class="resume-wrapper">
         
-        <!-- Header -->
-        <header class="header">
-            <div class="profile-img-container" onclick="changeImage()">
+        <!-- SIDEBAR (Dark) -->
+        <div class="sidebar">
+            <div class="profile-pic" onclick="changeImage()">
                 <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
             </div>
-            
-            <div class="header-info">
-                <h1 contenteditable="true">RANJU MANNA</h1>
-                <h2 contenteditable="true">2D Animator & Video Editor</h2>
-                
-                <div class="contact-info">
-                    <div><i class="fas fa-map-marker-alt"></i> <span contenteditable="true">Jangalpara Bazar, Hooghly, West Bengal – 712701</span></div>
-                    <div><i class="fas fa-phone-alt"></i> <span contenteditable="true">+91 9933670094</span></div>
-                    <div><i class="far fa-envelope"></i> <span contenteditable="true">ranjumanna400@gmail.com</span></div>
-                </div>
 
-                <div class="profile-section">
-                    <h3 contenteditable="true">PROFESSIONAL SUMMARY</h3>
-                    <p contenteditable="true">Creative and detail-oriented 2D Animator and Video Editor with 3 years of experience in animation and digital content creation. Skilled in creating animated videos, motion graphics, reels, and edited content using industry-standard software such as Adobe Premiere Pro, Adobe Photoshop, Adobe Animate (Flash), and Spine 2D. Passionate about delivering high-quality visual content for social media, YouTube, and promotional projects.</p>
+            <div class="sidebar-title" contenteditable="true">Contact Info</div>
+            <div class="contact-item">
+                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                <span contenteditable="true">+91 9933670094</span>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon"><i class="far fa-envelope"></i></div>
+                <span contenteditable="true">ranjumanna400@gmail.com</span>
+            </div>
+
+            <div class="sidebar-title" contenteditable="true">Software Skills</div>
+            <!-- Clickable Progress Bars -->
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 90%;"></div>
                 </div>
             </div>
-        </header>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 80%;"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 75%;"></div>
+                </div>
+            </div>
 
-        <!-- Main 2-Column Content -->
+            <div class="sidebar-title" contenteditable="true">Expertise</div>
+            <div class="expertise-container">
+                <span class="expertise-pill" contenteditable="true">2D Animation</span>
+                <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
+                <span class="expertise-pill" contenteditable="true">Video Editing</span>
+                <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
+                <span class="expertise-pill" contenteditable="true">Social Media Reels</span>
+                <span class="expertise-pill" contenteditable="true">Thumbnail Design</span>
+                <span class="expertise-pill" contenteditable="true">Poster Design</span>
+            </div>
+
+            <div class="sidebar-title" style="margin-top: auto;" contenteditable="true">Languages</div>
+            <div class="expertise-container">
+                <span class="expertise-pill" contenteditable="true">Bengali</span>
+                <span class="expertise-pill" contenteditable="true">Hindi</span>
+                <span class="expertise-pill" contenteditable="true">English</span>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT (Light) -->
         <div class="main-content">
             
-            <!-- Left Column -->
-            <div class="column left">
-                <div class="section-title" contenteditable="true">EXPERTISE</div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">2D Animation</li>
-                    <li contenteditable="true">Spine Animation</li>
-                    <li contenteditable="true">Video Editing</li>
-                    <li contenteditable="true">Motion Graphics</li>
-                    <li contenteditable="true">Social Media Reel Editing</li>
-                    <li contenteditable="true">Thumbnail & Poster Design</li>
-                    <li contenteditable="true">Basic Graphic Design</li>
-                </ul>
+            <h1 class="header-name" contenteditable="true">RANJU<br>MANNA</h1>
+            <h2 class="header-role" contenteditable="true">2D Animator & Video Editor</h2>
+            
+            <p class="summary-text" contenteditable="true">
+                Creative and detail-oriented 2D Animator and Video Editor with 3 years of experience in animation and digital content creation. Skilled in creating animated videos, motion graphics, reels, and edited content using industry-standard software. Passionate about delivering high-quality visual storytelling for social media, YouTube, and promotional projects.
+            </p>
 
-                <div class="section-title" contenteditable="true">SOFTWARE</div>
-                <ul class="skills-list" id="software-skills">
-                    <!-- Dots logic handled by JavaScript -->
-                    <li>
-                        <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
-                        <div class="dots" data-rating="5">
-                            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
-                        <div class="dots" data-rating="4">
-                            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
-                        <div class="dots" data-rating="4">
-                            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
-                        <div class="dots" data-rating="4">
-                            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                        </div>
-                    </li>
-                </ul>
-
-                <div class="section-title" contenteditable="true">LANGUAGES</div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">Bengali</li>
-                    <li contenteditable="true">Hindi</li>
-                    <li contenteditable="true">English</li>
-                </ul>
+            <h3 class="content-title"><i class="fas fa-briefcase"></i> <span contenteditable="true">Experience</span></h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <div class="item-title" contenteditable="true">2D Animator & Video Editor</div>
+                        <div class="item-date" contenteditable="true">2021 – Present</div>
+                    </div>
+                    <div class="item-subtitle" contenteditable="true">S & S Media Studio</div>
+                    <ul class="item-list">
+                        <li contenteditable="true">Created highly engaging 2D animated content for digital platforms and clients.</li>
+                        <li contenteditable="true">Edited promotional videos, dynamic reels, and viral social media content.</li>
+                        <li contenteditable="true">Spearheaded animation projects utilizing Adobe Animate and Spine 2D rigging.</li>
+                        <li contenteditable="true">Collaborated with creative teams to dramatically improve video quality and viewer retention.</li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="column right">
-                
-                <div class="section-title" contenteditable="true">WORK EXPERIENCE</div>
-                
+            <h3 class="content-title"><i class="fas fa-graduation-cap"></i> <span contenteditable="true">Education</span></h3>
+            <div class="timeline">
+                <div class="timeline-item" style="margin-bottom: 15px;">
+                    <div class="item-header">
+                        <div class="item-title" contenteditable="true">Higher Secondary Education</div>
+                        <div class="item-date" contenteditable="true">2021</div>
+                    </div>
+                    <div class="item-subtitle" style="margin-bottom: 0;" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
+                </div>
                 <div class="timeline-item">
-                    <h4 contenteditable="true">2D Animator & Video Editor</h4>
-                    <h5 contenteditable="true">S & S Media Studio</h5>
-                    <div class="date" contenteditable="true">2021 – Present</div>
-                    <ul>
-                        <li contenteditable="true">Created 2D animated content for digital platforms.</li>
-                        <li contenteditable="true">Edited promotional videos, reels, and social media content.</li>
-                        <li contenteditable="true">Worked on animation projects using Adobe Animate and Spine 2D.</li>
-                        <li contenteditable="true">Designed and edited visual content for clients and online media.</li>
-                        <li contenteditable="true">Collaborated with creative teams to improve video quality and engagement.</li>
+                    <div class="item-header">
+                        <div class="item-title" contenteditable="true">Secondary Education</div>
+                        <div class="item-date" contenteditable="true">2019</div>
+                    </div>
+                    <div class="item-subtitle" style="margin-bottom: 0;" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
+                </div>
+            </div>
+
+            <h3 class="content-title"><i class="fas fa-certificate"></i> <span contenteditable="true">Professional Training</span></h3>
+            <div class="timeline" style="margin-bottom: 0;">
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <div class="item-title" contenteditable="true">Diploma in Desktop Publishing</div>
+                        <div class="item-date" contenteditable="true">2022</div>
+                    </div>
+                    <div class="item-subtitle" contenteditable="true">Dream Box, Baksha, Santrapara</div>
+                    <ul class="item-list">
+                        <li contenteditable="true">Comprehensive Animation & Video Editing Training.</li>
+                        <li contenteditable="true">Mastered 2D Animation workflows using Adobe Animate (Flash).</li>
+                        <li contenteditable="true">Specialized in Spine 2D Animation character setup and kinematics.</li>
+                        <li contenteditable="true">Advanced timeline management and color grading in Premiere Pro.</li>
                     </ul>
                 </div>
-
-                <div class="section-title" style="margin-top: 30px;" contenteditable="true">EDUCATION</div>
-                
-                <div class="timeline-item">
-                    <h4 contenteditable="true">Higher Secondary Education</h4>
-                    <h5 contenteditable="true">Jangalpara Krishnarampur Deshapran High School</h5>
-                    <div class="date" contenteditable="true">2021</div>
-                </div>
-
-                <div class="timeline-item">
-                    <h4 contenteditable="true">Secondary Education</h4>
-                    <h5 contenteditable="true">Jangalpara Krishnarampur Deshapran High School</h5>
-                    <div class="date" contenteditable="true">2019</div>
-                </div>
-
-                <div class="section-title" style="margin-top: 30px;" contenteditable="true">TRAINING</div>
-                
-                <div class="timeline-item">
-                    <h4 contenteditable="true">Diploma in Desktop Publishing</h4>
-                    <h5 contenteditable="true">Dream Box, Baksha, Santrapara</h5>
-                    <div class="date" contenteditable="true">2022</div>
-                    <ul>
-                        <li contenteditable="true">Animation & Editing Training</li>
-                        <li contenteditable="true">2D Animation using Adobe Animate (Flash)</li>
-                        <li contenteditable="true">Spine 2D Animation techniques</li>
-                        <li contenteditable="true">Advanced Video Editing with Adobe Premiere Pro</li>
-                    </ul>
-                </div>
-
             </div>
 
         </div>
@@ -552,49 +469,31 @@
 
     <!-- Interactivity Scripts -->
     <script>
-        // --- 1. Change Image Function ---
+        // --- Change Image ---
         function changeImage() {
             const currentImg = document.getElementById('profileImg');
-            const newUrl = prompt("Enter the URL of your new profile picture:\n\n(Tip: You can upload an image to an image hosting site like Imgur or a public Google Drive link, and paste the URL here.)");
+            const newUrl = prompt("Enter the URL of your new profile picture:\n\n(Tip: Upload your image to Imgur, Discord, or Google Drive, and paste the direct image link here.)");
             
             if (newUrl && newUrl.trim() !== "") {
                 currentImg.src = newUrl;
             }
         }
 
-        // --- 2. Interactive Skill Dots Logic ---
-        function initializeDots() {
-            const allDotContainers = document.querySelectorAll('.dots');
+        // --- Interactive Progress Bars ---
+        function updateProgress(event, container) {
+            // Calculate where the user clicked relative to the width of the container
+            const rect = container.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percentage = Math.round((clickX / rect.width) * 100);
             
-            allDotContainers.forEach(container => {
-                const dots = container.querySelectorAll('.dot');
-                const initialRating = parseInt(container.getAttribute('data-rating')) || 0;
-                
-                // Set initial active dots
-                updateDots(dots, initialRating);
-
-                // Add click event to each dot
-                dots.forEach((dot, index) => {
-                    dot.addEventListener('click', () => {
-                        updateDots(dots, index + 1);
-                        container.setAttribute('data-rating', index + 1);
-                    });
-                });
-            });
+            // Ensure it doesn't go below 10% or above 100%
+            const finalPercentage = Math.max(10, Math.min(100, percentage));
+            
+            // Find the inner fill bar and update its width
+            const fillBar = container.querySelector('.progress-bar-fill');
+            fillBar.style.width = finalPercentage + '%';
         }
-
-        function updateDots(dotsArray, count) {
-            dotsArray.forEach((dot, index) => {
-                if (index < count) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-        // Run initialization when page loads
-        window.onload = initializeDots;
     </script>
 </body>
 </html>
+
