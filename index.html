@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranju Manna | Creative Resume</title>
+    <title>Ranju Manna | Cartoon Style Resume</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* --- CSS VARIABLES --- */
         :root {
-            --bg-color: #f0f2f5;
-            --sidebar-bg: #1a1c23;
-            --sidebar-text: #e2e8f0;
+            --bg-color: #e0e7ff;
+            --sidebar-top: #1e3a8a; /* Deep Blue */
+            --sidebar-mid: #2563eb; /* Royal Blue */
+            --sidebar-bot: #0ea5e9; /* Sky Blue */
+            --sidebar-text: #ffffff;
             --main-bg: #ffffff;
             --text-dark: #1e293b;
-            --text-light: #64748b;
-            --accent: #00f2fe; /* Creative Cyan Accent */
-            --accent-dark: #0284c7;
+            --text-light: #475569;
+            --accent-yellow: #facc15; /* Fun Cartoon Yellow */
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            /* Fredoka for headings (rounded, fun), Nunito for body (clean, readable) */
+            font-family: 'Nunito', sans-serif; 
             /* Force exact colors during print */
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -44,78 +48,107 @@
         .controls-container {
             background: white;
             padding: 20px 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            border: 3px solid var(--text-dark);
+            box-shadow: 6px 6px 0px var(--accent-blue);
             margin-bottom: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
             z-index: 100;
-            border-top: 4px solid var(--accent-dark);
             max-width: 800px;
             text-align: center;
         }
 
-        .controls-text { font-size: 15px; color: var(--text-dark); }
-        .controls-warning { font-size: 13px; color: #dc2626; font-weight: 600; background: #fee2e2; padding: 8px 15px; border-radius: 6px; }
+        .controls-text h2 { font-family: 'Fredoka', sans-serif; color: var(--text-dark); }
+        .controls-text p { font-size: 15px; color: var(--text-light); }
+        .controls-warning { font-size: 13px; color: #b91c1c; font-weight: 700; background: #fee2e2; padding: 10px 15px; border-radius: 8px; border: 2px dashed #f87171; }
 
         .print-btn {
-            background: linear-gradient(135deg, var(--accent-dark), #0369a1);
-            color: white;
-            border: none;
+            background: var(--accent-yellow);
+            color: var(--text-dark);
+            border: 3px solid var(--text-dark);
             padding: 12px 30px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+            box-shadow: 4px 4px 0px var(--text-dark);
         }
 
-        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); }
+        .print-btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--text-dark); }
 
         /* --- EDITABLE ELEMENTS --- */
-        [contenteditable="true"] { outline: none; border-radius: 4px; transition: all 0.2s; }
-        [contenteditable="true"]:hover { box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.3); background: rgba(0, 242, 254, 0.05); cursor: text; }
-        [contenteditable="true"]:focus { box-shadow: 0 0 0 2px var(--accent); background: rgba(0, 242, 254, 0.05); }
+        [contenteditable="true"] { outline: none; border-radius: 6px; transition: all 0.2s; }
+        [contenteditable="true"]:hover { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.05); cursor: text; }
+        [contenteditable="true"]:focus { box-shadow: 0 0 0 3px var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
 
         /* --- RESUME A4 CONTAINER --- */
         .resume-wrapper {
             width: 210mm;
             height: 297mm;
             background-color: var(--main-bg);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 4px solid var(--text-dark); /* Thick cartoon border outside */
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
             display: flex;
             position: relative;
             overflow: hidden;
         }
 
-        /* --- SIDEBAR (LEFT) --- */
+        /* --- SIDEBAR (BLUE WITH GRAPHICS) --- */
         .sidebar {
-            width: 35%;
+            width: 38%;
             height: 100%;
-            background-color: var(--sidebar-bg);
+            background: linear-gradient(150deg, var(--sidebar-top), var(--sidebar-mid), var(--sidebar-bot));
             color: var(--sidebar-text);
-            padding: 12mm 8mm;
+            padding: 15mm 10mm;
             display: flex;
             flex-direction: column;
+            position: relative;
+            border-right: 4px solid var(--text-dark);
         }
 
+        /* Fun Background Graphics in Sidebar */
+        .graphic-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.07);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .icon-film { top: 20mm; right: -10mm; font-size: 120px; transform: rotate(15deg); }
+        .icon-pencil { bottom: 60mm; left: -10mm; font-size: 100px; transform: rotate(-25deg); }
+        .icon-stars { top: 110mm; left: 10mm; font-size: 60px; }
+
+        .sidebar-content {
+            position: relative;
+            z-index: 1; /* Keep text above graphics */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Cartoon Profile Pic */
         .profile-pic {
-            width: 40mm;
-            height: 40mm;
+            width: 45mm;
+            height: 45mm;
             border-radius: 50%;
-            border: 3px solid var(--accent);
+            border: 4px solid #ffffff;
             margin: 0 auto 10mm auto;
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+            background: var(--accent-yellow);
+            /* Comic style offset shadow */
+            box-shadow: 6px 6px 0px var(--accent-yellow);
+            transition: transform 0.2s;
         }
+        .profile-pic:hover { transform: scale(1.05); }
 
         .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -123,57 +156,60 @@
             content: 'Change Photo';
             position: absolute; inset: 0;
             background: rgba(0,0,0,0.6);
-            color: white; font-size: 11px;
+            color: white; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.2s;
         }
         .profile-pic:hover::after { opacity: 1; }
 
         .sidebar-title {
-            font-size: 14px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 5px;
-            margin-bottom: 15px;
+            color: var(--accent-yellow);
+            margin-bottom: 12px;
             margin-top: 25px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
         }
 
         /* Contact Section */
         .contact-item {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            font-size: 11px;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            font-weight: 600;
             word-break: break-all;
         }
 
         .contact-icon {
-            width: 24px; height: 24px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
+            width: 28px; height: 28px;
+            background: var(--accent-yellow);
+            border: 2px solid var(--text-dark);
+            border-radius: 8px;
             display: flex; justify-content: center; align-items: center;
-            color: var(--accent);
+            color: var(--text-dark);
             flex-shrink: 0;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
         }
 
-        /* Skills Progress Bars */
-        .skill-item { margin-bottom: 12px; }
-        .skill-name { font-size: 11.5px; margin-bottom: 5px; display: block; font-weight: 500; }
+        /* Fun Progress Bars */
+        .skill-item { margin-bottom: 15px; }
+        .skill-name { font-size: 12.5px; margin-bottom: 6px; display: block; font-weight: 700; }
         .progress-bar-bg {
-            width: 100%; height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
+            width: 100%; height: 12px;
+            background: rgba(0,0,0,0.2);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
             cursor: pointer;
             position: relative;
+            overflow: hidden;
         }
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-dark), var(--accent));
-            border-radius: 3px;
+            background: var(--accent-yellow);
+            border-right: 2px solid #ffffff;
             width: 80%; /* Default */
             transition: width 0.3s ease;
         }
@@ -181,112 +217,142 @@
         /* Expertise Pills */
         .expertise-container { display: flex; flex-wrap: wrap; gap: 8px; }
         .expertise-pill {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 10px;
-            color: #cbd5e1;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #ffffff;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
         }
 
-        /* --- MAIN CONTENT (RIGHT) --- */
+        /* --- MAIN CONTENT (WHITE) --- */
         .main-content {
-            width: 65%;
+            width: 62%;
             height: 100%;
-            padding: 12mm 12mm;
+            padding: 15mm 12mm;
             display: flex;
             flex-direction: column;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px; /* Subtle comic-book dot background */
         }
 
         .header-name {
-            font-size: 42px;
-            font-weight: 800;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
             color: var(--text-dark);
-            line-height: 1.1;
-            letter-spacing: -0.5px;
+            line-height: 1;
             text-transform: uppercase;
+            text-shadow: 4px 4px 0px var(--accent-yellow);
+            margin-bottom: 5px;
         }
 
         .header-role {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--accent-dark);
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--text-dark);
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 8px;
+            transform: rotate(-2deg);
         }
 
         .summary-text {
-            font-size: 12px;
-            color: var(--text-light);
-            line-height: 1.7;
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 600;
+            line-height: 1.6;
             text-align: justify;
-            margin-bottom: 30px;
-            padding-left: 15px;
-            border-left: 3px solid var(--accent);
+            margin-bottom: 35px;
+            padding: 15px;
+            background: white;
+            border: 3px solid var(--text-dark);
+            border-radius: 12px;
+            box-shadow: 5px 5px 0px var(--accent-cyan);
         }
 
         .content-title {
-            font-size: 18px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 22px;
             font-weight: 700;
             color: var(--text-dark);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             gap: 10px;
+            border-bottom: 3px dashed var(--accent-blue);
+            padding-bottom: 5px;
         }
 
-        .content-title i { color: var(--accent-dark); }
+        .content-title i { 
+            color: var(--accent-blue); 
+            background: var(--accent-yellow);
+            padding: 8px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dark);
+            font-size: 16px;
+        }
 
-        /* Timeline Styling */
+        /* Playful Timeline */
         .timeline {
             position: relative;
-            padding-left: 20px;
+            padding-left: 25px;
             margin-bottom: 30px;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 5px; top: 5px; bottom: 0;
-            width: 2px;
-            background: #e2e8f0;
+            left: 8px; top: 5px; bottom: 0;
+            width: 4px;
+            background: var(--accent-blue);
+            border-radius: 2px;
         }
 
-        .timeline-item { position: relative; margin-bottom: 20px; }
+        .timeline-item { position: relative; margin-bottom: 25px; }
         
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -21px; top: 5px;
-            width: 10px; height: 10px;
+            left: -26px; top: 3px;
+            width: 16px; height: 16px;
             border-radius: 50%;
-            background: var(--accent-dark);
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px var(--accent-dark);
+            background: var(--accent-yellow);
+            border: 3px solid var(--text-dark);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
         }
 
         .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-        .item-title { font-size: 14px; font-weight: 700; color: var(--text-dark); }
-        .item-date { font-size: 11px; font-weight: 600; color: var(--accent-dark); background: #f0f9ff; padding: 2px 8px; border-radius: 12px; }
-        .item-subtitle { font-size: 13px; font-weight: 500; color: var(--text-light); margin-bottom: 8px; }
+        .item-title { font-size: 16px; font-weight: 800; color: var(--text-dark); }
+        .item-date { font-size: 12px; font-weight: 800; color: white; background: var(--text-dark); padding: 4px 10px; border-radius: 8px; }
+        .item-subtitle { font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
         
         .item-list { list-style: none; padding-left: 0; }
         .item-list li {
-            font-size: 11.5px;
+            font-size: 12px;
+            font-weight: 600;
             color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 6px;
+            line-height: 1.5;
+            margin-bottom: 8px;
             position: relative;
-            padding-left: 15px;
+            padding-left: 20px;
         }
         .item-list li::before {
-            content: '▹';
+            content: '\f0da'; /* Play button icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
             position: absolute;
-            left: 0; top: -1px;
-            color: var(--accent-dark);
+            left: 0; top: 1px;
+            color: var(--accent-cyan);
             font-size: 14px;
         }
 
@@ -299,14 +365,15 @@
             .resume-wrapper {
                 margin: 0 !important;
                 box-shadow: none !important;
+                border: none !important; /* Remove outer border for print so it fits page */
                 width: 210mm !important;
                 height: 297mm !important;
                 page-break-after: avoid;
                 page-break-before: avoid;
             }
 
-            .sidebar { width: 35% !important; float: left; }
-            .main-content { width: 65% !important; float: left; }
+            .sidebar { width: 38% !important; float: left; border-right: 4px solid #1e293b !important; }
+            .main-content { width: 62% !important; float: left; }
 
             /* Remove hover outlines */
             [contenteditable="true"]:hover, [contenteditable="true"]:focus {
@@ -322,91 +389,100 @@
     <!-- Instructions & Print Controls -->
     <div class="controls-container no-print">
         <div class="controls-text">
-            <h2><i class="fas fa-magic"></i> Interactive Creative Resume</h2>
-            <p style="margin-top: 5px;">Click on <strong>any text</strong> to edit. Click your <strong>photo</strong> to change it. Click the <strong>progress bars</strong> to adjust skill levels.</p>
+            <h2><i class="fas fa-paint-roller"></i> Animator's Creative Resume</h2>
+            <p>Click <strong>any text</strong> to edit. Click your <strong>photo</strong> to change it. Click the <strong>progress bars</strong> to adjust levels.</p>
         </div>
         <div class="controls-warning">
-            CRITICAL: When the print menu opens, you MUST check the box for "Background graphics" (in More settings), otherwise the dark sidebar will turn white!
+            ⚠️ BEFORE PRINTING/SAVING PDF: You MUST check the box for "Background graphics" in your browser's print settings, or the blue background will disappear!
         </div>
         <button class="print-btn" onclick="window.print()">
-            <i class="fas fa-file-pdf"></i> Save as PDF
+            <i class="fas fa-file-pdf"></i> Download PDF
         </button>
     </div>
 
     <!-- RESUME A4 Container -->
     <div class="resume-wrapper">
         
-        <!-- SIDEBAR (Dark) -->
+        <!-- SIDEBAR (Blue with graphics) -->
         <div class="sidebar">
-            <div class="profile-pic" onclick="changeImage()">
-                <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
-            </div>
+            <!-- Decorative Background Graphics -->
+            <i class="fas fa-film graphic-icon icon-film"></i>
+            <i class="fas fa-pencil-ruler graphic-icon icon-pencil"></i>
+            <i class="fas fa-sparkles graphic-icon icon-stars"></i>
 
-            <div class="sidebar-title" contenteditable="true">Contact Info</div>
-            <div class="contact-item">
-                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
-            </div>
-            <div class="contact-item">
-                <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-                <span contenteditable="true">+91 9933670094</span>
-            </div>
-            <div class="contact-item">
-                <div class="contact-icon"><i class="far fa-envelope"></i></div>
-                <span contenteditable="true">ranjumanna400@gmail.com</span>
-            </div>
+            <div class="sidebar-content">
+                <div class="profile-pic" onclick="changeImage()">
+                    <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
+                </div>
 
-            <div class="sidebar-title" contenteditable="true">Software Skills</div>
-            <!-- Clickable Progress Bars -->
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 90%;"></div>
+                <div class="sidebar-title" contenteditable="true">CONTACT</div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
                 </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 80%;"></div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <span contenteditable="true">+91 9933670094</span>
                 </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 85%;"></div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <span contenteditable="true">ranjumanna400@gmail.com</span>
                 </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 75%;"></div>
-                </div>
-            </div>
 
-            <div class="sidebar-title" contenteditable="true">Expertise</div>
-            <div class="expertise-container">
-                <span class="expertise-pill" contenteditable="true">2D Animation</span>
-                <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
-                <span class="expertise-pill" contenteditable="true">Video Editing</span>
-                <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
-                <span class="expertise-pill" contenteditable="true">Social Media Reels</span>
-                <span class="expertise-pill" contenteditable="true">Thumbnail Design</span>
-                <span class="expertise-pill" contenteditable="true">Poster Design</span>
-            </div>
+                <div class="sidebar-title" contenteditable="true">SOFTWARE</div>
+                <!-- Clickable Progress Bars -->
+                <div class="skill-item">
+                    <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
+                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                        <div class="progress-bar-fill" style="width: 90%;"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
+                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                        <div class="progress-bar-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
+                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                        <div class="progress-bar-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
+                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                        <div class="progress-bar-fill" style="width: 75%;"></div>
+                    </div>
+                </div>
 
-            <div class="sidebar-title" style="margin-top: auto;" contenteditable="true">Languages</div>
-            <div class="expertise-container">
-                <span class="expertise-pill" contenteditable="true">Bengali</span>
-                <span class="expertise-pill" contenteditable="true">Hindi</span>
-                <span class="expertise-pill" contenteditable="true">English</span>
+                <div class="sidebar-title" contenteditable="true">EXPERTISE</div>
+                <div class="expertise-container">
+                    <span class="expertise-pill" contenteditable="true">2D Animation</span>
+                    <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
+                    <span class="expertise-pill" contenteditable="true">Video Editing</span>
+                    <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
+                    <span class="expertise-pill" contenteditable="true">Social Reels</span>
+                    <span class="expertise-pill" contenteditable="true">Thumbnails</span>
+                    <span class="expertise-pill" contenteditable="true">Poster Design</span>
+                </div>
+
+                <div class="sidebar-title" style="margin-top: auto;" contenteditable="true">LANGUAGES</div>
+                <div class="expertise-container">
+                    <span class="expertise-pill" contenteditable="true">Bengali</span>
+                    <span class="expertise-pill" contenteditable="true">Hindi</span>
+                    <span class="expertise-pill" contenteditable="true">English</span>
+                </div>
             </div>
         </div>
 
-        <!-- MAIN CONTENT (Light) -->
+        <!-- MAIN CONTENT (White with dot pattern) -->
         <div class="main-content">
             
-            <h1 class="header-name" contenteditable="true">RANJU<br>MANNA</h1>
-            <h2 class="header-role" contenteditable="true">2D Animator & Video Editor</h2>
+            <div style="margin-bottom: 20px;">
+                <h1 class="header-name" contenteditable="true">RANJU<br>MANNA</h1>
+                <div class="header-role" contenteditable="true">2D Animator & Video Editor</div>
+            </div>
             
             <p class="summary-text" contenteditable="true">
                 Creative and detail-oriented 2D Animator and Video Editor with 3 years of experience in animation and digital content creation. Skilled in creating animated videos, motion graphics, reels, and edited content using industry-standard software. Passionate about delivering high-quality visual storytelling for social media, YouTube, and promotional projects.
@@ -447,7 +523,7 @@
                 </div>
             </div>
 
-            <h3 class="content-title"><i class="fas fa-certificate"></i> <span contenteditable="true">Professional Training</span></h3>
+            <h3 class="content-title"><i class="fas fa-star"></i> <span contenteditable="true">Professional Training</span></h3>
             <div class="timeline" style="margin-bottom: 0;">
                 <div class="timeline-item">
                     <div class="item-header">
@@ -496,4 +572,3 @@
     </script>
 </body>
 </html>
-
