@@ -3,35 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranju Manna | Cartoon Style Resume</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Ranju Manna | Minimal Anime Resume</title>
+    <!-- Google Fonts: Nunito for a soft, rounded, friendly anime aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS VARIABLES --- */
+        /* --- SOFT PASTEL COLOR PALETTE --- */
         :root {
-            --bg-color: #e0e7ff;
-            --sidebar-top: #1e3a8a; /* Deep Blue */
-            --sidebar-mid: #2563eb; /* Royal Blue */
-            --sidebar-bot: #0ea5e9; /* Sky Blue */
-            --sidebar-text: #ffffff;
-            --main-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-light: #475569;
-            --accent-yellow: #facc15; /* Fun Cartoon Yellow */
-            --accent-blue: #3b82f6;
-            --accent-cyan: #06b6d4;
+            --bg-color: #f8fafc;
+            --sidebar-bg: #F0F4F8; /* Very light, soft pastel baby blue */
+            --main-bg: #FFFFFF;
+            --text-main: #334155; /* Soft dark slate instead of harsh black */
+            --text-light: #64748b;
+            --accent-blue: #7DD3FC; /* Soft pastel sky blue */
+            --accent-pink: #FDA4AF; /* Soft pastel pink */
+            --accent-yellow: #FEF08A; /* Soft pastel yellow */
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* Fredoka for headings (rounded, fun), Nunito for body (clean, readable) */
-            font-family: 'Nunito', sans-serif; 
-            /* Force exact colors during print */
+            font-family: 'Nunito', sans-serif;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
@@ -47,448 +42,417 @@
         /* --- UI CONTROLS (Hidden on Print) --- */
         .controls-container {
             background: white;
-            padding: 20px 30px;
+            padding: 15px 25px;
             border-radius: 16px;
-            border: 3px solid var(--text-dark);
-            box-shadow: 6px 6px 0px var(--accent-blue);
-            margin-bottom: 30px;
+            border: 2px dashed var(--accent-pink);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             z-index: 100;
-            max-width: 800px;
             text-align: center;
+            max-width: 700px;
         }
 
-        .controls-text h2 { font-family: 'Fredoka', sans-serif; color: var(--text-dark); }
-        .controls-text p { font-size: 15px; color: var(--text-light); }
-        .controls-warning { font-size: 13px; color: #b91c1c; font-weight: 700; background: #fee2e2; padding: 10px 15px; border-radius: 8px; border: 2px dashed #f87171; }
+        .controls-text { font-size: 14px; color: var(--text-main); font-weight: 600; }
+        .controls-warning { font-size: 12px; color: #e11d48; font-weight: 700; background: #ffe4e6; padding: 8px 15px; border-radius: 8px; }
 
         .print-btn {
-            background: var(--accent-yellow);
-            color: var(--text-dark);
-            border: 3px solid var(--text-dark);
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 700;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.2s;
-            box-shadow: 4px 4px 0px var(--text-dark);
+            box-shadow: 0 4px 10px rgba(253, 164, 175, 0.4);
         }
 
-        .print-btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--text-dark); }
+        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(253, 164, 175, 0.6); }
 
         /* --- EDITABLE ELEMENTS --- */
-        [contenteditable="true"] { outline: none; border-radius: 6px; transition: all 0.2s; }
-        [contenteditable="true"]:hover { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.05); cursor: text; }
-        [contenteditable="true"]:focus { box-shadow: 0 0 0 3px var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
+        [contenteditable="true"] { outline: none; border-radius: 4px; transition: all 0.2s; }
+        [contenteditable="true"]:hover { background: rgba(125, 211, 252, 0.15); box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.4); cursor: text; }
+        [contenteditable="true"]:focus { background: rgba(125, 211, 252, 0.15); box-shadow: 0 0 0 2px var(--accent-blue); }
 
-        /* --- RESUME A4 CONTAINER --- */
+        /* --- RESUME A4 CONTAINER (Strictly Sized to prevent cut-offs) --- */
         .resume-wrapper {
             width: 210mm;
             height: 297mm;
             background-color: var(--main-bg);
-            border: 4px solid var(--text-dark); /* Thick cartoon border outside */
-            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             display: flex;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Prevents spilling to a second page */
+            border-radius: 12px; /* Soft edges for screen viewing */
         }
 
-        /* --- SIDEBAR (BLUE WITH GRAPHICS) --- */
+        /* --- SIDEBAR (Light Pastel Blue) --- */
         .sidebar {
-            width: 38%;
+            width: 35%;
             height: 100%;
-            background: linear-gradient(150deg, var(--sidebar-top), var(--sidebar-mid), var(--sidebar-bot));
-            color: var(--sidebar-text);
-            padding: 15mm 10mm;
+            background-color: var(--sidebar-bg);
+            padding: 12mm 8mm;
             display: flex;
             flex-direction: column;
             position: relative;
-            border-right: 4px solid var(--text-dark);
         }
 
-        /* Fun Background Graphics in Sidebar */
-        .graphic-icon {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.07);
-            z-index: 0;
-            pointer-events: none;
-        }
-        .icon-film { top: 20mm; right: -10mm; font-size: 120px; transform: rotate(15deg); }
-        .icon-pencil { bottom: 60mm; left: -10mm; font-size: 100px; transform: rotate(-25deg); }
-        .icon-stars { top: 110mm; left: 10mm; font-size: 60px; }
-
-        .sidebar-content {
-            position: relative;
-            z-index: 1; /* Keep text above graphics */
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        /* Cartoon Profile Pic */
+        /* Cute Profile Picture */
         .profile-pic {
-            width: 45mm;
-            height: 45mm;
-            border-radius: 50%;
-            border: 4px solid #ffffff;
-            margin: 0 auto 10mm auto;
+            width: 38mm;
+            height: 38mm;
+            border-radius: 30%; /* Squircle shape, popular in anime/kawaii UI */
+            border: 4px solid white;
+            margin: 0 auto 8mm auto;
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            background: var(--accent-yellow);
-            /* Comic style offset shadow */
-            box-shadow: 6px 6px 0px var(--accent-yellow);
-            transition: transform 0.2s;
+            background: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .profile-pic:hover { transform: scale(1.05); }
 
         .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-        
         .profile-pic::after {
             content: 'Change Photo';
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.6);
-            color: white; font-size: 12px; font-weight: 700;
+            position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+            color: white; font-size: 11px; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.2s;
         }
         .profile-pic:hover::after { opacity: 1; }
 
+        /* Sidebar Headers */
         .sidebar-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent-yellow);
-            margin-bottom: 12px;
-            margin-top: 25px;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sidebar-title::before {
+            content: '✨'; /* Sparkle emoji for anime touch */
+            font-size: 12px;
         }
 
-        /* Contact Section */
+        /* Contact Details */
         .contact-item {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 14px;
-            font-size: 12px;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 11px;
             font-weight: 600;
-            word-break: break-all;
+            color: var(--text-light);
+            word-break: break-word;
         }
-
         .contact-icon {
-            width: 28px; height: 28px;
-            background: var(--accent-yellow);
-            border: 2px solid var(--text-dark);
-            border-radius: 8px;
-            display: flex; justify-content: center; align-items: center;
-            color: var(--text-dark);
-            flex-shrink: 0;
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            color: var(--accent-pink);
+            font-size: 12px;
+            width: 16px;
+            text-align: center;
         }
 
-        /* Fun Progress Bars */
-        .skill-item { margin-bottom: 15px; }
-        .skill-name { font-size: 12.5px; margin-bottom: 6px; display: block; font-weight: 700; }
+        /* Progress Bars */
+        .skill-item { margin-bottom: 10px; }
+        .skill-name { font-size: 11px; margin-bottom: 4px; display: block; font-weight: 700; color: var(--text-main); }
         .progress-bar-bg {
-            width: 100%; height: 12px;
-            background: rgba(0,0,0,0.2);
-            border: 2px solid #ffffff;
+            width: 100%; height: 8px;
+            background: white;
             border-radius: 10px;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
         .progress-bar-fill {
             height: 100%;
-            background: var(--accent-yellow);
-            border-right: 2px solid #ffffff;
-            width: 80%; /* Default */
+            background: var(--accent-blue);
+            border-radius: 10px;
+            width: 80%;
             transition: width 0.3s ease;
         }
 
         /* Expertise Pills */
-        .expertise-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .expertise-container { display: flex; flex-wrap: wrap; gap: 6px; }
         .expertise-pill {
-            background: rgba(255,255,255,0.15);
-            border: 2px solid #ffffff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+            background: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: 700;
-            color: #ffffff;
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            color: var(--text-main);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
-        /* --- MAIN CONTENT (WHITE) --- */
+        /* Cute Mascot at bottom of sidebar */
+        .mascot-container {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            opacity: 0.8;
+        }
+
+        /* --- MAIN CONTENT (White) --- */
         .main-content {
-            width: 62%;
+            width: 65%;
             height: 100%;
-            padding: 15mm 12mm;
+            padding: 12mm 12mm;
             display: flex;
             flex-direction: column;
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px; /* Subtle comic-book dot background */
+            background: var(--main-bg);
         }
 
         .header-name {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--text-dark);
-            line-height: 1;
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1.1;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: 4px 4px 0px var(--accent-yellow);
-            margin-bottom: 5px;
         }
 
         .header-role {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--accent-blue);
-            margin-bottom: 25px;
-            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-pink);
+            margin-bottom: 15px;
             letter-spacing: 1px;
-            background: var(--text-dark);
-            color: white;
+            text-transform: uppercase;
+            background: #fff1f2;
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 8px;
-            transform: rotate(-2deg);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
         .summary-text {
-            font-size: 13px;
-            color: var(--text-dark);
+            font-size: 11.5px;
+            color: var(--text-light);
             font-weight: 600;
             line-height: 1.6;
             text-align: justify;
-            margin-bottom: 35px;
-            padding: 15px;
-            background: white;
-            border: 3px solid var(--text-dark);
-            border-radius: 12px;
-            box-shadow: 5px 5px 0px var(--accent-cyan);
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-blue);
         }
 
+        /* Section Titles */
         .content-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 3px dashed var(--accent-blue);
-            padding-bottom: 5px;
+            gap: 8px;
         }
-
-        .content-title i { 
-            color: var(--accent-blue); 
-            background: var(--accent-yellow);
-            padding: 8px;
+        .content-title .icon-box {
+            background: var(--accent-blue);
+            color: white;
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
-            border: 2px solid var(--text-dark);
-            font-size: 16px;
+            font-size: 11px;
         }
 
-        /* Playful Timeline */
+        /* Compact Timeline */
         .timeline {
             position: relative;
-            padding-left: 25px;
-            margin-bottom: 30px;
+            padding-left: 15px;
+            margin-bottom: 20px; /* Reduced gap so it all fits */
         }
-
         .timeline::before {
             content: '';
             position: absolute;
-            left: 8px; top: 5px; bottom: 0;
-            width: 4px;
-            background: var(--accent-blue);
+            left: 5px; top: 4px; bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
             border-radius: 2px;
         }
-
-        .timeline-item { position: relative; margin-bottom: 25px; }
-        
+        .timeline-item { position: relative; margin-bottom: 15px; }
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -26px; top: 3px;
-            width: 16px; height: 16px;
+            left: -14.5px; top: 4px;
+            width: 10px; height: 10px;
             border-radius: 50%;
-            background: var(--accent-yellow);
-            border: 3px solid var(--text-dark);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            background: white;
+            border: 2px solid var(--accent-blue);
         }
 
-        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-        .item-title { font-size: 16px; font-weight: 800; color: var(--text-dark); }
-        .item-date { font-size: 12px; font-weight: 800; color: white; background: var(--text-dark); padding: 4px 10px; border-radius: 8px; }
-        .item-subtitle { font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+        .item-title { font-size: 13.5px; font-weight: 800; color: var(--text-main); }
+        .item-date { font-size: 10px; font-weight: 700; color: var(--accent-pink); }
+        .item-subtitle { font-size: 12px; font-weight: 700; color: var(--accent-blue); margin-bottom: 6px; }
         
         .item-list { list-style: none; padding-left: 0; }
         .item-list li {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-light);
-            line-height: 1.5;
-            margin-bottom: 8px;
+            line-height: 1.4;
+            margin-bottom: 4px;
             position: relative;
-            padding-left: 20px;
+            padding-left: 14px;
         }
         .item-list li::before {
-            content: '\f0da'; /* Play button icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+            content: '✿'; /* Cute flower bullet point */
             position: absolute;
-            left: 0; top: 1px;
-            color: var(--accent-cyan);
-            font-size: 14px;
+            left: 0; top: 0px;
+            color: var(--accent-pink);
+            font-size: 10px;
         }
 
-        /* --- STRICT PRINT RULES (PREVENTS BREAKING) --- */
+        /* --- STRICT PRINT RULES --- */
         @media print {
             .controls-container, .no-print { display: none !important; }
             body { margin: 0; padding: 0; background: white; align-items: flex-start; }
             
-            /* Enforce Exact Dimensions & Colors */
             .resume-wrapper {
                 margin: 0 !important;
                 box-shadow: none !important;
-                border: none !important; /* Remove outer border for print so it fits page */
+                border-radius: 0 !important;
                 width: 210mm !important;
                 height: 297mm !important;
-                page-break-after: avoid;
-                page-break-before: avoid;
             }
-
-            .sidebar { width: 38% !important; float: left; border-right: 4px solid #1e293b !important; }
-            .main-content { width: 62% !important; float: left; }
+            .sidebar { width: 35% !important; float: left; }
+            .main-content { width: 65% !important; float: left; }
 
             /* Remove hover outlines */
             [contenteditable="true"]:hover, [contenteditable="true"]:focus {
                 box-shadow: none !important; background: transparent !important;
             }
-
             @page { size: A4 portrait; margin: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Instructions & Print Controls -->
+    <!-- Controls -->
     <div class="controls-container no-print">
         <div class="controls-text">
-            <h2><i class="fas fa-paint-roller"></i> Animator's Creative Resume</h2>
-            <p>Click <strong>any text</strong> to edit. Click your <strong>photo</strong> to change it. Click the <strong>progress bars</strong> to adjust levels.</p>
+            <i class="fas fa-magic"></i> Minimal Anime Layout - Click text to edit, click bars to change skills!
         </div>
         <div class="controls-warning">
-            ⚠️ BEFORE PRINTING/SAVING PDF: You MUST check the box for "Background graphics" in your browser's print settings, or the blue background will disappear!
+            ⚠️ IMPORTANT: When printing/saving as PDF, check the box for "Background graphics" in your settings so the pastel colors show up!
         </div>
         <button class="print-btn" onclick="window.print()">
-            <i class="fas fa-file-pdf"></i> Download PDF
+            <i class="fas fa-file-pdf"></i> Save / Print PDF
         </button>
     </div>
 
-    <!-- RESUME A4 Container -->
+    <!-- RESUME -->
     <div class="resume-wrapper">
         
-        <!-- SIDEBAR (Blue with graphics) -->
+        <!-- SIDEBAR (Light Pastel) -->
         <div class="sidebar">
-            <!-- Decorative Background Graphics -->
-            <i class="fas fa-film graphic-icon icon-film"></i>
-            <i class="fas fa-pencil-ruler graphic-icon icon-pencil"></i>
-            <i class="fas fa-sparkles graphic-icon icon-stars"></i>
+            
+            <div class="profile-pic" onclick="changeImage()">
+                <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
+            </div>
 
-            <div class="sidebar-content">
-                <div class="profile-pic" onclick="changeImage()">
-                    <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
-                </div>
+            <div class="sidebar-title" contenteditable="true">Contact</div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt contact-icon"></i>
+                <span contenteditable="true">+91 9933670094</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <span contenteditable="true">ranjumanna400@gmail.com</span>
+            </div>
 
-                <div class="sidebar-title" contenteditable="true">CONTACT</div>
-                <div class="contact-item">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
+            <div class="sidebar-title" contenteditable="true">Software</div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 90%; background: #FDA4AF;"></div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-                    <span contenteditable="true">+91 9933670094</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 80%; background: #7DD3FC;"></div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <span contenteditable="true">ranjumanna400@gmail.com</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 85%; background: #FCD34D;"></div>
                 </div>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
+                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
+                    <div class="progress-bar-fill" style="width: 75%; background: #C4B5FD;"></div>
+                </div>
+            </div>
 
-                <div class="sidebar-title" contenteditable="true">SOFTWARE</div>
-                <!-- Clickable Progress Bars -->
-                <div class="skill-item">
-                    <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
-                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                        <div class="progress-bar-fill" style="width: 90%;"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
-                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                        <div class="progress-bar-fill" style="width: 80%;"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
-                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                        <div class="progress-bar-fill" style="width: 85%;"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
-                    <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                        <div class="progress-bar-fill" style="width: 75%;"></div>
-                    </div>
-                </div>
+            <div class="sidebar-title" contenteditable="true">Expertise</div>
+            <div class="expertise-container">
+                <span class="expertise-pill" contenteditable="true">2D Animation</span>
+                <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
+                <span class="expertise-pill" contenteditable="true">Video Editing</span>
+                <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
+                <span class="expertise-pill" contenteditable="true">Social Reels</span>
+                <span class="expertise-pill" contenteditable="true">Thumbnails</span>
+                <span class="expertise-pill" contenteditable="true">Poster Design</span>
+            </div>
 
-                <div class="sidebar-title" contenteditable="true">EXPERTISE</div>
-                <div class="expertise-container">
-                    <span class="expertise-pill" contenteditable="true">2D Animation</span>
-                    <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
-                    <span class="expertise-pill" contenteditable="true">Video Editing</span>
-                    <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
-                    <span class="expertise-pill" contenteditable="true">Social Reels</span>
-                    <span class="expertise-pill" contenteditable="true">Thumbnails</span>
-                    <span class="expertise-pill" contenteditable="true">Poster Design</span>
-                </div>
+            <div class="sidebar-title" contenteditable="true">Languages</div>
+            <div class="expertise-container">
+                <span class="expertise-pill" contenteditable="true">Bengali</span>
+                <span class="expertise-pill" contenteditable="true">Hindi</span>
+                <span class="expertise-pill" contenteditable="true">English</span>
+            </div>
 
-                <div class="sidebar-title" style="margin-top: auto;" contenteditable="true">LANGUAGES</div>
-                <div class="expertise-container">
-                    <span class="expertise-pill" contenteditable="true">Bengali</span>
-                    <span class="expertise-pill" contenteditable="true">Hindi</span>
-                    <span class="expertise-pill" contenteditable="true">English</span>
-                </div>
+            <!-- Cute SVG Mascot (Smiling Cloud) -->
+            <div class="mascot-container">
+                <svg width="80" height="60" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Cloud Body -->
+                    <path d="M 25 45 A 15 15 0 0 1 25 15 A 20 20 0 0 1 65 10 A 18 18 0 0 1 85 45 Z" fill="#FFFFFF"/>
+                    <!-- Eyes -->
+                    <circle cx="45" cy="30" r="3" fill="#334155"/>
+                    <circle cx="65" cy="30" r="3" fill="#334155"/>
+                    <!-- Blush -->
+                    <ellipse cx="38" cy="34" rx="4" ry="2.5" fill="#FDA4AF" opacity="0.6"/>
+                    <ellipse cx="72" cy="34" rx="4" ry="2.5" fill="#FDA4AF" opacity="0.6"/>
+                    <!-- Smile -->
+                    <path d="M 52 32 Q 55 36 58 32" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
         </div>
 
-        <!-- MAIN CONTENT (White with dot pattern) -->
+        <!-- MAIN CONTENT (White) -->
         <div class="main-content">
             
-            <div style="margin-bottom: 20px;">
-                <h1 class="header-name" contenteditable="true">RANJU<br>MANNA</h1>
-                <div class="header-role" contenteditable="true">2D Animator & Video Editor</div>
-            </div>
+            <h1 class="header-name" contenteditable="true">RANJU MANNA</h1>
+            <div class="header-role" contenteditable="true">2D Animator & Video Editor</div>
             
             <p class="summary-text" contenteditable="true">
                 Creative and detail-oriented 2D Animator and Video Editor with 3 years of experience in animation and digital content creation. Skilled in creating animated videos, motion graphics, reels, and edited content using industry-standard software. Passionate about delivering high-quality visual storytelling for social media, YouTube, and promotional projects.
             </p>
 
-            <h3 class="content-title"><i class="fas fa-briefcase"></i> <span contenteditable="true">Experience</span></h3>
+            <div class="content-title">
+                <div class="icon-box"><i class="fas fa-briefcase"></i></div>
+                <span contenteditable="true">Work Experience</span>
+            </div>
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="item-header">
@@ -497,24 +461,49 @@
                     </div>
                     <div class="item-subtitle" contenteditable="true">S & S Media Studio</div>
                     <ul class="item-list">
-                        <li contenteditable="true">Created highly engaging 2D animated content for digital platforms and clients.</li>
-                        <li contenteditable="true">Edited promotional videos, dynamic reels, and viral social media content.</li>
-                        <li contenteditable="true">Spearheaded animation projects utilizing Adobe Animate and Spine 2D rigging.</li>
-                        <li contenteditable="true">Collaborated with creative teams to dramatically improve video quality and viewer retention.</li>
+                        <li contenteditable="true">Created 2D animated content for digital platforms.</li>
+                        <li contenteditable="true">Edited promotional videos, reels, and social media content.</li>
+                        <li contenteditable="true">Worked on animation projects using Adobe Animate and Spine 2D.</li>
+                        <li contenteditable="true">Designed and edited visual content for clients and online media.</li>
+                        <li contenteditable="true">Collaborated with creative teams to improve video quality and engagement.</li>
                     </ul>
                 </div>
             </div>
 
-            <h3 class="content-title"><i class="fas fa-graduation-cap"></i> <span contenteditable="true">Education</span></h3>
+            <div class="content-title">
+                <div class="icon-box" style="background: #FDA4AF;"><i class="fas fa-star"></i></div>
+                <span contenteditable="true">Professional Training</span>
+            </div>
             <div class="timeline">
-                <div class="timeline-item" style="margin-bottom: 15px;">
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <div class="item-title" contenteditable="true">Diploma in Desktop Publishing</div>
+                        <div class="item-date" contenteditable="true">2022</div>
+                    </div>
+                    <div class="item-subtitle" contenteditable="true">Dream Box, Baksha, Santrapara</div>
+                    <ul class="item-list">
+                        <li contenteditable="true">Animation & Editing Training.</li>
+                        <li contenteditable="true">2D Animation using Adobe Animate (Flash).</li>
+                        <li contenteditable="true">Spine 2D Animation.</li>
+                        <li contenteditable="true">Video Editing with Adobe Premiere Pro.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Education moved to the bottom as requested -->
+            <div class="content-title">
+                <div class="icon-box" style="background: #FCD34D; color: #334155;"><i class="fas fa-graduation-cap"></i></div>
+                <span contenteditable="true">Education</span>
+            </div>
+            <div class="timeline" style="margin-bottom: 0;">
+                <div class="timeline-item" style="margin-bottom: 10px;">
                     <div class="item-header">
                         <div class="item-title" contenteditable="true">Higher Secondary Education</div>
                         <div class="item-date" contenteditable="true">2021</div>
                     </div>
                     <div class="item-subtitle" style="margin-bottom: 0;" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item" style="margin-bottom: 0;">
                     <div class="item-header">
                         <div class="item-title" contenteditable="true">Secondary Education</div>
                         <div class="item-date" contenteditable="true">2019</div>
@@ -523,52 +512,28 @@
                 </div>
             </div>
 
-            <h3 class="content-title"><i class="fas fa-star"></i> <span contenteditable="true">Professional Training</span></h3>
-            <div class="timeline" style="margin-bottom: 0;">
-                <div class="timeline-item">
-                    <div class="item-header">
-                        <div class="item-title" contenteditable="true">Diploma in Desktop Publishing</div>
-                        <div class="item-date" contenteditable="true">2022</div>
-                    </div>
-                    <div class="item-subtitle" contenteditable="true">Dream Box, Baksha, Santrapara</div>
-                    <ul class="item-list">
-                        <li contenteditable="true">Comprehensive Animation & Video Editing Training.</li>
-                        <li contenteditable="true">Mastered 2D Animation workflows using Adobe Animate (Flash).</li>
-                        <li contenteditable="true">Specialized in Spine 2D Animation character setup and kinematics.</li>
-                        <li contenteditable="true">Advanced timeline management and color grading in Premiere Pro.</li>
-                    </ul>
-                </div>
-            </div>
-
         </div>
     </div>
 
     <!-- Interactivity Scripts -->
     <script>
-        // --- Change Image ---
         function changeImage() {
             const currentImg = document.getElementById('profileImg');
-            const newUrl = prompt("Enter the URL of your new profile picture:\n\n(Tip: Upload your image to Imgur, Discord, or Google Drive, and paste the direct image link here.)");
-            
+            const newUrl = prompt("Enter the URL of your new profile picture:");
             if (newUrl && newUrl.trim() !== "") {
                 currentImg.src = newUrl;
             }
         }
 
-        // --- Interactive Progress Bars ---
         function updateProgress(event, container) {
-            // Calculate where the user clicked relative to the width of the container
             const rect = container.getBoundingClientRect();
             const clickX = event.clientX - rect.left;
             const percentage = Math.round((clickX / rect.width) * 100);
-            
-            // Ensure it doesn't go below 10% or above 100%
             const finalPercentage = Math.max(10, Math.min(100, percentage));
-            
-            // Find the inner fill bar and update its width
             const fillBar = container.querySelector('.progress-bar-fill');
             fillBar.style.width = finalPercentage + '%';
         }
     </script>
 </body>
 </html>
+
