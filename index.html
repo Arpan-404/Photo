@@ -3,587 +3,629 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranju Manna | Creative Animator Resume</title>
-    <!-- Google Fonts: Fredoka for creative headers, Nunito for clean body text -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>Clinic Billing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- STRICT 3-COLOR PALETTE (Minimal & Premium) --- */
-        :root {
-            --bg-color: #e2e8f0;
-            --main-bg: #ffffff;
-            --sidebar-bg: #f0f9ff; /* Extremely faint blue for contrast */
-            --text-main: #0f172a; /* Deep Slate / Ink Black */
-            --text-light: #475569;
-            --accent-blue: #0ea5e9; /* Professional Sky Blue */
-            --accent-yellow: #fde047; /* Only used for the angled sticker */
-            --outline: #0f172a; /* 2D Cartoon Outline Color */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Nunito', sans-serif;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        /* --- UI CONTROLS --- */
-        .controls-container {
-            background: white;
-            padding: 15px 25px;
-            border-radius: 12px;
-            border: 3px solid var(--outline);
-            box-shadow: 4px 4px 0px var(--accent-blue);
-            margin-bottom: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            z-index: 100;
-            text-align: center;
-            max-width: 700px;
-        }
-
-        .controls-text { font-size: 15px; color: var(--text-main); font-family: 'Fredoka', sans-serif; font-weight: 600; }
-        .controls-warning { font-size: 12px; color: #b91c1c; font-weight: 700; background: #fee2e2; padding: 8px 12px; border-radius: 6px; }
-
-        .print-btn {
-            background: var(--accent-blue);
-            color: white;
-            border: 2px solid var(--outline);
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.1s;
-            box-shadow: 3px 3px 0px var(--outline);
-        }
-
-        .print-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--outline); }
-
-        /* --- EDITABLE ELEMENTS --- */
-        [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; }
-        [contenteditable="true"]:hover { background: rgba(14, 165, 233, 0.1); cursor: text; box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3); }
-        [contenteditable="true"]:focus { background: rgba(14, 165, 233, 0.1); box-shadow: 0 0 0 2px var(--accent-blue); }
-
-        /* --- RESUME A4 CONTAINER (STRICT HEIGHT TO PREVENT CUTOFF) --- */
-        .resume-wrapper {
-            width: 210mm;
-            height: 297mm; /* Exact A4 Height */
-            background-color: var(--main-bg);
-            border: 4px solid var(--outline);
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
-            display: flex;
-            position: relative;
-            overflow: hidden; /* Enforces strict 1-page limit */
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 36%;
-            height: 100%;
-            background-color: var(--sidebar-bg);
-            border-right: 4px solid var(--outline);
-            padding: 12mm 10mm;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Profile Picture - Angled Polaroid Style */
-        .profile-wrapper {
-            margin: 0 auto 10mm auto;
-            transform: rotate(-2deg);
-            transition: transform 0.3s;
-        }
-        .profile-wrapper:hover { transform: rotate(1deg) scale(1.02); }
-
-        .profile-pic {
-            width: 42mm;
-            height: 42mm;
-            border-radius: 10px;
-            border: 3px solid var(--outline);
-            background: white;
-            padding: 4px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            box-shadow: 5px 5px 0px var(--accent-blue);
-        }
-
-        .profile-pic img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
-        .profile-pic::after {
-            content: 'Change Photo';
-            position: absolute; inset: 4px; background: rgba(0,0,0,0.6); border-radius: 6px;
-            color: white; font-size: 12px; font-weight: 700; font-family: 'Fredoka', sans-serif;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s;
-        }
-        .profile-pic:hover::after { opacity: 1; }
-
-        /* Sidebar Headers */
-        .sidebar-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-            background: var(--text-main);
-            padding: 4px 10px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            margin-top: 15px;
-            display: inline-block;
-            align-self: flex-start;
-            transform: rotate(-1deg);
-        }
-
-        /* Contact Details */
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--text-main);
-            word-break: break-word;
-        }
-        .contact-icon {
-            color: var(--accent-blue);
-            font-size: 14px;
-            width: 20px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        /* Playful Progress Bars */
-        .skill-item { margin-bottom: 10px; }
-        .skill-name { font-size: 12px; margin-bottom: 4px; display: block; font-weight: 800; color: var(--text-main); }
-        .progress-bar-bg {
-            width: 100%; height: 12px;
-            background: white;
-            border: 2px solid var(--outline);
-            border-radius: 6px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--accent-blue);
-            border-right: 2px solid var(--outline);
-            width: 80%;
-            transition: width 0.3s ease;
-        }
-
-        /* Angled Expertise Pills */
-        .expertise-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .expertise-pill {
-            background: white;
-            padding: 4px 10px;
-            border: 2px solid var(--outline);
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--text-main);
-            box-shadow: 2px 2px 0px var(--accent-blue);
-        }
-
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            width: 64%;
-            height: 100%;
-            padding: 12mm 12mm; /* Reduced padding to fit more text */
-            display: flex;
-            flex-direction: column;
-            background: var(--main-bg);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Angled Sticker Name & Role */
-        .header-section {
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .header-name {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 0px var(--accent-blue);
-            margin-bottom: 12px;
-        }
-
-        /* Angled Creative Title */
-        .header-role-container {
-            display: inline-block;
-            transform: rotate(-3deg);
-            transition: transform 0.3s;
-        }
-        .header-role-container:hover { transform: rotate(0deg) scale(1.02); }
-
-        .header-role {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background: var(--accent-yellow); /* Only pop of extra color */
-            border: 2px solid var(--outline);
-            padding: 6px 14px;
-            border-radius: 8px;
-            box-shadow: 3px 3px 0px var(--outline);
-            display: inline-block;
-        }
-
-        /* Summary Text */
-        .summary-text {
-            font-size: 12px;
-            color: var(--text-main);
-            font-weight: 600;
-            line-height: 1.6;
-            text-align: justify;
-            margin-bottom: 20px;
-            padding: 12px 15px;
-            background: #f8fafc;
-            border: 2px solid var(--outline);
-            border-radius: 8px;
-            box-shadow: 3px 3px 0px var(--accent-blue);
-        }
-
-        /* Section Titles */
-        .content-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .content-title .icon-box {
-            color: white;
-            background: var(--text-main);
-            border: 2px solid var(--outline);
-            font-size: 12px;
-            width: 24px; height: 24px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 6px;
-            box-shadow: 2px 2px 0px var(--accent-blue);
-            transform: rotate(-5deg);
-        }
-
-        /* 2D Connected Timeline (Tightened up to prevent cut-offs) */
-        .timeline {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 15px; 
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 7px; top: 6px; bottom: 0;
-            width: 3px;
-            background: var(--outline);
-            border-radius: 3px;
-        }
-        .timeline-item { position: relative; margin-bottom: 12px; }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -19px; top: 5px;
-            width: 12px; height: 12px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            border: 2px solid var(--outline);
-        }
-
-        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-        .item-title { font-size: 14px; font-weight: 800; color: var(--text-main); }
-        .item-date { font-family: 'Fredoka', sans-serif; font-size: 11px; font-weight: 600; color: var(--text-main); background: white; border: 2px solid var(--outline); padding: 2px 8px; border-radius: 6px; box-shadow: 2px 2px 0px var(--accent-blue); }
-        .item-subtitle { font-size: 12.5px; font-weight: 800; color: var(--accent-blue); margin-bottom: 6px; }
-        
-        .item-list { list-style: none; padding-left: 0; }
-        .item-list li {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--text-light);
-            line-height: 1.4;
-            margin-bottom: 4px;
-            position: relative;
-            padding-left: 14px;
-        }
-        .item-list li::before {
-            content: '▹';
-            position: absolute;
-            left: 0; top: 0px;
-            color: var(--accent-blue);
-            font-size: 14px;
-            font-weight: 900;
-        }
-
-        /* --- MINIMAL DOODLE GRAPHIC (Absolute positioned so it doesn't break layout) --- */
-        .minimal-doodle {
-            position: absolute;
-            bottom: 15mm;
-            right: 12mm;
-            width: 120px;
-            height: auto;
-            opacity: 0.85;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* --- STRICT PRINT RULES --- */
+        /* Hide everything except the printable invoice when printing */
         @media print {
-            .controls-container, .no-print { display: none !important; }
-            body { margin: 0; padding: 0; background: white; align-items: flex-start; }
-            
-            .resume-wrapper {
-                margin: 0 !important;
-                box-shadow: none !important;
-                border: none !important; /* Remove outer border for print sizing */
-                width: 210mm !important;
-                height: 297mm !important;
+            body * {
+                visibility: hidden;
             }
-            .sidebar { width: 36% !important; float: left; border-right: 4px solid var(--outline) !important; }
-            .main-content { width: 64% !important; float: left; }
-
-            [contenteditable="true"]:hover, [contenteditable="true"]:focus {
-                box-shadow: none !important; background: transparent !important;
+            #print-area, #print-area * {
+                visibility: visible;
             }
-            @page { size: A4 portrait; margin: 0; }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 font-sans h-screen flex overflow-hidden">
 
-    <!-- Controls -->
-    <div class="controls-container no-print">
-        <div class="controls-text">
-            ✏️ Clean, 3-Color Creative Layout (Fixed Spacing for PDF)
+    <!-- Sidebar Navigation -->
+    <nav class="bg-indigo-900 text-white w-64 flex-shrink-0 hidden md:flex flex-col no-print transition-all duration-300 z-20">
+        <div class="p-6 flex items-center space-x-3">
+            <i class="fas fa-notes-medical text-2xl text-indigo-400"></i>
+            <span class="text-xl font-bold tracking-wider">MediBill</span>
         </div>
-        <div class="controls-warning">
-            ⚠️ IMPORTANT: When saving to PDF, check the "Background graphics" box in your print settings so the design prints perfectly!
+        <div class="flex-1 px-4 space-y-2 mt-4">
+            <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-chart-pie w-5"></i>
+                <span>Dashboard</span>
+            </button>
+            <button onclick="navigate('new-bill')" id="nav-new-bill" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors text-gray-300">
+                <i class="fas fa-file-invoice-dollar w-5"></i>
+                <span>New Invoice</span>
+            </button>
+            <button onclick="navigate('history')" id="nav-history" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors text-gray-300">
+                <i class="fas fa-history w-5"></i>
+                <span>Billing History</span>
+            </button>
         </div>
-        <button class="print-btn" onclick="window.print()">
-            <i class="fas fa-print"></i> Print / Save as PDF
-        </button>
+        <div class="p-4 border-t border-indigo-800 text-sm text-indigo-300 text-center">
+            Clinic SPA v1.0
+        </div>
+    </nav>
+
+    <!-- Mobile Header (Visible only on small screens) -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-indigo-900 text-white p-4 flex justify-between items-center z-20 no-print">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-notes-medical text-xl text-indigo-400"></i>
+            <span class="text-lg font-bold">MediBill</span>
+        </div>
+        <div class="flex space-x-4">
+            <button onclick="navigate('dashboard')" class="text-indigo-200 hover:text-white"><i class="fas fa-chart-pie"></i></button>
+            <button onclick="navigate('new-bill')" class="text-indigo-200 hover:text-white"><i class="fas fa-plus"></i></button>
+            <button onclick="navigate('history')" class="text-indigo-200 hover:text-white"><i class="fas fa-history"></i></button>
+        </div>
     </div>
 
-    <!-- RESUME -->
-    <div class="resume-wrapper">
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto pt-16 md:pt-0">
         
-        <!-- SIDEBAR -->
-        <div class="sidebar">
-            <div class="profile-wrapper">
-                <div class="profile-pic" onclick="changeImage()">
-                    <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Profile Picture">
-                </div>
-            </div>
-
-            <div class="sidebar-title" contenteditable="true">Contact</div>
-            <div class="contact-item">
-                <i class="fas fa-map-marker-alt contact-icon"></i>
-                <span contenteditable="true">Jangalpara Bazar, Hooghly,<br>West Bengal – 712701</span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-phone-alt contact-icon"></i>
-                <span contenteditable="true">+91 9933670094</span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-envelope contact-icon"></i>
-                <span contenteditable="true">ranjumanna400@gmail.com</span>
-            </div>
-
-            <div class="sidebar-title" contenteditable="true">Software</div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Premiere Pro</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 90%;"></div>
-                </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Photoshop</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 80%;"></div>
-                </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Adobe Animate (Flash)</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 85%;"></div>
-                </div>
-            </div>
-            <div class="skill-item">
-                <span class="skill-name" contenteditable="true">Spine 2D Animation</span>
-                <div class="progress-bar-bg" onclick="updateProgress(event, this)">
-                    <div class="progress-bar-fill" style="width: 75%;"></div>
-                </div>
-            </div>
-
-            <div class="sidebar-title" contenteditable="true">Expertise</div>
-            <div class="expertise-container">
-                <span class="expertise-pill" contenteditable="true">2D Animation</span>
-                <span class="expertise-pill" contenteditable="true">Spine Rigging</span>
-                <span class="expertise-pill" contenteditable="true">Video Editing</span>
-                <span class="expertise-pill" contenteditable="true">Motion Graphics</span>
-                <span class="expertise-pill" contenteditable="true">Social Reels</span>
-                <span class="expertise-pill" contenteditable="true">Thumbnails</span>
-                <span class="expertise-pill" contenteditable="true">Poster Design</span>
-            </div>
-
-            <div class="sidebar-title" contenteditable="true" style="margin-top: 15px;">Languages</div>
-            <div class="expertise-container">
-                <span class="expertise-pill" contenteditable="true">Bengali</span>
-                <span class="expertise-pill" contenteditable="true">Hindi</span>
-                <span class="expertise-pill" contenteditable="true">English</span>
-            </div>
-        </div>
-
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
+        <!-- ==================== DASHBOARD VIEW ==================== -->
+        <section id="view-dashboard" class="view-section p-6 md:p-10 flex-1">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Overview</h2>
             
-            <div class="header-section">
-                <h1 class="header-name" contenteditable="true">RANJU MANNA</h1>
-                <!-- ANGLED JOB TITLE (Yellow Sticker) -->
-                <div class="header-role-container">
-                    <div class="header-role" contenteditable="true">2D Animator & Video Editor</div>
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                    <div class="p-3 bg-green-100 text-green-600 rounded-lg">
+                        <i class="fas fa-rupee-sign text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Total Revenue (Today)</p>
+                        <h3 class="text-2xl font-bold text-gray-800" id="stat-revenue">₹0.00</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                        <i class="fas fa-file-invoice text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Invoices Generated</p>
+                        <h3 class="text-2xl font-bold text-gray-800" id="stat-invoices">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                    <div class="p-3 bg-purple-100 text-purple-600 rounded-lg">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Patients Seen</p>
+                        <h3 class="text-2xl font-bold text-gray-800" id="stat-patients">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Invoices Widget -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-800">Recent Invoices</h3>
+                    <button onclick="navigate('history')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">View All</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-500 text-sm">
+                                <th class="py-3 px-6 font-medium">Inv #</th>
+                                <th class="py-3 px-6 font-medium">Patient Name</th>
+                                <th class="py-3 px-6 font-medium">Date</th>
+                                <th class="py-3 px-6 font-medium">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-recent-list" class="divide-y divide-gray-100">
+                            <tr><td colspan="4" class="py-6 text-center text-gray-400">No invoices generated yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== NEW BILL VIEW ==================== -->
+        <section id="view-new-bill" class="view-section hidden p-6 md:p-10 flex-1">
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" id="print-area">
+                
+                <!-- Invoice Header -->
+                <div class="p-6 md:p-8 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-indigo-900">INVOICE</h2>
+                        <p class="text-sm text-gray-500 mt-1">Invoice #: <span id="display-inv-number" class="font-mono text-gray-800">INV-1001</span></p>
+                    </div>
+                    <div class="text-left md:text-right mt-4 md:mt-0">
+                        <h3 class="font-bold text-gray-800 text-lg">Your Clinic Name</h3>
+                        <p class="text-sm text-gray-500">123 Health Avenue, Medical District</p>
+                        <p class="text-sm text-gray-500">Phone: +91 98765 43210</p>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8">
+                    <!-- Patient Details Form -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 no-print">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
+                            <input type="text" id="patient-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Enter patient name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" id="patient-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Enter phone number">
+                        </div>
+                    </div>
+
+                    <!-- Print Only Patient Details -->
+                    <div class="hidden print:block mb-8">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Billed To:</p>
+                                <h4 class="font-bold text-gray-800 text-lg" id="print-patient-name">Walk-in Patient</h4>
+                                <p class="text-sm text-gray-600" id="print-patient-phone"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-500">Date:</p>
+                                <p class="font-medium text-gray-800" id="print-date"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Table -->
+                    <div class="mb-6 overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 text-sm border-b border-t border-gray-200">
+                                    <th class="py-3 px-4 font-semibold w-1/2">Service / Treatment</th>
+                                    <th class="py-3 px-4 font-semibold text-center w-1/6">Qty</th>
+                                    <th class="py-3 px-4 font-semibold text-right w-1/6">Rate (₹)</th>
+                                    <th class="py-3 px-4 font-semibold text-right w-1/6">Amount (₹)</th>
+                                    <th class="py-3 px-2 font-semibold text-center no-print w-12"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items" class="divide-y divide-gray-100">
+                                <!-- Dynamic Rows Go Here -->
+                            </tbody>
+                        </table>
+                        
+                        <button onclick="addInvoiceRow()" class="mt-4 text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center space-x-1 no-print px-4">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add Service</span>
+                        </button>
+                    </div>
+
+                    <!-- Totals Section -->
+                    <div class="flex flex-col md:flex-row justify-between items-end md:items-start pt-4">
+                        <div class="w-full md:w-1/2 mb-6 md:mb-0 no-print">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes / Instructions</label>
+                            <textarea id="invoice-notes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" placeholder="e.g., Next visit in 2 weeks..."></textarea>
+                        </div>
+                        
+                        <div class="w-full md:w-1/3 space-y-3">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal:</span>
+                                <span class="font-medium" id="summary-subtotal">₹0.00</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600 items-center no-print">
+                                <span>Discount (%):</span>
+                                <input type="number" id="input-discount" min="0" max="100" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 outline-none" oninput="calculateTotals()">
+                            </div>
+                            <div class="hidden print:flex justify-between text-gray-600">
+                                <span>Discount:</span>
+                                <span id="print-discount">₹0.00</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600 items-center no-print">
+                                <span>Tax (%):</span>
+                                <input type="number" id="input-tax" min="0" max="100" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 outline-none" oninput="calculateTotals()">
+                            </div>
+                            <div class="hidden print:flex justify-between text-gray-600">
+                                <span>Tax:</span>
+                                <span id="print-tax">₹0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
+                                <span>Total Amount:</span>
+                                <span id="summary-total" class="text-indigo-700">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <p class="summary-text" contenteditable="true">
-                Creative and detail-oriented 2D Animator and Video Editor with 3 years of experience in animation and digital content creation. Skilled in creating animated videos, motion graphics, reels, and edited content using industry-standard software. Passionate about delivering high-quality visual storytelling for social media, YouTube, and promotional projects.
-            </p>
-
-            <div class="content-title">
-                <div class="icon-box"><i class="fas fa-briefcase"></i></div>
-                <span class="title-text" contenteditable="true">Work Experience</span>
+            <!-- Action Buttons -->
+            <div class="max-w-4xl mx-auto mt-6 flex justify-end space-x-4 no-print pb-10">
+                <button onclick="resetInvoice()" class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                    Clear Form
+                </button>
+                <button onclick="saveAndPrint()" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md transition-colors font-medium flex items-center space-x-2">
+                    <i class="fas fa-print"></i>
+                    <span>Save & Print</span>
+                </button>
             </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="item-header">
-                        <div class="item-title" contenteditable="true">2D Animator & Video Editor</div>
-                        <div class="item-date" contenteditable="true">2021 – Present</div>
+        </section>
+
+
+        <!-- ==================== HISTORY VIEW ==================== -->
+        <section id="view-history" class="view-section hidden p-6 md:p-10 flex-1">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Billing History</h2>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-180px)]">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <div class="relative w-64">
+                        <input type="text" id="search-history" placeholder="Search patient name..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm" oninput="filterHistory()">
+                        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                     </div>
-                    <div class="item-subtitle" contenteditable="true">S & S Media Studio</div>
-                    <ul class="item-list">
-                        <li contenteditable="true">Created 2D animated content for digital platforms.</li>
-                        <li contenteditable="true">Edited promotional videos, reels, and social media content.</li>
-                        <li contenteditable="true">Worked on animation projects using Adobe Animate and Spine 2D.</li>
-                        <li contenteditable="true">Designed and edited visual content for clients and online media.</li>
-                        <li contenteditable="true">Collaborated with creative teams to improve video quality.</li>
-                    </ul>
+                    <button onclick="clearHistory()" class="text-sm text-red-500 hover:text-red-700 flex items-center space-x-1">
+                        <i class="fas fa-trash-alt"></i> <span class="hidden sm:inline">Clear History</span>
+                    </button>
+                </div>
+                
+                <div class="overflow-y-auto flex-1">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 bg-white shadow-sm z-10">
+                            <tr class="bg-gray-50 text-gray-500 text-sm">
+                                <th class="py-3 px-6 font-medium border-b border-gray-200">Invoice #</th>
+                                <th class="py-3 px-6 font-medium border-b border-gray-200">Date</th>
+                                <th class="py-3 px-6 font-medium border-b border-gray-200">Patient Name</th>
+                                <th class="py-3 px-6 font-medium border-b border-gray-200 text-right">Total Amount</th>
+                                <th class="py-3 px-6 font-medium border-b border-gray-200 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-list" class="divide-y divide-gray-100">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </section>
 
-            <div class="content-title">
-                <div class="icon-box"><i class="fas fa-star"></i></div>
-                <span class="title-text" contenteditable="true">Professional Training</span>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="item-header">
-                        <div class="item-title" contenteditable="true">Diploma in Desktop Publishing</div>
-                        <div class="item-date" contenteditable="true">2022</div>
-                    </div>
-                    <div class="item-subtitle" contenteditable="true">Dream Box, Baksha, Santrapara</div>
-                    <ul class="item-list">
-                        <li contenteditable="true">Animation & Editing Training.</li>
-                        <li contenteditable="true">2D Animation using Adobe Animate (Flash).</li>
-                        <li contenteditable="true">Spine 2D Animation techniques.</li>
-                        <li contenteditable="true">Video Editing with Adobe Premiere Pro.</li>
-                    </ul>
-                </div>
-            </div>
+    </main>
 
-            <div class="content-title">
-                <div class="icon-box"><i class="fas fa-graduation-cap"></i></div>
-                <span class="title-text" contenteditable="true">Education</span>
-            </div>
-            <div class="timeline" style="margin-bottom: 0;">
-                <div class="timeline-item" style="margin-bottom: 8px;">
-                    <div class="item-header">
-                        <div class="item-title" contenteditable="true">Higher Secondary Education</div>
-                        <div class="item-date" contenteditable="true">2021</div>
-                    </div>
-                    <div class="item-subtitle" style="margin-bottom: 0; color: var(--text-light);" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
-                </div>
-                <div class="timeline-item" style="margin-bottom: 0;">
-                    <div class="item-header">
-                        <div class="item-title" contenteditable="true">Secondary Education</div>
-                        <div class="item-date" contenteditable="true">2019</div>
-                    </div>
-                    <div class="item-subtitle" style="margin-bottom: 0; color: var(--text-light);" contenteditable="true">Jangalpara Krishnarampur Deshapran High School</div>
-                </div>
-            </div>
-
-            <!-- CLEAN, MINIMAL 2D DOODLE (Placed absolute so it NEVER pushes text down) -->
-            <svg class="minimal-doodle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Drawing Tablet -->
-                <rect x="10" y="30" width="80" height="50" rx="4" fill="#ffffff" stroke="#0f172a" stroke-width="3" transform="rotate(-5 50 55)"/>
-                <!-- Tablet Screen -->
-                <rect x="18" y="36" width="64" height="38" rx="2" fill="#f0f9ff" stroke="#0f172a" stroke-width="2" transform="rotate(-5 50 55)"/>
-                <!-- Stylus Pen -->
-                <line x1="85" y1="20" x2="60" y2="55" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
-                <!-- Cute drawing on tablet screen -->
-                <circle cx="40" cy="52" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
-                <circle cx="56" cy="50" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
-                <path d="M 45 60 Q 48 64 51 60" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
-                <!-- Sparkles -->
-                <path d="M 20 15 L 22 20 L 27 22 L 22 24 L 20 29 L 18 24 L 13 22 L 18 20 Z" fill="#0ea5e9"/>
-                <path d="M 80 80 L 81 83 L 84 84 L 81 85 L 80 88 L 79 85 L 76 84 L 79 83 Z" fill="#0ea5e9"/>
-            </svg>
-
-        </div>
+    <!-- Success Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50 no-print">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Success!</span>
     </div>
 
-    <!-- Interactivity Scripts -->
+    <!-- Application Logic -->
     <script>
-        function changeImage() {
-            const currentImg = document.getElementById('profileImg');
-            const newUrl = prompt("Enter the URL of your new profile picture:");
-            if (newUrl && newUrl.trim() !== "") {
-                currentImg.src = newUrl;
+        // --- State Management ---
+        let currentInvoiceId = 1001;
+        let invoices = JSON.parse(localStorage.getItem('clinic_invoices')) || [];
+        if(invoices.length > 0) {
+            // Get the highest invoice ID to continue the sequence
+            const maxId = Math.max(...invoices.map(inv => parseInt(inv.id.split('-')[1])));
+            currentInvoiceId = maxId + 1;
+        }
+
+        // Common treatment options tailored for physiotherapy/clinic
+        const treatmentOptions = [
+            "General Consultation",
+            "Physiotherapy Assessment",
+            "Physiotherapy Session (Standard)",
+            "Electrotherapy (TENS/IFT)",
+            "Ultrasound Therapy",
+            "Manual Therapy / Massage",
+            "Exercise Prescription",
+            "Follow-up Visit"
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('display-inv-number').innerText = `INV-${currentInvoiceId}`;
+            addInvoiceRow(); // Add one empty row by default
+            updateDashboardStats();
+            renderHistory();
+            
+            // Set today's date for print
+            document.getElementById('print-date').innerText = new Date().toLocaleDateString('en-IN');
+        });
+
+        // --- Navigation Logic ---
+        function navigate(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            // Show target view
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+            
+            // Update Navigation Highlighting (Desktop)
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-800', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+            const activeBtn = document.getElementById(`nav-${viewId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-gray-300');
+                activeBtn.classList.add('bg-indigo-800', 'text-white');
+            }
+
+            if(viewId === 'dashboard') updateDashboardStats();
+            if(viewId === 'history') renderHistory();
+        }
+
+        // --- Invoice Logic ---
+        function addInvoiceRow() {
+            const tbody = document.getElementById('invoice-items');
+            const tr = document.createElement('tr');
+            tr.className = 'item-row hover:bg-gray-50 transition-colors';
+            
+            // Create datalist ID for autocomplete
+            const datalistId = `treatments-${Date.now()}`;
+            const optionsHtml = treatmentOptions.map(opt => `<option value="${opt}">`).join('');
+
+            tr.innerHTML = `
+                <td class="py-2 px-4">
+                    <input list="${datalistId}" type="text" class="item-desc w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-indigo-500 outline-none text-sm" placeholder="Select or type service...">
+                    <datalist id="${datalistId}">${optionsHtml}</datalist>
+                </td>
+                <td class="py-2 px-4">
+                    <input type="number" min="1" value="1" class="item-qty w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-indigo-500 outline-none text-sm text-center" oninput="calculateTotals()">
+                </td>
+                <td class="py-2 px-4">
+                    <input type="number" min="0" placeholder="0.00" class="item-rate w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-indigo-500 outline-none text-sm text-right" oninput="calculateTotals()">
+                </td>
+                <td class="py-2 px-4 text-right font-medium text-gray-700">
+                    ₹<span class="item-amount">0.00</span>
+                </td>
+                <td class="py-2 px-2 text-center no-print">
+                    <button onclick="removeRow(this)" class="text-red-400 hover:text-red-600 p-1 rounded transition-colors" title="Remove Item">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        function removeRow(btn) {
+            const tbody = document.getElementById('invoice-items');
+            if (tbody.children.length > 1) {
+                btn.closest('tr').remove();
+                calculateTotals();
+            } else {
+                showToast("Cannot remove the last row. Just clear it instead.", false);
             }
         }
 
-        function updateProgress(event, container) {
-            const rect = container.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const percentage = Math.round((clickX / rect.width) * 100);
-            const finalPercentage = Math.max(10, Math.min(100, percentage));
-            const fillBar = container.querySelector('.progress-bar-fill');
-            fillBar.style.width = finalPercentage + '%';
+        function calculateTotals() {
+            let subtotal = 0;
+            const rows = document.querySelectorAll('.item-row');
+            
+            rows.forEach(row => {
+                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+                const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+                const amount = qty * rate;
+                
+                row.querySelector('.item-amount').innerText = amount.toFixed(2);
+                subtotal += amount;
+            });
+
+            const discountPct = parseFloat(document.getElementById('input-discount').value) || 0;
+            const taxPct = parseFloat(document.getElementById('input-tax').value) || 0;
+
+            const discountAmt = subtotal * (discountPct / 100);
+            const afterDiscount = subtotal - discountAmt;
+            const taxAmt = afterDiscount * (taxPct / 100);
+            const total = afterDiscount + taxAmt;
+
+            // Update DOM
+            document.getElementById('summary-subtotal').innerText = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('summary-total').innerText = `₹${total.toFixed(2)}`;
+            
+            // Update print-specific elements
+            document.getElementById('print-discount').innerText = `₹${discountAmt.toFixed(2)} (${discountPct}%)`;
+            document.getElementById('print-tax').innerText = `₹${taxAmt.toFixed(2)} (${taxPct}%)`;
+            
+            return { subtotal, discountAmt, taxAmt, total };
         }
+
+        function saveAndPrint() {
+            // 1. Validate Form
+            const patientName = document.getElementById('patient-name').value.trim();
+            const patientPhone = document.getElementById('patient-phone').value.trim();
+            
+            if (!patientName) {
+                alert("Please enter a patient name.");
+                document.getElementById('patient-name').focus();
+                return;
+            }
+
+            // Ensure at least one item has a price
+            const totals = calculateTotals();
+            if (totals.total <= 0) {
+                alert("Total amount cannot be zero. Please add valid services and rates.");
+                return;
+            }
+
+            // 2. Prepare Data for Print View
+            document.getElementById('print-patient-name').innerText = patientName;
+            document.getElementById('print-patient-phone').innerText = patientPhone ? `Ph: ${patientPhone}` : '';
+            
+            // 3. Save to memory/localStorage
+            const invoiceData = {
+                id: `INV-${currentInvoiceId}`,
+                date: new Date().toISOString(),
+                patientName: patientName,
+                phone: patientPhone,
+                total: totals.total,
+                items: []
+            };
+
+            document.querySelectorAll('.item-row').forEach(row => {
+                const desc = row.querySelector('.item-desc').value;
+                if(desc) {
+                    invoiceData.items.push({
+                        desc: desc,
+                        qty: row.querySelector('.item-qty').value,
+                        rate: row.querySelector('.item-rate').value,
+                        amount: row.querySelector('.item-amount').innerText
+                    });
+                }
+            });
+
+            invoices.push(invoiceData);
+            localStorage.setItem('clinic_invoices', JSON.stringify(invoices));
+            
+            // 4. Trigger Print
+            window.print();
+            
+            // 5. Post-print cleanup
+            showToast(`Invoice ${invoiceData.id} Saved Successfully!`);
+            currentInvoiceId++;
+            resetInvoice();
+            updateDashboardStats();
+        }
+
+        function resetInvoice() {
+            document.getElementById('patient-name').value = '';
+            document.getElementById('patient-phone').value = '';
+            document.getElementById('invoice-notes').value = '';
+            document.getElementById('input-discount').value = '0';
+            document.getElementById('input-tax').value = '0';
+            
+            const tbody = document.getElementById('invoice-items');
+            tbody.innerHTML = ''; // Clear rows
+            addInvoiceRow(); // Add one fresh row
+            
+            document.getElementById('display-inv-number').innerText = `INV-${currentInvoiceId}`;
+            calculateTotals();
+        }
+
+        // --- Dashboard Logic ---
+        function updateDashboardStats() {
+            const today = new Date().setHours(0,0,0,0);
+            
+            let todayRevenue = 0;
+            let todayInvoicesCount = 0;
+            
+            // Unique patients using a Set
+            const uniquePatients = new Set(invoices.map(inv => inv.patientName.toLowerCase()));
+
+            invoices.forEach(inv => {
+                const invDate = new Date(inv.date).setHours(0,0,0,0);
+                if (invDate === today) {
+                    todayRevenue += parseFloat(inv.total);
+                    todayInvoicesCount++;
+                }
+            });
+
+            document.getElementById('stat-revenue').innerText = `₹${todayRevenue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits:2})}`;
+            document.getElementById('stat-invoices').innerText = todayInvoicesCount;
+            document.getElementById('stat-patients').innerText = uniquePatients.size;
+
+            // Populate Recent list (last 5)
+            const recentList = document.getElementById('dashboard-recent-list');
+            recentList.innerHTML = '';
+            
+            const recentInvoices = [...invoices].reverse().slice(0, 5);
+            
+            if (recentInvoices.length === 0) {
+                recentList.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-gray-400">No invoices generated yet.</td></tr>`;
+            } else {
+                recentInvoices.forEach(inv => {
+                    const dateStr = new Date(inv.date).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+                    recentList.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-6 text-sm font-medium text-indigo-600">${inv.id}</td>
+                            <td class="py-3 px-6 text-sm text-gray-800">${inv.patientName}</td>
+                            <td class="py-3 px-6 text-sm text-gray-500">${dateStr}</td>
+                            <td class="py-3 px-6 text-sm font-medium text-gray-900">₹${parseFloat(inv.total).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // --- History Logic ---
+        function renderHistory(filterText = '') {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            
+            const filteredInvoices = invoices.filter(inv => 
+                inv.patientName.toLowerCase().includes(filterText.toLowerCase()) || 
+                inv.id.toLowerCase().includes(filterText.toLowerCase())
+            ).reverse(); // Newest first
+
+            if(filteredInvoices.length === 0) {
+                list.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-400">No records found.</td></tr>`;
+                return;
+            }
+
+            filteredInvoices.forEach(inv => {
+                const dateStr = new Date(inv.date).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+                list.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="py-3 px-6 text-sm font-medium text-indigo-600">${inv.id}</td>
+                        <td class="py-3 px-6 text-sm text-gray-500">${dateStr}</td>
+                        <td class="py-3 px-6 text-sm text-gray-800 font-medium">${inv.patientName}</td>
+                        <td class="py-3 px-6 text-sm font-bold text-gray-900 text-right">₹${parseFloat(inv.total).toFixed(2)}</td>
+                        <td class="py-3 px-6 text-center">
+                            <button onclick="reprintInvoice('${inv.id}')" class="text-indigo-500 hover:text-indigo-700 p-1" title="Print Copy">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterHistory() {
+            const query = document.getElementById('search-history').value;
+            renderHistory(query);
+        }
+
+        function clearHistory() {
+            if(confirm("Are you sure you want to delete all billing history? This cannot be undone.")) {
+                invoices = [];
+                localStorage.removeItem('clinic_invoices');
+                currentInvoiceId = 1001;
+                renderHistory();
+                updateDashboardStats();
+                resetInvoice();
+                showToast("History cleared successfully.");
+            }
+        }
+
+        // Mock reprint function (in a real app, this would reconstruct the invoice view)
+        function reprintInvoice(id) {
+            alert(`Reprinting invoice ${id}... (In a full production setup, this would reload the data into the invoice template and trigger window.print)`);
+        }
+
+        // --- Utils ---
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.className = `fixed bottom-5 right-5 transform transition-all duration-300 px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50 no-print ${isSuccess ? 'bg-green-600' : 'bg-red-500'} text-white`;
+            
+            // Slide up and fade in
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                // Slide down and fade out
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
     </script>
 </body>
 </html>
+
