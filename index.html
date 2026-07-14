@@ -42,308 +42,251 @@
             border-radius: 4px;
         }
 
-        /* Improved Print Styling */
+        /* Bulletproof Print Styling for Mobile */
         @media print {
-            body {
+            body, html {
                 background: white !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            #print-area {
-                box-shadow: none !important;
-                border: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
+            }
+            #app-container {
+                display: none !important;
+            }
+            #print-view {
+                display: block !important;
                 width: 100% !important;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans h-screen flex overflow-hidden">
+<body class="bg-gray-50 text-gray-800 font-sans">
 
-    <!-- Sidebar Navigation (Desktop) -->
-    <nav class="bg-brand-900 text-white w-64 flex-shrink-0 hidden md:flex flex-col print:hidden transition-all duration-300 z-20 shadow-lg">
-        <div class="p-6 flex items-center space-x-3">
-            <i class="fas fa-leaf text-2xl text-brand-300"></i>
-            <span class="text-xl font-bold tracking-wider">TherapeuticHub</span>
-        </div>
-        <div class="flex-1 px-4 space-y-2 mt-4">
-            <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 bg-brand-800 rounded-lg text-left transition-colors">
-                <i class="fas fa-chart-pie w-5 text-center"></i>
-                <span>Dashboard</span>
-            </button>
-            <button onclick="navigate('new-bill')" id="nav-new-bill" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-brand-800 rounded-lg text-left transition-colors text-gray-300">
-                <i class="fas fa-file-invoice-dollar w-5 text-center"></i>
-                <span>New Invoice</span>
-            </button>
-            <button onclick="navigate('history')" id="nav-history" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-brand-800 rounded-lg text-left transition-colors text-gray-300">
-                <i class="fas fa-history w-5 text-center"></i>
-                <span>Billing History</span>
-            </button>
-        </div>
-        <div class="p-4 border-t border-brand-800 text-xs text-brand-300 text-center">
-            Local Data Mode Active<br>
-            <span class="text-[10px] opacity-75">Data saved to browser storage</span>
-        </div>
-    </nav>
+    <!-- ==================== APP UI (Hidden on Print) ==================== -->
+    <div id="app-container" class="flex h-screen w-full overflow-hidden print:hidden">
+        
+        <!-- Sidebar Navigation (Desktop) -->
+        <nav class="bg-brand-900 text-white w-64 flex-shrink-0 hidden md:flex flex-col transition-all duration-300 z-20 shadow-lg">
+            <div class="p-6 flex items-center space-x-3">
+                <i class="fas fa-leaf text-2xl text-brand-300"></i>
+                <span class="text-xl font-bold tracking-wider">TherapeuticHub</span>
+            </div>
+            <div class="flex-1 px-4 space-y-2 mt-4">
+                <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 bg-brand-800 rounded-lg text-left transition-colors">
+                    <i class="fas fa-chart-pie w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="navigate('new-bill')" id="nav-new-bill" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-brand-800 rounded-lg text-left transition-colors text-gray-300">
+                    <i class="fas fa-file-invoice-dollar w-5 text-center"></i>
+                    <span>New Invoice</span>
+                </button>
+                <button onclick="navigate('history')" id="nav-history" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 hover:bg-brand-800 rounded-lg text-left transition-colors text-gray-300">
+                    <i class="fas fa-history w-5 text-center"></i>
+                    <span>Billing History</span>
+                </button>
+            </div>
+            <div class="p-4 border-t border-brand-800 text-xs text-brand-300 text-center">
+                Local Data Mode Active<br>
+                <span class="text-[10px] opacity-75">Data saved to browser storage</span>
+            </div>
+        </nav>
 
-    <!-- Mobile Header -->
-    <div class="md:hidden fixed top-0 left-0 right-0 bg-brand-900 text-white p-4 flex justify-between items-center z-20 print:hidden shadow-md">
-        <div class="flex items-center space-x-2">
-            <i class="fas fa-leaf text-xl text-brand-300"></i>
-            <span class="text-lg font-bold">TherapeuticHub</span>
+        <!-- Mobile Header -->
+        <div class="md:hidden fixed top-0 left-0 right-0 bg-brand-900 text-white p-4 flex justify-between items-center z-20 shadow-md">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-leaf text-xl text-brand-300"></i>
+                <span class="text-lg font-bold">TherapeuticHub</span>
+            </div>
+            <div class="flex space-x-5">
+                <button onclick="navigate('dashboard')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-chart-pie"></i></button>
+                <button onclick="navigate('new-bill')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-plus"></i></button>
+                <button onclick="navigate('history')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-history"></i></button>
+            </div>
         </div>
-        <div class="flex space-x-5">
-            <button onclick="navigate('dashboard')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-chart-pie"></i></button>
-            <button onclick="navigate('new-bill')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-plus"></i></button>
-            <button onclick="navigate('history')" class="text-brand-200 hover:text-white text-xl"><i class="fas fa-history"></i></button>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-full overflow-y-auto pt-16 md:pt-0">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view-section p-4 md:p-10 flex-1">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                        <div class="p-3 bg-brand-100 text-brand-600 rounded-lg"><i class="fas fa-rupee-sign text-xl"></i></div>
+                        <div><p class="text-sm text-gray-500 font-medium">Total Revenue (Today)</p><h3 class="text-2xl font-bold text-gray-800" id="stat-revenue">₹0.00</h3></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg"><i class="fas fa-file-invoice text-xl"></i></div>
+                        <div><p class="text-sm text-gray-500 font-medium">Invoices Generated</p><h3 class="text-2xl font-bold text-gray-800" id="stat-invoices">0</h3></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
+                        <div class="p-3 bg-purple-100 text-purple-600 rounded-lg"><i class="fas fa-users text-xl"></i></div>
+                        <div><p class="text-sm text-gray-500 font-medium">Patients Seen</p><h3 class="text-2xl font-bold text-gray-800" id="stat-patients">0</h3></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-800">Recent Invoices</h3>
+                        <button onclick="navigate('history')" class="text-sm text-brand-600 hover:text-brand-800 font-medium">View All</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[500px]">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-sm">
+                                    <th class="py-3 px-6 font-medium">Inv #</th>
+                                    <th class="py-3 px-6 font-medium">Patient Name</th>
+                                    <th class="py-3 px-6 font-medium">Date</th>
+                                    <th class="py-3 px-6 font-medium">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-recent-list" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Bill View -->
+            <section id="view-new-bill" class="view-section hidden p-4 md:p-10 flex-1">
+                <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    
+                    <div class="p-6 md:p-8 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="mb-4 md:mb-0">
+                            <h2 class="text-3xl font-bold text-brand-900">INVOICE</h2>
+                            <p class="text-sm text-gray-500 mt-1">Invoice #: <span id="display-inv-number" class="font-mono text-gray-800 font-bold">INV-1001</span></p>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <h3 class="font-bold text-gray-800 text-2xl flex items-center md:justify-end space-x-2">
+                                <i class="fas fa-leaf text-brand-500 text-lg"></i><span>TherapeuticHub</span>
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">Phone: +91 9641568109</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 md:p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
+                                <input type="text" id="patient-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Enter patient name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
+                                <input type="tel" id="patient-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Enter phone number">
+                            </div>
+                        </div>
+
+                        <div class="mb-6 overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-gray-50 text-gray-600 text-sm border-b border-t border-gray-200">
+                                        <th class="py-3 px-4 font-semibold w-1/2">Treatment / Service</th>
+                                        <th class="py-3 px-4 font-semibold text-center w-1/6">Qty</th>
+                                        <th class="py-3 px-4 font-semibold text-right w-1/6">Rate (₹)</th>
+                                        <th class="py-3 px-4 font-semibold text-right w-1/6">Amount (₹)</th>
+                                        <th class="py-3 px-2 font-semibold text-center w-10"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoice-items" class="divide-y divide-gray-100">
+                                    <!-- Dynamic Rows Go Here -->
+                                </tbody>
+                            </table>
+                            
+                            <button onclick="addInvoiceRow()" class="mt-4 text-sm text-brand-600 hover:text-brand-800 font-medium flex items-center space-x-1 px-2 py-1 rounded hover:bg-brand-50 transition-colors">
+                                <i class="fas fa-plus-circle"></i><span>Add Row</span>
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row justify-between items-end md:items-start pt-4">
+                            <div class="w-full md:w-1/2 mb-6 md:mb-0 pr-0 md:pr-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Notes / Next Appointment</label>
+                                <textarea id="invoice-notes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none" placeholder="e.g., Next visit in 2 days."></textarea>
+                            </div>
+                            
+                            <div class="w-full md:w-1/3 space-y-3">
+                                <div class="flex justify-between text-gray-600 text-lg">
+                                    <span>Subtotal:</span>
+                                    <span class="font-medium" id="summary-subtotal">₹0.00</span>
+                                </div>
+                                <div class="flex justify-between text-gray-600 items-center">
+                                    <span>Discount (%):</span>
+                                    <input type="number" id="input-discount" min="0" max="100" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-brand-500 outline-none" oninput="calculateTotals()">
+                                </div>
+                                <div class="flex justify-between text-2xl font-bold text-gray-900 pt-3 border-t border-gray-200">
+                                    <span>Total Amount:</span>
+                                    <span id="summary-total" class="text-brand-600">₹0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="max-w-4xl mx-auto mt-6 flex justify-end space-x-3 pb-10">
+                    <button onclick="resetInvoice()" class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Clear Form</button>
+                    <button onclick="saveAndPrint()" class="px-6 py-2.5 bg-brand-600 text-white rounded-lg hover:bg-brand-700 shadow-md transition-colors font-medium flex items-center space-x-2">
+                        <i class="fas fa-print"></i><span>Save & Print</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- History View -->
+            <section id="view-history" class="view-section hidden p-4 md:p-10 flex-1">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Billing History</h2>
+                    <div class="flex space-x-2 w-full md:w-auto">
+                        <button onclick="exportData()" class="flex-1 md:flex-none px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2 border border-gray-200">
+                            <i class="fas fa-download"></i> <span class="hidden sm:inline">Backup</span>
+                        </button>
+                        <button onclick="triggerImport()" class="flex-1 md:flex-none px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2 border border-gray-200">
+                            <i class="fas fa-upload"></i> <span class="hidden sm:inline">Restore</span>
+                        </button>
+                        <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-220px)]">
+                    <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center bg-gray-50 gap-4">
+                        <div class="relative w-full sm:w-72">
+                            <input type="text" id="search-history" placeholder="Search patient name..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm" oninput="filterHistory()">
+                            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
+                        <button onclick="clearHistory()" class="text-sm text-red-500 hover:bg-red-50 px-3 py-2 rounded transition-colors flex items-center space-x-2 w-full sm:w-auto justify-center">
+                            <i class="fas fa-trash-alt"></i> <span>Delete All</span>
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-y-auto overflow-x-auto flex-1">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead class="sticky top-0 bg-white shadow-sm z-10">
+                                <tr class="bg-gray-50 text-gray-500 text-sm">
+                                    <th class="py-3 px-6 font-medium border-b border-gray-200">Invoice #</th>
+                                    <th class="py-3 px-6 font-medium border-b border-gray-200">Date</th>
+                                    <th class="py-3 px-6 font-medium border-b border-gray-200">Patient Name</th>
+                                    <th class="py-3 px-6 font-medium border-b border-gray-200 text-right">Total (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-list" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-brand-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50">
+            <i class="fas fa-check-circle"></i>
+            <span id="toast-message">Success!</span>
         </div>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col h-screen overflow-y-auto pt-16 md:pt-0 print:pt-0">
-        
-        <!-- ==================== DASHBOARD VIEW ==================== -->
-        <section id="view-dashboard" class="view-section p-4 md:p-10 flex-1 print:hidden">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Overview</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
-                    <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
-                        <i class="fas fa-rupee-sign text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Total Revenue (Today)</p>
-                        <h3 class="text-2xl font-bold text-gray-800" id="stat-revenue">₹0.00</h3>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
-                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                        <i class="fas fa-file-invoice text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Invoices Generated</p>
-                        <h3 class="text-2xl font-bold text-gray-800" id="stat-invoices">0</h3>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center space-x-4">
-                    <div class="p-3 bg-purple-100 text-purple-600 rounded-lg">
-                        <i class="fas fa-users text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Patients Seen</p>
-                        <h3 class="text-2xl font-bold text-gray-800" id="stat-patients">0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 class="text-lg font-semibold text-gray-800">Recent Invoices</h3>
-                    <button onclick="navigate('history')" class="text-sm text-brand-600 hover:text-brand-800 font-medium">View All</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[500px]">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-500 text-sm">
-                                <th class="py-3 px-6 font-medium">Inv #</th>
-                                <th class="py-3 px-6 font-medium">Patient Name</th>
-                                <th class="py-3 px-6 font-medium">Date</th>
-                                <th class="py-3 px-6 font-medium">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboard-recent-list" class="divide-y divide-gray-100">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ==================== NEW BILL VIEW ==================== -->
-        <section id="view-new-bill" class="view-section hidden p-4 md:p-10 flex-1 print:block print:p-0">
-            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden print:border-none" id="print-area">
-                
-                <!-- Invoice Header -->
-                <div class="p-6 md:p-8 border-b border-gray-100 bg-gray-50 print:bg-white flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <div class="mb-4 md:mb-0">
-                        <h2 class="text-3xl font-bold text-brand-900">INVOICE</h2>
-                        <p class="text-sm text-gray-500 mt-1">Invoice #: <span id="display-inv-number" class="font-mono text-gray-800 font-bold">INV-1001</span></p>
-                    </div>
-                    <div class="text-left md:text-right">
-                        <h3 class="font-bold text-gray-800 text-2xl flex items-center md:justify-end space-x-2">
-                            <i class="fas fa-leaf text-brand-500 text-lg"></i>
-                            <span>TherapeuticHub</span>
-                        </h3>
-                        <p class="text-sm text-gray-600 mt-1">Phone: +91 9641568109</p>
-                    </div>
-                </div>
-
-                <div class="p-6 md:p-8 print:px-0">
-                    <!-- Patient Details Form (Hidden on Print) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 no-print">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
-                            <input type="text" id="patient-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Enter patient name" oninput="syncHeader()">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Patient Phone Number (Optional)</label>
-                            <input type="tel" id="patient-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Enter phone number" oninput="syncHeader()">
-                        </div>
-                    </div>
-
-                    <!-- Print Only Patient Details (Visible on Print) -->
-                    <div class="hidden print:block mb-8 pb-4 border-b border-gray-100">
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Billed To:</p>
-                                <h4 class="font-bold text-gray-800 text-xl" id="print-patient-name">Patient Name</h4>
-                                <p class="text-md text-gray-600" id="print-patient-phone"></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-500 mb-1">Date:</p>
-                                <p class="font-medium text-gray-800 text-lg" id="print-date"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Services Table -->
-                    <div class="mb-6 overflow-x-auto print:overflow-visible">
-                        <table class="w-full text-left border-collapse min-w-[500px] print:min-w-full">
-                            <thead>
-                                <tr class="bg-gray-50 print:bg-white text-gray-600 text-sm border-b border-t border-gray-200">
-                                    <th class="py-3 px-4 font-semibold w-1/2">Treatment / Service</th>
-                                    <th class="py-3 px-4 font-semibold text-center w-1/6">Qty</th>
-                                    <th class="py-3 px-4 font-semibold text-right w-1/6">Rate (₹)</th>
-                                    <th class="py-3 px-4 font-semibold text-right w-1/6">Amount (₹)</th>
-                                    <th class="py-3 px-2 font-semibold text-center no-print w-10"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoice-items" class="divide-y divide-gray-100 print:divide-gray-200">
-                                <!-- Dynamic Rows Go Here -->
-                            </tbody>
-                        </table>
-                        
-                        <button onclick="addInvoiceRow()" class="mt-4 text-sm text-brand-600 hover:text-brand-800 font-medium flex items-center space-x-1 no-print px-2 py-1 rounded hover:bg-brand-50 transition-colors">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Add Row</span>
-                        </button>
-                    </div>
-
-                    <!-- Totals Section -->
-                    <div class="flex flex-col md:flex-row justify-between items-end md:items-start pt-4">
-                        <div class="w-full md:w-1/2 mb-6 md:mb-0 no-print pr-0 md:pr-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes / Next Appointment</label>
-                            <textarea id="invoice-notes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none" placeholder="e.g., Next visit in 2 days. Drink plenty of water." oninput="syncHeader()"></textarea>
-                        </div>
-                        
-                        <!-- Print Notes (Hidden in UI, visible in print if there is text) -->
-                        <div class="hidden print:block w-1/2 pr-6">
-                            <p class="text-sm font-bold text-gray-700 mb-1" id="print-notes-title" style="display:none;">Notes:</p>
-                            <p class="text-sm text-gray-600 whitespace-pre-wrap" id="print-notes-content"></p>
-                        </div>
-                        
-                        <div class="w-full md:w-1/3 space-y-3">
-                            <div class="flex justify-between text-gray-600 text-lg">
-                                <span>Subtotal:</span>
-                                <span class="font-medium" id="summary-subtotal">₹0.00</span>
-                            </div>
-                            <div class="flex justify-between text-gray-600 items-center no-print">
-                                <span>Discount (%):</span>
-                                <input type="number" id="input-discount" min="0" max="100" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-brand-500 outline-none" oninput="calculateTotals()">
-                            </div>
-                            <div class="hidden print:flex justify-between text-gray-600">
-                                <span>Discount:</span>
-                                <span id="print-discount">₹0.00</span>
-                            </div>
-                            <div class="flex justify-between text-2xl font-bold text-gray-900 pt-3 border-t border-gray-200">
-                                <span>Total Amount:</span>
-                                <span id="summary-total" class="text-brand-600">₹0.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Print Footer -->
-                <div class="hidden print:block text-center mt-12 pt-6 border-t border-gray-200 text-sm text-gray-500">
-                    <p>Thank you for choosing TherapeuticHub.</p>
-                    <p>Wishing you a speedy recovery!</p>
-                </div>
-            </div>
-            
-            <!-- Action Buttons -->
-            <div class="max-w-4xl mx-auto mt-6 flex justify-end space-x-3 no-print pb-10">
-                <button onclick="resetInvoice()" class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                    Clear Form
-                </button>
-                <button onclick="saveAndPrint()" class="px-6 py-2.5 bg-brand-600 text-white rounded-lg hover:bg-brand-700 shadow-md transition-colors font-medium flex items-center space-x-2">
-                    <i class="fas fa-print"></i>
-                    <span>Save & Print</span>
-                </button>
-            </div>
-        </section>
-
-
-        <!-- ==================== HISTORY VIEW ==================== -->
-        <section id="view-history" class="view-section hidden p-4 md:p-10 flex-1 print:hidden">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Billing History</h2>
-                
-                <!-- Data Backup Options -->
-                <div class="flex space-x-2 w-full md:w-auto">
-                    <button onclick="exportData()" class="flex-1 md:flex-none px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2 border border-gray-200">
-                        <i class="fas fa-download"></i> <span class="hidden sm:inline">Backup Data</span>
-                    </button>
-                    <button onclick="triggerImport()" class="flex-1 md:flex-none px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2 border border-gray-200">
-                        <i class="fas fa-upload"></i> <span class="hidden sm:inline">Restore Data</span>
-                    </button>
-                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-220px)]">
-                <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center bg-gray-50 gap-4">
-                    <div class="relative w-full sm:w-72">
-                        <input type="text" id="search-history" placeholder="Search patient name or invoice ID..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm" oninput="filterHistory()">
-                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
-                    </div>
-                    <button onclick="clearHistory()" class="text-sm text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded transition-colors flex items-center space-x-2 w-full sm:w-auto justify-center">
-                        <i class="fas fa-trash-alt"></i> <span>Delete All History</span>
-                    </button>
-                </div>
-                
-                <div class="overflow-y-auto overflow-x-auto flex-1">
-                    <table class="w-full text-left border-collapse min-w-[600px]">
-                        <thead class="sticky top-0 bg-white shadow-sm z-10">
-                            <tr class="bg-gray-50 text-gray-500 text-sm">
-                                <th class="py-3 px-6 font-medium border-b border-gray-200">Invoice #</th>
-                                <th class="py-3 px-6 font-medium border-b border-gray-200">Date</th>
-                                <th class="py-3 px-6 font-medium border-b border-gray-200">Patient Name</th>
-                                <th class="py-3 px-6 font-medium border-b border-gray-200 text-right">Total (₹)</th>
-                                <th class="py-3 px-6 font-medium border-b border-gray-200 text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-list" class="divide-y divide-gray-100">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Success Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-brand-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50 no-print">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Success!</span>
+    <!-- ==================== PRINT UI (Only Visible During Print) ==================== -->
+    <div id="print-view" class="hidden print:block w-full bg-white">
+        <!-- Content will be injected here instantly right before printing via JS -->
     </div>
 
     <!-- Application Logic -->
     <script>
-        // --- State Management ---
         let currentInvoiceId = 1001;
         let invoices = JSON.parse(localStorage.getItem('clinic_invoices')) || [];
         
@@ -355,16 +298,15 @@
         const treatmentOptions = [
             "Initial Consultation",
             "Physiotherapy Assessment",
-            "Physiotherapy Session (Standard)",
-            "Electrotherapy (TENS/IFT/Ultrasound)",
-            "Manual Therapy / Massage",
-            "Exercise Prescription & Training",
+            "Physiotherapy Session",
+            "Electrotherapy",
+            "Manual Therapy",
+            "Exercise Prescription",
             "Cupping Therapy",
             "Dry Needling",
             "Follow-up Session"
         ];
 
-        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('display-inv-number').innerText = `INV-${currentInvoiceId}`;
             addInvoiceRow(); 
@@ -372,7 +314,9 @@
             renderHistory();
         });
 
-        // --- Navigation Logic ---
+        // Trigger text-rendering right before the browser opens the PDF dialog
+        window.addEventListener('beforeprint', generatePrintView);
+
         function navigate(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden');
@@ -391,72 +335,30 @@
             if(viewId === 'history') renderHistory();
         }
 
-        // --- Intercept Ctrl+P / Standard Print command to format data ---
-        window.addEventListener('beforeprint', syncHeader);
-
-        function syncHeader() {
-            // Update Patient Info for printing
-            const name = document.getElementById('patient-name').value.trim();
-            document.getElementById('print-patient-name').innerText = name || 'Walk-in Patient';
-            
-            const phone = document.getElementById('patient-phone').value.trim();
-            document.getElementById('print-patient-phone').innerText = phone ? `Ph: ${phone}` : '';
-            
-            document.getElementById('print-date').innerText = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-            
-            // Update Notes for printing
-            const notes = document.getElementById('invoice-notes').value.trim();
-            const printNotesEl = document.getElementById('print-notes-content');
-            const printNotesTitle = document.getElementById('print-notes-title');
-            if(notes) {
-                printNotesEl.innerText = notes;
-                printNotesTitle.style.display = 'block';
-                printNotesEl.style.display = 'block';
-            } else {
-                printNotesTitle.style.display = 'none';
-                printNotesEl.style.display = 'none';
-            }
-        }
-
-        function syncPrintData(inputEl) {
-            // Finds the hidden span right next to the input and mirrors the text
-            const span = inputEl.nextElementSibling;
-            if (span && span.classList.contains('print-text')) {
-                span.innerText = inputEl.value || '';
-            }
-        }
-
-        // --- Invoice Logic ---
         function addInvoiceRow() {
             const tbody = document.getElementById('invoice-items');
             const tr = document.createElement('tr');
-            tr.className = 'item-row hover:bg-gray-50 transition-colors print:hover:bg-white';
+            tr.className = 'item-row hover:bg-gray-50 transition-colors';
             
             const datalistId = `treatments-${Date.now()}`;
             const optionsHtml = treatmentOptions.map(opt => `<option value="${opt}">`).join('');
 
-            // Added print:hidden to inputs, and hidden print:block spans underneath them to ensure printing always works
             tr.innerHTML = `
                 <td class="py-2 px-2 md:px-4">
-                    <input list="${datalistId}" type="text" class="item-desc w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm print:hidden" placeholder="Treatment name..." oninput="syncPrintData(this)">
-                    <span class="print-text hidden print:block text-sm text-gray-800 whitespace-normal"></span>
+                    <input list="${datalistId}" type="text" class="item-desc w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm" placeholder="Treatment name...">
                     <datalist id="${datalistId}">${optionsHtml}</datalist>
                 </td>
                 <td class="py-2 px-2 md:px-4">
-                    <input type="number" min="1" value="1" class="item-qty w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm text-center print:hidden" oninput="calculateTotals(); syncPrintData(this)">
-                    <span class="print-text hidden print:block text-sm text-gray-800 text-center">1</span>
+                    <input type="number" min="1" value="1" class="item-qty w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm text-center" oninput="calculateTotals()">
                 </td>
                 <td class="py-2 px-2 md:px-4">
-                    <input type="number" min="0" placeholder="0" class="item-rate w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm text-right print:hidden" oninput="calculateTotals(); syncPrintData(this)">
-                    <span class="print-text hidden print:block text-sm text-gray-800 text-right"></span>
+                    <input type="number" min="0" placeholder="0" class="item-rate w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 outline-none text-sm text-right" oninput="calculateTotals()">
                 </td>
                 <td class="py-2 px-2 md:px-4 text-right font-medium text-gray-700 text-sm">
                     ₹<span class="item-amount">0</span>
                 </td>
-                <td class="py-2 px-1 text-center no-print">
-                    <button onclick="removeRow(this)" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition-colors" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <td class="py-2 px-1 text-center">
+                    <button onclick="removeRow(this)" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition-colors" title="Remove"><i class="fas fa-times"></i></button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -468,7 +370,7 @@
                 btn.closest('tr').remove();
                 calculateTotals();
             } else {
-                showToast("Cannot remove the last row. Just clear the text.", false);
+                showToast("Cannot remove the last row.", false);
             }
         }
 
@@ -492,47 +394,151 @@
             document.getElementById('summary-subtotal').innerText = `₹${formatMoney(subtotal)}`;
             document.getElementById('summary-total').innerText = `₹${formatMoney(total)}`;
             
-            if(discountPct > 0) {
-                document.getElementById('print-discount').innerText = `₹${formatMoney(discountAmt)} (${discountPct}%)`;
-                document.getElementById('print-discount').parentElement.classList.remove('hidden');
-                document.getElementById('print-discount').parentElement.classList.add('print:flex');
-            } else {
-                document.getElementById('print-discount').parentElement.classList.add('hidden');
-                document.getElementById('print-discount').parentElement.classList.remove('print:flex');
-            }
-            
-            return { subtotal, discountAmt, total };
+            return { subtotal, discountAmt, total, discountPct };
         }
 
         function formatMoney(amount) {
             return Number.isInteger(amount) ? amount.toString() : amount.toFixed(2);
         }
 
-        function saveAndPrint() {
-            const patientName = document.getElementById('patient-name').value.trim();
+        // ==================== NEW BULLETPROOF PRINT GENERATOR ====================
+        function generatePrintView() {
+            const patientName = document.getElementById('patient-name').value.trim() || 'Walk-in Patient';
             const patientPhone = document.getElementById('patient-phone').value.trim();
-            
-            if (!patientName) {
-                alert("Please enter a patient name.");
-                document.getElementById('patient-name').focus();
-                return;
+            const dateStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            const invId = document.getElementById('display-inv-number').innerText;
+
+            // Generate Table Rows HTML securely
+            let rowsHtml = '';
+            document.querySelectorAll('.item-row').forEach(row => {
+                const desc = row.querySelector('.item-desc').value.trim();
+                const qty = row.querySelector('.item-qty').value;
+                const rate = row.querySelector('.item-rate').value || '0';
+                const amt = row.querySelector('.item-amount').innerText;
+
+                // Only print if there is a description or a rate typed in
+                if (desc || rate !== '0') {
+                    rowsHtml += `
+                        <tr style="border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                            <td style="padding: 12px 8px; text-align: left;">${desc}</td>
+                            <td style="padding: 12px 8px; text-align: center;">${qty}</td>
+                            <td style="padding: 12px 8px; text-align: right;">₹${rate}</td>
+                            <td style="padding: 12px 8px; text-align: right; font-weight: 600;">₹${amt}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            // Fallback if no items
+            if (!rowsHtml) {
+                rowsHtml = `<tr><td colspan="4" style="padding: 20px; text-align: center; color: #6b7280;">No treatments recorded.</td></tr>`;
             }
 
             const totals = calculateTotals();
+            const subtotal = document.getElementById('summary-subtotal').innerText;
+            const total = document.getElementById('summary-total').innerText;
+            
+            let discountHtml = '';
+            if (totals.discountPct > 0) {
+                discountHtml = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #4b5563;">
+                        <span>Discount (${totals.discountPct}%):</span>
+                        <span>₹${formatMoney(totals.discountAmt)}</span>
+                    </div>
+                `;
+            }
+
+            const notes = document.getElementById('invoice-notes').value.trim();
+            const notesHtml = notes ? `
+                <div style="margin-top: 32px;">
+                    <p style="font-weight: bold; color: #374151; font-size: 14px; margin-bottom: 4px;">Notes / Instructions:</p>
+                    <p style="color: #4b5563; font-size: 14px; white-space: pre-wrap;">${notes}</p>
+                </div>
+            ` : '';
+
+            // Inject pure HTML into the print-view container
+            const printHtml = `
+                <div style="max-width: 800px; margin: 0 auto; padding: 20px 20px 40px 20px; font-family: Arial, sans-serif; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #f3f4f6; padding-bottom: 20px; margin-bottom: 24px;">
+                        <div>
+                            <h1 style="font-size: 28px; font-weight: bold; color: #0f766e; margin: 0 0 8px 0;">INVOICE</h1>
+                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Invoice #: <span style="font-weight: bold; color: #1f2937;">${invId}</span></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <h2 style="font-size: 22px; font-weight: bold; color: #1f2937; margin: 0 0 4px 0;">TherapeuticHub</h2>
+                            <p style="margin: 0; color: #4b5563; font-size: 14px;">Phone: +91 9641568109</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 32px;">
+                        <div>
+                            <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 14px;">Billed To:</p>
+                            <h3 style="margin: 0 0 4px 0; font-size: 18px; font-weight: bold; color: #111827;">${patientName}</h3>
+                            ${patientPhone ? `<p style="margin: 0; color: #4b5563; font-size: 14px;">Ph: ${patientPhone}</p>` : ''}
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 14px;">Date:</p>
+                            <p style="margin: 0; font-weight: 600; font-size: 15px; color: #111827;">${dateStr}</p>
+                        </div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #e5e7eb; color: #4b5563; font-size: 14px;">
+                                <th style="padding: 12px 8px; text-align: left; width: 50%;">Treatment / Service</th>
+                                <th style="padding: 12px 8px; text-align: center; width: 15%;">Qty</th>
+                                <th style="padding: 12px 8px; text-align: right; width: 15%;">Rate</th>
+                                <th style="padding: 12px 8px; text-align: right; width: 20%;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div style="width: 100%; max-width: 300px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 16px; color: #4b5563;">
+                                <span>Subtotal:</span>
+                                <span style="font-weight: 500;">${subtotal}</span>
+                            </div>
+                            ${discountHtml}
+                            <div style="display: flex; justify-content: space-between; padding-top: 12px; border-top: 2px solid #e5e7eb; font-size: 20px; font-weight: bold; color: #111827;">
+                                <span>Total Amount:</span>
+                                <span style="color: #0f766e;">${total}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${notesHtml}
+
+                    <div style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280; font-size: 13px;">
+                        <p style="margin: 0 0 4px 0;">Thank you for choosing TherapeuticHub.</p>
+                        <p style="margin: 0;">Wishing you a speedy recovery!</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('print-view').innerHTML = printHtml;
+        }
+
+        function saveAndPrint() {
+            const patientName = document.getElementById('patient-name').value.trim();
+            const totals = calculateTotals();
+            
             if (totals.total <= 0) {
                 alert("Total amount cannot be zero. Please add valid services and rates.");
                 return;
             }
 
-            syncHeader(); // Force sync headers before print
+            // Explicitly generate the print view before calling print
+            generatePrintView();
             
             const invoiceData = {
                 id: `INV-${currentInvoiceId}`,
                 date: new Date().toISOString(),
-                patientName: patientName,
-                phone: patientPhone,
-                total: totals.total,
-                items: [] 
+                patientName: patientName || 'Walk-in Patient',
+                total: totals.total
             };
 
             invoices.push(invoiceData);
@@ -540,7 +546,7 @@
             
             window.print();
             
-            showToast(`Invoice ${invoiceData.id} Saved Successfully!`);
+            showToast(`Invoice ${invoiceData.id} Saved!`);
             currentInvoiceId++;
             resetInvoice();
             updateDashboardStats();
@@ -552,13 +558,6 @@
             document.getElementById('invoice-notes').value = '';
             document.getElementById('input-discount').value = '0';
             
-            // Clear print headers
-            document.getElementById('print-patient-name').innerText = 'Patient Name';
-            document.getElementById('print-patient-phone').innerText = '';
-            document.getElementById('print-notes-content').innerText = '';
-            document.getElementById('print-notes-title').style.display = 'none';
-            document.getElementById('print-notes-content').style.display = 'none';
-            
             const tbody = document.getElementById('invoice-items');
             tbody.innerHTML = ''; 
             addInvoiceRow(); 
@@ -567,12 +566,9 @@
             calculateTotals();
         }
 
-        // --- Dashboard Logic ---
         function updateDashboardStats() {
             const today = new Date().setHours(0,0,0,0);
-            
-            let todayRevenue = 0;
-            let todayInvoicesCount = 0;
+            let todayRevenue = 0, todayInvoicesCount = 0;
             const uniquePatients = new Set();
 
             invoices.forEach(inv => {
@@ -590,7 +586,6 @@
 
             const recentList = document.getElementById('dashboard-recent-list');
             recentList.innerHTML = '';
-            
             const recentInvoices = [...invoices].reverse().slice(0, 5);
             
             if (recentInvoices.length === 0) {
@@ -610,18 +605,16 @@
             }
         }
 
-        // --- History & Data Backup Logic ---
         function renderHistory(filterText = '') {
             const list = document.getElementById('history-list');
             list.innerHTML = '';
-            
             const filteredInvoices = invoices.filter(inv => 
                 inv.patientName.toLowerCase().includes(filterText.toLowerCase()) || 
                 inv.id.toLowerCase().includes(filterText.toLowerCase())
             ).reverse();
 
             if(filteredInvoices.length === 0) {
-                list.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-400">No records found.</td></tr>`;
+                list.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-gray-400">No records found.</td></tr>`;
                 return;
             }
 
@@ -633,83 +626,46 @@
                         <td class="py-3 px-6 text-sm text-gray-500 whitespace-nowrap">${dateStr}</td>
                         <td class="py-3 px-6 text-sm text-gray-800 font-medium">${inv.patientName}</td>
                         <td class="py-3 px-6 text-sm font-bold text-gray-900 text-right">₹${formatMoney(parseFloat(inv.total))}</td>
-                        <td class="py-3 px-6 text-center">
-                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full border border-green-200">Paid</span>
-                        </td>
                     </tr>
                 `;
             });
         }
 
-        function filterHistory() {
-            const query = document.getElementById('search-history').value;
-            renderHistory(query);
-        }
+        function filterHistory() { renderHistory(document.getElementById('search-history').value); }
 
         function clearHistory() {
-            if(confirm("DANGER: Are you sure you want to delete ALL billing history from this browser? Please make sure you have downloaded a backup first!")) {
-                invoices = [];
-                localStorage.removeItem('clinic_invoices');
-                currentInvoiceId = 1001;
-                renderHistory();
-                updateDashboardStats();
-                resetInvoice();
-                showToast("All data cleared successfully.", false);
+            if(confirm("DANGER: Are you sure you want to delete ALL billing history?")) {
+                invoices = []; localStorage.removeItem('clinic_invoices'); currentInvoiceId = 1001;
+                renderHistory(); updateDashboardStats(); resetInvoice();
             }
         }
 
         function exportData() {
-            if (invoices.length === 0) {
-                alert("No data to backup.");
-                return;
-            }
-            const dataStr = JSON.stringify(invoices, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            
-            const date = new Date().toISOString().split('T')[0];
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `TherapeuticHub_Backup_${date}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast("Backup downloaded!");
+            if (invoices.length === 0) return alert("No data to backup.");
+            const blob = new Blob([JSON.stringify(invoices, null, 2)], { type: "application/json" });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `TherapeuticHub_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click(); showToast("Backup downloaded!");
         }
 
-        function triggerImport() {
-            document.getElementById('import-file').click();
-        }
+        function triggerImport() { document.getElementById('import-file').click(); }
 
         function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
+            const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (Array.isArray(importedData)) {
-                        const merged = [...invoices, ...importedData];
-                        const uniqueInvoices = Array.from(new Map(merged.map(item => [item.id, item])).values());
-                        
-                        invoices = uniqueInvoices;
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        const merged = [...invoices, ...imported];
+                        invoices = Array.from(new Map(merged.map(item => [item.id, item])).values());
                         localStorage.setItem('clinic_invoices', JSON.stringify(invoices));
-                        
                         const maxId = Math.max(...invoices.map(inv => parseInt(inv.id.split('-')[1])));
-                        if(!isNaN(maxId)) {
-                            currentInvoiceId = maxId + 1;
-                            document.getElementById('display-inv-number').innerText = `INV-${currentInvoiceId}`;
-                        }
-                        
-                        renderHistory();
-                        updateDashboardStats();
-                        showToast("Data restored successfully!");
-                    } else {
-                        throw new Error("Invalid file format");
-                    }
-                } catch (err) {
-                    alert("Failed to import data. Please ensure it is a valid TherapeuticHub backup file.");
-                }
+                        if(!isNaN(maxId)) currentInvoiceId = maxId + 1;
+                        document.getElementById('display-inv-number').innerText = `INV-${currentInvoiceId}`;
+                        renderHistory(); updateDashboardStats(); showToast("Data restored!");
+                    } else throw new Error();
+                } catch (err) { alert("Invalid backup file."); }
                 event.target.value = '';
             };
             reader.readAsText(file);
@@ -718,16 +674,10 @@
         function showToast(message, isSuccess = true) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = message;
-            
-            toast.className = `fixed bottom-5 right-5 transform transition-all duration-300 px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50 no-print ${isSuccess ? 'bg-brand-600' : 'bg-red-500'} text-white`;
-            
+            toast.className = `fixed bottom-5 right-5 transform transition-all duration-300 px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50 ${isSuccess ? 'bg-brand-600' : 'bg-red-500'} text-white`;
             toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
-
     </script>
 </body>
 </html>
