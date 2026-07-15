@@ -570,8 +570,8 @@
           <div>
             <div style="font-size:11px;text-transform:uppercase;color:#94a3b8;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;">Billed To</div>
             <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:4px;">${escapeHtml(invoice.patientName)}</div>
-            ${invoice.patientPhone ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;">📞 ${escapeHtml(invoice.patientPhone)}</div>` : ""}
-            ${invoice.patientAddress ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;max-width:260px;line-height:1.4;">📍 ${escapeHtml(invoice.patientAddress)}</div>` : ""}
+            ${invoice.patientPhone ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;"> ${escapeHtml(invoice.patientPhone)}</div>` : ""}
+            ${invoice.patientAddress ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;max-width:260px;line-height:1.4;"> ${escapeHtml(invoice.patientAddress)}</div>` : ""}
           </div>
           <div style="text-align:right;">
              <table style="font-size:13px;text-align:right;">
