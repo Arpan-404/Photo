@@ -65,7 +65,7 @@
         </div>
       </div>
       
-      <!-- Primary Action Button mimicking the screenshot's "+ New" button -->
+      <!-- Primary Action Button -->
       <button data-tab="new-invoice" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2" onclick="switchTab('new-invoice')">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         New Invoice
@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <!-- Recent Table matching the screenshot style -->
+      <!-- Recent Table -->
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h3 class="font-display font-semibold text-slate-800">Recent Records</h3>
@@ -137,7 +137,7 @@
         
         <!-- Patient Info -->
         <div class="p-6 border-b border-slate-100 bg-slate-50/30">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-1.5">Patient Name <span class="text-rose-500">*</span></label>
               <input id="inp-patient-name" type="text" placeholder="Enter patient name" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm transition-colors">
@@ -145,6 +145,10 @@
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number</label>
               <input id="inp-patient-phone" type="tel" placeholder="Mobile number" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm transition-colors">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Patient Address</label>
+              <input id="inp-patient-address" type="text" placeholder="e.g. Jangalpara" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm transition-colors">
             </div>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-1.5">Date <span class="text-rose-500">*</span></label>
@@ -277,7 +281,6 @@
 </div>
 
 <!-- ============ PRINT VIEW (Injected before printing) ============ -->
-<!-- Note: Removed ALL mobile numbers from this view based on user request -->
 <div id="print-view" class="hidden print:block text-black bg-white"></div>
 
 <script>
@@ -285,6 +288,10 @@
   "use strict";
 
   const CLINIC_NAME = "TherapeuticHub";
+  const CLINIC_PHONE = "+91 9641568109";
+  const CLINIC_ADDR_L1 = "Near Jangalpara Post Office and JKD High School,";
+  const CLINIC_ADDR_L2 = "Jangalpara, Hooghly, West Bengal 712701";
+  
   const LOGO_URL = "https://res.cloudinary.com/dyuni0dx5/image/upload/v1776679019/xebuje3hprja9jtuqq19.png";
   const STORAGE_KEY = "th_invoices";
   const COUNTER_KEY = "th_invoice_counter";
@@ -378,7 +385,6 @@
       const tr = document.createElement("tr");
       tr.className = "hover:bg-slate-50 transition-colors";
       
-      // Formatting based on the image style
       tr.innerHTML = `
         <td class="px-6 py-4 font-bold text-blue-600">${escapeHtml(inv.id)}</td>
         <td class="px-6 py-4">
@@ -465,6 +471,7 @@
   function resetInvoiceForm(){
     document.getElementById("inp-patient-name").value = "";
     document.getElementById("inp-patient-phone").value = "";
+    document.getElementById("inp-patient-address").value = "";
     document.getElementById("inp-invoice-date").value = todayISO();
     document.getElementById("inp-notes").value = "";
     document.getElementById("inp-discount").value = 0;
@@ -478,6 +485,7 @@
   function buildInvoiceFromForm(){
     const patientName = document.getElementById("inp-patient-name").value.trim();
     const patientPhone = document.getElementById("inp-patient-phone").value.trim();
+    const patientAddress = document.getElementById("inp-patient-address").value.trim();
     const invoiceDate = document.getElementById("inp-invoice-date").value || todayISO();
     const notes = document.getElementById("inp-notes").value.trim();
     const { items, subtotal, discountPct, discountAmt, total } = calcTotals();
@@ -493,7 +501,7 @@
     }
 
     return {
-      patientName, patientPhone, notes,
+      patientName, patientPhone, patientAddress, notes,
       items: realItems,
       subtotal, discountPct, discountAmt, total,
       date: invoiceDate,
@@ -525,7 +533,7 @@
   document.getElementById("btn-save-only").addEventListener("click", () => saveInvoice(false));
   document.getElementById("btn-save-print").addEventListener("click", () => saveInvoice(true));
 
-  // ---------- Print view generation (pure text — mobile-safe, NO MOBILE NUMBERS) ----------
+  // ---------- Print view generation ----------
   function generatePrintView(invoice){
     const rowsHtml = invoice.items.map(item => `
       <tr>
@@ -540,12 +548,16 @@
       <div style="max-width:760px;margin:0 auto;font-family:Arial,sans-serif;color:#0f172a;padding:10px;">
         
         <!-- Header -->
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #e2e8f0;padding-bottom:20px;margin-bottom:24px;">
-          <div style="display:flex;align-items:center;gap:16px;">
-            <img src="${LOGO_URL}" alt="Logo" style="width:56px;height:56px;object-fit:contain;border:1px solid #f1f5f9;border-radius:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #e2e8f0;padding-bottom:20px;margin-bottom:24px;">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <img src="${LOGO_URL}" alt="Logo" style="width:64px;height:64px;object-fit:contain;border:1px solid #f1f5f9;border-radius:8px;">
             <div>
                 <div style="font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-0.5px;">${escapeHtml(CLINIC_NAME)}</div>
                 <div style="font-size:13px;color:#64748b;margin-top:2px;">Therapeutic &amp; Rehabilitation Services</div>
+                <div style="font-size:12px;color:#475569;margin-top:6px;line-height:1.4;">
+                  ${escapeHtml(CLINIC_ADDR_L1)}<br>${escapeHtml(CLINIC_ADDR_L2)}
+                </div>
+                <div style="font-size:13px;color:#0f172a;font-weight:600;margin-top:4px;">📞 ${escapeHtml(CLINIC_PHONE)}</div>
             </div>
           </div>
           <div style="text-align:right;">
@@ -557,8 +569,9 @@
         <div style="display:flex;justify-content:space-between;margin-bottom:32px;">
           <div>
             <div style="font-size:11px;text-transform:uppercase;color:#94a3b8;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;">Billed To</div>
-            <div style="font-size:16px;font-weight:700;color:#0f172a;">${escapeHtml(invoice.patientName)}</div>
-            <!-- NOTE: Patient Phone deliberately excluded here per request -->
+            <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:4px;">${escapeHtml(invoice.patientName)}</div>
+            ${invoice.patientPhone ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;">📞 ${escapeHtml(invoice.patientPhone)}</div>` : ""}
+            ${invoice.patientAddress ? `<div style="font-size:13px;color:#475569;margin-bottom:2px;max-width:260px;line-height:1.4;">📍 ${escapeHtml(invoice.patientAddress)}</div>` : ""}
           </div>
           <div style="text-align:right;">
              <table style="font-size:13px;text-align:right;">
@@ -639,7 +652,6 @@
       const tr = document.createElement("tr");
       tr.className = "hover:bg-slate-50 transition-colors";
       
-      // Adapted layout to closely match screenshot layout
       tr.innerHTML = `
         <td class="px-6 py-4 font-bold text-blue-600">${escapeHtml(inv.id)}</td>
         <td class="px-6 py-4">
