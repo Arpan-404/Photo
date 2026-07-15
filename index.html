@@ -1,747 +1,879 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TherapeuticHub - Billing System</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        teal: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Ensures backgrounds print correctly if printed from desktop */
-        @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            @page {
-                margin: 0.5cm;
-            }
-        }
-        /* Custom scrollbar for tables */
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TherapeuticHub — Billing</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { 
+    font-family: 'Inter', sans-serif; 
+    --primary: #0f766e; /* Teal 700 */
+  }
+  h1, h2, h3, .font-display { 
+    font-family: 'Poppins', sans-serif; 
+  }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  /* Tab Transitions */
+  .tab-btn { 
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+    position: relative;
+  }
+  .tab-btn.active { 
+    background: #ffffff; 
+    color: var(--primary); 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Input Focus States */
+  input, textarea, select { transition: all 0.2s ease; }
+  input:focus, textarea:focus, select:focus { 
+    outline: none; 
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15); 
+    border-color: #14b8a6; 
+    background-color: #ffffff;
+  }
+
+  /* Animations */
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-row { animation: slideDown 0.25s ease-out forwards; }
+
+  /* Print Styles */
+  #print-view { display: none; }
+  @media print {
+    body * { visibility: hidden; }
+    #print-view, #print-view * { visibility: visible; }
+    #print-view { 
+      display: block !important; 
+      position: absolute; 
+      top: 0; left: 0; 
+      width: 100%; 
+      padding: 0; 
+      margin: 0; 
+    }
+    @page { margin: 12mm; }
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-teal-200 selection:text-teal-900">
 
-    <!-- MAIN APP UI (Hidden during print) -->
-    <div id="app-container" class="print:hidden flex flex-col min-h-screen">
-        
-        <!-- Navigation Bar -->
-        <nav class="bg-teal-600 text-white shadow-md sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid fa-leaf text-2xl"></i>
-                        <span class="font-bold text-xl tracking-tight">TherapeuticHub</span>
-                    </div>
-                    <!-- Desktop Nav -->
-                    <div class="hidden md:block">
-                        <div class="flex items-baseline space-x-4">
-                            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn bg-teal-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</button>
-                            <button onclick="switchTab('new-invoice')" id="nav-new-invoice" class="nav-btn text-teal-100 hover:bg-teal-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">New Invoice</button>
-                            <button onclick="switchTab('history')" id="nav-history" class="nav-btn text-teal-100 hover:bg-teal-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">History</button>
-                        </div>
-                    </div>
-                    <!-- Mobile Menu Button -->
-                    <div class="md:hidden">
-                        <button onclick="toggleMobileMenu()" class="text-teal-100 hover:text-white focus:outline-none">
-                            <i class="fa-solid fa-bars text-2xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Mobile Nav Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden bg-teal-700 pb-3 pt-2 px-2 space-y-1">
-                <button onclick="switchTab('dashboard'); toggleMobileMenu()" class="block w-full text-left text-white px-3 py-2 rounded-md text-base font-medium">Dashboard</button>
-                <button onclick="switchTab('new-invoice'); toggleMobileMenu()" class="block w-full text-left text-teal-100 hover:text-white hover:bg-teal-600 px-3 py-2 rounded-md text-base font-medium">New Invoice</button>
-                <button onclick="switchTab('history'); toggleMobileMenu()" class="block w-full text-left text-teal-100 hover:text-white hover:bg-teal-600 px-3 py-2 rounded-md text-base font-medium">History</button>
-            </div>
-        </nav>
+<!-- ============ APP (hidden on print) ============ -->
+<div id="app" class="print:hidden min-h-screen flex flex-col relative">
 
-        <!-- Main Content Area -->
-        <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- ================= DASHBOARD TAB ================= -->
-            <div id="tab-dashboard" class="tab-content block">
-                <h2 class="text-2xl font-bold text-slate-800 mb-6">Today's Overview</h2>
-                
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-teal-500 flex items-center">
-                        <div class="p-3 rounded-full bg-teal-100 text-teal-600 mr-4">
-                            <i class="fa-solid fa-indian-rupee-sign text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">Today's Revenue</p>
-                            <p class="text-2xl font-bold text-slate-800" id="dash-revenue">₹0</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500 flex items-center">
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-                            <i class="fa-solid fa-file-invoice text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">Invoices Generated</p>
-                            <p class="text-2xl font-bold text-slate-800" id="dash-invoices">0</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-purple-500 flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                            <i class="fa-solid fa-users text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">Unique Patients</p>
-                            <p class="text-2xl font-bold text-slate-800" id="dash-patients">0</p>
-                        </div>
-                    </div>
-                </div>
+  <!-- Background decorative blobs -->
+  <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-teal-900/5 to-transparent pointer-events-none -z-10"></div>
 
-                <!-- Recent Invoices Table -->
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-800">Recent Invoices</h3>
-                    </div>
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Patient Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-slate-200" id="dash-recent-table">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= NEW INVOICE TAB ================= -->
-            <div id="tab-new-invoice" class="tab-content hidden">
-                <form id="invoice-form" class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="bg-teal-50 px-6 py-4 border-b border-teal-100 flex justify-between items-center">
-                        <h2 class="text-xl font-bold text-teal-800">Create New Invoice</h2>
-                        <span class="text-sm text-teal-600 font-medium" id="current-date-display"></span>
-                    </div>
-                    
-                    <div class="p-6">
-                        <!-- Patient Details -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Patient Name *</label>
-                                <input type="text" id="inv-patient-name" required class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition-shadow" placeholder="e.g. John Doe">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Phone Number *</label>
-                                <input type="tel" id="inv-phone" required class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition-shadow" placeholder="e.g. 9876543210">
-                            </div>
-                        </div>
-
-                        <!-- Services Datalist for Autocomplete -->
-                        <datalist id="services-list">
-                            <option value="Physiotherapy Assessment"></option>
-                            <option value="Electrotherapy"></option>
-                            <option value="Manual Therapy"></option>
-                            <option value="Exercise Therapy"></option>
-                            <option value="Dry Needling"></option>
-                            <option value="Taping"></option>
-                            <option value="Cupping Therapy"></option>
-                            <option value="Laser Therapy"></option>
-                        </datalist>
-
-                        <!-- Items Table -->
-                        <div class="mb-6 overflow-x-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-slate-200 border border-slate-200 rounded-lg">
-                                <thead class="bg-slate-50">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 w-1/2">Treatment / Service</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 w-24">Qty</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 w-32">Rate (₹)</th>
-                                        <th class="px-4 py-3 text-right text-sm font-semibold text-slate-700 w-32">Amount</th>
-                                        <th class="px-4 py-3 text-center text-sm font-semibold text-slate-700 w-16"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="invoice-items-body" class="bg-white divide-y divide-slate-200">
-                                    <!-- Rows added dynamically -->
-                                </tbody>
-                            </table>
-                            <button type="button" onclick="addInvoiceRow()" class="mt-3 inline-flex items-center px-3 py-1.5 border border-teal-600 text-teal-600 rounded text-sm hover:bg-teal-50 transition-colors">
-                                <i class="fa-solid fa-plus mr-2"></i> Add Treatment
-                            </button>
-                        </div>
-
-                        <!-- Totals & Notes Area -->
-                        <div class="flex flex-col md:flex-row justify-between items-start gap-8">
-                            <!-- Notes -->
-                            <div class="w-full md:w-1/2">
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Notes / Next Appointment</label>
-                                <textarea id="inv-notes" rows="4" class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition-shadow" placeholder="Any special instructions or follow-up dates..."></textarea>
-                            </div>
-                            
-                            <!-- Calculations -->
-                            <div class="w-full md:w-1/3 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                <div class="flex justify-between items-center mb-3">
-                                    <span class="text-slate-600">Subtotal:</span>
-                                    <span class="font-semibold" id="inv-subtotal">₹0.00</span>
-                                </div>
-                                <div class="flex justify-between items-center mb-3">
-                                    <span class="text-slate-600">Discount (%):</span>
-                                    <input type="number" id="inv-discount" min="0" max="100" value="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right focus:ring-teal-500 focus:border-teal-500 outline-none" oninput="calculateTotals()">
-                                </div>
-                                <div class="border-t border-slate-300 my-3 pt-3 flex justify-between items-center">
-                                    <span class="text-lg font-bold text-slate-800">Total:</span>
-                                    <span class="text-2xl font-bold text-teal-600" id="inv-total">₹0.00</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="mt-8 pt-5 border-t border-slate-200 flex justify-end space-x-4">
-                            <button type="button" onclick="resetForm()" class="px-6 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 font-medium transition-colors">Clear</button>
-                            <button type="submit" class="px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium shadow-sm flex items-center transition-colors">
-                                <i class="fa-solid fa-print mr-2"></i> Save & Print
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- ================= BILLING HISTORY TAB ================= -->
-            <div id="tab-history" class="tab-content hidden">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Billing History</h2>
-                    
-                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                        <!-- Search -->
-                        <div class="relative flex-grow md:flex-grow-0">
-                            <input type="text" id="search-history" placeholder="Search name or ID..." oninput="renderHistoryTable()" class="w-full md:w-64 pl-10 pr-4 py-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none">
-                            <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
-                        </div>
-                        
-                        <!-- Data Management Buttons -->
-                        <button onclick="exportData()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium flex items-center transition-colors" title="Download Backup file">
-                            <i class="fa-solid fa-download mr-2"></i> Backup
-                        </button>
-                        
-                        <label class="px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-slate-700 text-sm font-medium flex items-center cursor-pointer transition-colors" title="Restore from Backup">
-                            <i class="fa-solid fa-upload mr-2"></i> Restore
-                            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                        </label>
-
-                        <button onclick="clearHistory()" class="px-4 py-2 border border-red-500 text-red-600 rounded-md hover:bg-red-50 text-sm font-medium flex items-center transition-colors">
-                            <i class="fa-solid fa-trash-can mr-2"></i> Delete All
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Patient Details</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Total Amount</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-slate-200" id="history-table-body">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Empty State -->
-                    <div id="history-empty" class="hidden p-8 text-center text-slate-500">
-                        <i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-300"></i>
-                        <p>No invoices found.</p>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-teal-800 to-emerald-700 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-inner flex items-center justify-center font-display font-bold text-xl text-teal-50">
+          TH
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-xl tracking-tight leading-tight">TherapeuticHub</h1>
+          <p class="text-teal-100 text-xs font-medium tracking-wide uppercase mt-0.5 opacity-80">Clinic Billing System</p>
+        </div>
+      </div>
+      <a href="tel:+919641568109" class="group flex items-center gap-2 text-teal-50 text-sm font-medium bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md px-4 py-2 rounded-full transition-all duration-200">
+        <i data-lucide="phone-call" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+        +91 9641568109
+      </a>
     </div>
 
-    <!-- ================= CRITICAL PRINT VIEW (Hidden by default, shown ONLY during print) ================= -->
-    <!-- This solves the mobile bug where inputs/textareas don't print. It uses PURE TEXT injected by JS before printing -->
-    <div id="print-view" class="hidden print:block bg-white text-black p-4 max-w-4xl mx-auto w-full">
-        <!-- Clinic Header -->
-        <div class="border-b-2 border-teal-600 pb-4 mb-6 text-center">
-            <h1 class="text-3xl font-bold text-teal-700 tracking-tight">TherapeuticHub</h1>
-            <p class="text-gray-600 mt-1"><i class="fa-solid fa-phone mr-1"></i> +91 9641568109</p>
-        </div>
+    <!-- Tabs -->
+    <nav class="max-w-6xl mx-auto px-4 pb-0 flex gap-2 overflow-x-auto pt-2">
+      <button data-tab="dashboard" class="tab-btn active flex items-center gap-2 whitespace-nowrap px-5 py-3 rounded-t-xl text-sm font-semibold bg-white/10 hover:bg-white/20 text-white/90 pb-3 mb-0">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </button>
+      <button data-tab="new-invoice" class="tab-btn flex items-center gap-2 whitespace-nowrap px-5 py-3 rounded-t-xl text-sm font-semibold bg-white/10 hover:bg-white/20 text-white/90 pb-3 mb-0">
+        <i data-lucide="file-plus-2" class="w-4 h-4"></i> New Invoice
+      </button>
+      <button data-tab="history" class="tab-btn flex items-center gap-2 whitespace-nowrap px-5 py-3 rounded-t-xl text-sm font-semibold bg-white/10 hover:bg-white/20 text-white/90 pb-3 mb-0">
+        <i data-lucide="history" class="w-4 h-4"></i> Billing History
+      </button>
+    </nav>
+  </header>
 
-        <!-- Invoice Meta -->
-        <div class="flex justify-between items-start mb-8">
+  <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-1">
+
+    <!-- ============ DASHBOARD VIEW ============ -->
+    <section id="view-dashboard" class="space-y-8 fade-in">
+      <div class="flex items-end justify-between">
+        <div>
+          <h2 class="font-display text-2xl font-bold text-slate-800">Today's Overview</h2>
+          <p class="text-slate-500 text-sm mt-1 flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span id="today-date-label"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <!-- Revenue Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+          <div class="absolute right-0 top-0 -mr-4 -mt-4 w-24 h-24 bg-teal-50 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+          <div class="relative z-10 flex items-start justify-between">
             <div>
-                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-300 inline-block mb-2">Patient Details</h2>
-                <p class="font-semibold text-lg" id="print-patient-name"></p>
-                <p class="text-gray-600" id="print-phone"></p>
+              <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Today's Revenue</p>
+              <p class="text-4xl font-display font-bold text-teal-700 mt-1" id="stat-revenue">₹0</p>
             </div>
-            <div class="text-right">
-                <h2 class="text-2xl font-bold text-gray-800 mb-1">INVOICE</h2>
-                <p class="text-gray-600"><strong>Invoice No:</strong> <span id="print-invoice-id"></span></p>
-                <p class="text-gray-600"><strong>Date:</strong> <span id="print-date"></span></p>
+            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
+              <i data-lucide="indian-rupee" class="w-5 h-5"></i>
             </div>
+          </div>
         </div>
 
-        <!-- Print Items Table (Plain text rendering, NO inputs) -->
-        <table class="w-full mb-8 border-collapse">
-            <thead>
-                <tr class="bg-teal-50 border-b-2 border-teal-600">
-                    <th class="py-2 px-2 text-left font-bold text-teal-800">Treatment / Service</th>
-                    <th class="py-2 px-2 text-center font-bold text-teal-800">Qty</th>
-                    <th class="py-2 px-2 text-right font-bold text-teal-800">Rate (₹)</th>
-                    <th class="py-2 px-2 text-right font-bold text-teal-800">Amount (₹)</th>
-                </tr>
+        <!-- Invoices Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+          <div class="absolute right-0 top-0 -mr-4 -mt-4 w-24 h-24 bg-blue-50 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+          <div class="relative z-10 flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Invoices Today</p>
+              <p class="text-4xl font-display font-bold text-slate-800 mt-1" id="stat-invoices">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+              <i data-lucide="receipt-text" class="w-5 h-5"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Patients Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+          <div class="absolute right-0 top-0 -mr-4 -mt-4 w-24 h-24 bg-indigo-50 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+          <div class="relative z-10 flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Patients Seen</p>
+              <p class="text-4xl font-display font-bold text-slate-800 mt-1" id="stat-patients">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <i data-lucide="users" class="w-5 h-5"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Invoices Table -->
+      <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <h3 class="font-display font-semibold text-slate-800 flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i> Recent Invoices
+          </h3>
+          <button data-tab="history" class="tab-btn-link text-teal-600 text-sm font-semibold hover:text-teal-700 flex items-center gap-1 group">
+            View all <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-white text-slate-500 border-b border-slate-100">
+              <tr>
+                <th class="text-left px-6 py-4 font-medium uppercase tracking-wider text-xs">Invoice ID</th>
+                <th class="text-left px-6 py-4 font-medium uppercase tracking-wider text-xs">Patient</th>
+                <th class="text-left px-6 py-4 font-medium uppercase tracking-wider text-xs">Date</th>
+                <th class="text-right px-6 py-4 font-medium uppercase tracking-wider text-xs">Amount</th>
+              </tr>
             </thead>
-            <tbody id="print-items-body">
-                <!-- Rows injected purely as text nodes by JS -->
-            </tbody>
+            <tbody id="recent-invoices-body" class="divide-y divide-slate-50"></tbody>
+          </table>
+          <div id="recent-empty" class="text-center text-slate-400 text-sm py-12 hidden flex-col items-center justify-center gap-2">
+            <i data-lucide="inbox" class="w-8 h-8 text-slate-300"></i>
+            <p>No invoices yet. Create your first invoice to get started.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEW INVOICE VIEW ============ -->
+    <section id="view-new-invoice" class="hidden space-y-6">
+      <div class="flex items-center justify-between flex-wrap gap-2 bg-white px-6 py-4 rounded-2xl border border-slate-200/60 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-teal-50 text-teal-600 rounded-lg">
+            <i data-lucide="file-signature" class="w-5 h-5"></i>
+          </div>
+          <h2 class="font-display text-xl font-bold text-slate-800">Create Invoice</h2>
+        </div>
+        <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+          <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Draft ID</span>
+          <span id="next-invoice-id" class="font-mono font-bold text-teal-700"></span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Details -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Patient Details Card -->
+          <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6">
+            <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="user" class="w-4 h-4 text-slate-400"></i> Patient Information
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Patient Name <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-lucide="user" class="h-4 w-4 text-slate-400"></i>
+                  </div>
+                  <input id="inp-patient-name" type="text" placeholder="e.g. Riya Sharma" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Phone Number</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-lucide="phone" class="h-4 w-4 text-slate-400"></i>
+                  </div>
+                  <input id="inp-patient-phone" type="tel" placeholder="e.g. 98765 43210" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400">
+                </div>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Notes / Next Appointment</label>
+                <div class="relative">
+                   <div class="absolute top-3 left-3 flex items-start pointer-events-none">
+                    <i data-lucide="align-left" class="h-4 w-4 text-slate-400"></i>
+                  </div>
+                  <textarea id="inp-notes" rows="2" placeholder="e.g. Next session on 20th July, continue with electrotherapy" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 resize-none"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Treatments Card -->
+          <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-slate-400"></i> Treatments & Services
+              </h3>
+              <button id="btn-add-row" class="flex items-center gap-1.5 text-sm font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition-colors border border-teal-100 hover:border-teal-200">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Row
+              </button>
+            </div>
+            
+            <div class="overflow-x-auto p-2">
+              <table class="w-full text-sm min-w-[560px]">
+                <thead class="text-slate-500">
+                  <tr>
+                    <th class="text-left px-4 py-2 font-medium text-xs uppercase tracking-wider">Service Details</th>
+                    <th class="text-left px-3 py-2 font-medium text-xs uppercase tracking-wider w-24">Qty</th>
+                    <th class="text-left px-3 py-2 font-medium text-xs uppercase tracking-wider w-32">Rate (₹)</th>
+                    <th class="text-right px-4 py-2 font-medium text-xs uppercase tracking-wider w-32">Amount (₹)</th>
+                    <th class="w-12"></th>
+                  </tr>
+                </thead>
+                <tbody id="items-body" class="space-y-1"></tbody>
+              </table>
+            </div>
+            
+            <datalist id="treatment-list">
+              <option value="Initial Consultation">
+              <option value="Follow-up Consultation">
+              <option value="Physiotherapy Assessment">
+              <option value="Electrotherapy">
+              <option value="Manual Therapy">
+              <option value="Ultrasound Therapy">
+              <option value="TENS Therapy">
+              <option value="Exercise Therapy">
+              <option value="Dry Needling">
+              <option value="Cupping Therapy">
+              <option value="Postural Correction">
+              <option value="Sports Massage">
+            </datalist>
+          </div>
+        </div>
+
+        <!-- Right Column: Summary & Actions -->
+        <div class="space-y-6">
+          <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 sticky top-24">
+            <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
+              <i data-lucide="calculator" class="w-4 h-4 text-slate-400"></i> Summary
+            </h3>
+            
+            <div class="space-y-4">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-500 font-medium">Subtotal</span>
+                <span id="sum-subtotal" class="font-semibold text-slate-700">₹0.00</span>
+              </div>
+              
+              <div class="flex justify-between items-center text-sm group">
+                <label for="inp-discount" class="text-slate-500 font-medium group-hover:text-teal-600 transition-colors">Discount (%)</label>
+                <div class="relative w-24">
+                  <input id="inp-discount" type="number" min="0" max="100" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-3 pr-7 py-1.5 text-right font-medium text-slate-800">
+                  <span class="absolute inset-y-0 right-3 flex items-center text-slate-400 pointer-events-none">%</span>
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-500 font-medium">Discount Amount</span>
+                <span id="sum-discount-amt" class="font-medium text-rose-500">-₹0.00</span>
+              </div>
+              
+              <div class="pt-4 mt-2 border-t border-slate-100 flex justify-between items-end">
+                <span class="text-base font-bold text-slate-800">Total Due</span>
+                <span id="sum-total" class="text-2xl font-display font-bold text-teal-700">₹0.00</span>
+              </div>
+            </div>
+
+            <div class="mt-8 space-y-3">
+              <button id="btn-save-print" class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98]">
+                <i data-lucide="printer" class="w-4 h-4"></i> Save & Print Bill
+              </button>
+              <button id="btn-save-only" class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-all duration-200 active:scale-[0.98]">
+                <i data-lucide="save" class="w-4 h-4"></i> Save Only
+              </button>
+              <button id="btn-reset-form" class="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200 mt-2">
+                Clear Form
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ BILLING HISTORY VIEW ============ -->
+    <section id="view-history" class="hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white px-6 py-4 rounded-2xl border border-slate-200/60 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+            <i data-lucide="folder-open" class="w-5 h-5"></i>
+          </div>
+          <h2 class="font-display text-xl font-bold text-slate-800">Billing History</h2>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button id="btn-backup" class="flex items-center gap-2 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl transition-all shadow-sm">
+            <i data-lucide="download" class="w-4 h-4 text-slate-500"></i> Backup
+          </button>
+          <label class="flex items-center gap-2 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl transition-all shadow-sm cursor-pointer">
+            <i data-lucide="upload" class="w-4 h-4 text-slate-500"></i> Restore
+            <input id="inp-restore" type="file" accept="application/json" class="hidden">
+          </label>
+          <button id="btn-delete-all" class="flex items-center gap-2 text-sm font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-xl transition-all">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Clear All
+          </button>
+        </div>
+      </div>
+
+      <div class="relative max-w-2xl">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
+        </div>
+        <input id="inp-search" type="text" placeholder="Search invoices by patient name or ID..." class="w-full bg-white border border-slate-200/80 shadow-sm rounded-xl pl-11 pr-4 py-3.5 text-sm font-medium text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-teal-500">
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50/50 text-slate-500 border-b border-slate-100">
+              <tr>
+                <th class="text-left px-6 py-4 font-bold uppercase tracking-wider text-xs">Invoice ID</th>
+                <th class="text-left px-6 py-4 font-bold uppercase tracking-wider text-xs">Patient</th>
+                <th class="text-left px-6 py-4 font-bold uppercase tracking-wider text-xs">Phone</th>
+                <th class="text-left px-6 py-4 font-bold uppercase tracking-wider text-xs">Date</th>
+                <th class="text-right px-6 py-4 font-bold uppercase tracking-wider text-xs">Total</th>
+                <th class="text-center px-6 py-4 font-bold uppercase tracking-wider text-xs">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="history-body" class="divide-y divide-slate-50"></tbody>
+          </table>
+        </div>
+        <div id="history-empty" class="text-center text-slate-400 py-16 hidden flex-col items-center gap-3">
+          <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-2">
+            <i data-lucide="search-x" class="w-8 h-8 text-slate-300"></i>
+          </div>
+          <p class="text-base font-medium">No invoices found</p>
+          <p class="text-sm">Try adjusting your search query.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-xs font-medium text-slate-400 py-6 mt-auto">
+    TherapeuticHub Billing System · Data is stored locally and securely on your device.
+  </footer>
+</div>
+
+<!-- ============ PRINT VIEW (pure text, injected before printing) ============ -->
+<div id="print-view" class="hidden print:block text-black bg-white"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Initialize Lucide Icons
+  lucide.createIcons();
+
+  const CLINIC_NAME = "TherapeuticHub";
+  const CLINIC_PHONE = "+91 9641568109";
+  const STORAGE_KEY = "th_invoices";
+  const COUNTER_KEY = "th_invoice_counter";
+
+  // ---------- Utilities ----------
+  function loadInvoices(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function saveInvoices(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+  function nextCounter(){
+    let c = parseInt(localStorage.getItem(COUNTER_KEY) || "0", 10);
+    return c + 1;
+  }
+  function peekNextId(){
+    const c = nextCounter();
+    return "INV-" + String(c).padStart(4, "0");
+  }
+  function commitCounter(){
+    const c = nextCounter();
+    localStorage.setItem(COUNTER_KEY, String(c));
+    return "INV-" + String(c).padStart(4, "0");
+  }
+  function money(n){
+    n = Number(n) || 0;
+    return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function formatDate(iso){
+    const d = new Date(iso);
+    if(isNaN(d)) return iso;
+    return d.toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+  }
+  function escapeHtml(str){
+    const div = document.createElement("div");
+    div.textContent = String(str ?? "");
+    return div.innerHTML;
+  }
+
+  // ---------- Tab navigation ----------
+  const views = {
+    "dashboard": document.getElementById("view-dashboard"),
+    "new-invoice": document.getElementById("view-new-invoice"),
+    "history": document.getElementById("view-history"),
+  };
+  function switchTab(tab){
+    Object.keys(views).forEach(k => views[k].classList.toggle("hidden", k !== tab));
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(btn=>{
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+    
+    // Add simple fade-in effect
+    views[tab].classList.remove("fade-in");
+    void views[tab].offsetWidth; // trigger reflow
+    views[tab].classList.add("fade-in");
+
+    if(tab === "dashboard") renderDashboard();
+    if(tab === "history") renderHistory();
+    if(tab === "new-invoice") document.getElementById("next-invoice-id").textContent = peekNextId();
+    window.scrollTo({top:0, behavior:"smooth"});
+    lucide.createIcons(); // refresh icons just in case
+  }
+  
+  // Custom fade-in style dynamically added
+  const style = document.createElement('style');
+  style.innerHTML = `.fade-in { animation: fadeIn 0.3s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }`;
+  document.head.appendChild(style);
+
+  document.querySelectorAll("[data-tab]").forEach(btn=>{
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+  
+  // Link from dashboard to history
+  document.querySelectorAll(".tab-btn-link").forEach(btn=>{
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  // ---------- Dashboard ----------
+  function renderDashboard(){
+    const invoices = loadInvoices();
+    const today = todayISO();
+    const todays = invoices.filter(inv => inv.date === today);
+
+    const revenue = todays.reduce((sum, inv) => sum + (Number(inv.total) || 0), 0);
+    const uniquePatients = new Set(todays.map(inv => (inv.patientPhone || inv.patientName || "").trim().toLowerCase())).size;
+
+    document.getElementById("stat-revenue").textContent = money(revenue);
+    document.getElementById("stat-invoices").textContent = todays.length;
+    document.getElementById("stat-patients").textContent = uniquePatients;
+    document.getElementById("today-date-label").textContent = new Date().toLocaleDateString("en-IN", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+
+    const recent = [...invoices].sort((a,b) => (b.createdAt||0) - (a.createdAt||0)).slice(0,5);
+    const body = document.getElementById("recent-invoices-body");
+    body.innerHTML = "";
+    document.getElementById("recent-empty").classList.toggle("hidden", recent.length > 0);
+    recent.forEach(inv => {
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-slate-50 transition-colors group";
+      tr.innerHTML = `
+        <td class="px-6 py-4 font-semibold text-teal-700">${escapeHtml(inv.id)}</td>
+        <td class="px-6 py-4 font-medium text-slate-700">${escapeHtml(inv.patientName)}</td>
+        <td class="px-6 py-4 text-slate-500">${formatDate(inv.date)}</td>
+        <td class="px-6 py-4 text-right font-bold text-slate-800">${money(inv.total)}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  // ---------- New Invoice: dynamic rows ----------
+  let rowCounter = 0;
+  function addItemRow(prefill){
+    rowCounter++;
+    const id = "row-" + rowCounter;
+    const tr = document.createElement("tr");
+    tr.id = id;
+    tr.className = "animate-row group";
+    tr.innerHTML = `
+      <td class="px-2 py-1.5">
+        <input list="treatment-list" type="text" placeholder="Select or type treatment..."
+          class="row-name w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-800" value="${escapeHtml(prefill?.name || "")}">
+      </td>
+      <td class="px-2 py-1.5">
+        <input type="number" min="0" step="1" value="${prefill?.qty ?? 1}"
+          class="row-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-800 text-center">
+      </td>
+      <td class="px-2 py-1.5">
+        <input type="number" min="0" step="0.01" value="${prefill?.rate ?? ""}"
+          class="row-rate w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-800 text-right">
+      </td>
+      <td class="px-3 py-1.5 text-right font-bold text-slate-700 row-amount">₹0.00</td>
+      <td class="px-1 py-1.5 text-center">
+        <button type="button" class="row-remove p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Remove row">
+          <i data-lucide="trash" class="w-4 h-4"></i>
+        </button>
+      </td>
+    `;
+    document.getElementById("items-body").appendChild(tr);
+    lucide.createIcons();
+
+    tr.querySelector(".row-qty").addEventListener("input", calcTotals);
+    tr.querySelector(".row-rate").addEventListener("input", calcTotals);
+    tr.querySelector(".row-name").addEventListener("input", calcTotals);
+    tr.querySelector(".row-remove").addEventListener("click", () => {
+      tr.style.opacity = '0';
+      tr.style.transform = 'translateY(-10px)';
+      tr.style.transition = 'all 0.2s';
+      setTimeout(() => {
+        tr.remove();
+        calcTotals();
+      }, 200);
+    });
+    calcTotals();
+  }
+  document.getElementById("btn-add-row").addEventListener("click", () => addItemRow());
+
+  function getItemsFromForm(){
+    const rows = document.querySelectorAll("#items-body tr");
+    const items = [];
+    rows.forEach(tr => {
+      const name = tr.querySelector(".row-name").value.trim();
+      const qty = Number(tr.querySelector(".row-qty").value) || 0;
+      const rate = Number(tr.querySelector(".row-rate").value) || 0;
+      const amount = qty * rate;
+      tr.querySelector(".row-amount").textContent = money(amount);
+      if(name || qty || rate){
+        items.push({ name, qty, rate, amount });
+      }
+    });
+    return items;
+  }
+
+  function calcTotals(){
+    const items = getItemsFromForm();
+    const subtotal = items.reduce((s,i)=> s + i.amount, 0);
+    const discountPct = Math.min(100, Math.max(0, Number(document.getElementById("inp-discount").value) || 0));
+    const discountAmt = subtotal * discountPct / 100;
+    const total = subtotal - discountAmt;
+
+    document.getElementById("sum-subtotal").textContent = money(subtotal);
+    document.getElementById("sum-discount-amt").textContent = "-" + money(discountAmt);
+    document.getElementById("sum-total").textContent = money(total);
+
+    return { items, subtotal, discountPct, discountAmt, total };
+  }
+  document.getElementById("inp-discount").addEventListener("input", calcTotals);
+
+  function resetInvoiceForm(){
+    document.getElementById("inp-patient-name").value = "";
+    document.getElementById("inp-patient-phone").value = "";
+    document.getElementById("inp-notes").value = "";
+    document.getElementById("inp-discount").value = 0;
+    document.getElementById("items-body").innerHTML = "";
+    addItemRow();
+    calcTotals();
+    document.getElementById("next-invoice-id").textContent = peekNextId();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  document.getElementById("btn-reset-form").addEventListener("click", resetInvoiceForm);
+
+  function buildInvoiceFromForm(){
+    const patientName = document.getElementById("inp-patient-name").value.trim();
+    const patientPhone = document.getElementById("inp-patient-phone").value.trim();
+    const notes = document.getElementById("inp-notes").value.trim();
+    const { items, subtotal, discountPct, discountAmt, total } = calcTotals();
+    const realItems = items.filter(i => i.name);
+
+    if(!patientName){
+      alert("Please enter the patient's name before saving.");
+      document.getElementById("inp-patient-name").focus();
+      return null;
+    }
+    if(realItems.length === 0){
+      alert("Please add at least one treatment/service.");
+      return null;
+    }
+
+    return {
+      patientName, patientPhone, notes,
+      items: realItems,
+      subtotal, discountPct, discountAmt, total,
+      date: todayISO(),
+      createdAt: Date.now(),
+    };
+  }
+
+  function saveInvoice(shouldPrint){
+    const draft = buildInvoiceFromForm();
+    if(!draft) return;
+
+    const id = commitCounter();
+    const invoice = { id, ...draft };
+
+    const invoices = loadInvoices();
+    invoices.push(invoice);
+    saveInvoices(invoices);
+
+    if(shouldPrint){
+      generatePrintView(invoice);
+      resetInvoiceForm();
+      switchTab("history");
+      setTimeout(() => window.print(), 200);
+    } else {
+      resetInvoiceForm();
+      switchTab("history");
+    }
+  }
+  document.getElementById("btn-save-only").addEventListener("click", () => saveInvoice(false));
+  document.getElementById("btn-save-print").addEventListener("click", () => saveInvoice(true));
+
+  // ---------- Print view generation (Premium A4 Receipt Look) ----------
+  function generatePrintView(invoice){
+    const rowsHtml = invoice.items.map((item, index) => `
+      <tr>
+        <td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#1e293b;font-size:13px;">${index + 1}.</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#1e293b;font-weight:600;font-size:13px;">${escapeHtml(item.name)}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#475569;text-align:center;font-size:13px;">${item.qty}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#475569;text-align:right;font-size:13px;">${money(item.rate)}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:right;font-weight:600;font-size:13px;">${money(item.amount)}</td>
+      </tr>
+    `).join("");
+
+    const html = `
+      <div style="max-width:750px;margin:0 auto;font-family:'Inter', Arial, sans-serif;color:#0f172a;padding:20px;background:#fff;">
+        
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0f766e;padding-bottom:20px;margin-bottom:24px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:48px;height:48px;background:#0f766e;color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;font-family:'Poppins',sans-serif;">TH</div>
+            <div>
+              <div style="font-size:24px;font-weight:800;color:#0f766e;font-family:'Poppins',sans-serif;letter-spacing:-0.5px;">${escapeHtml(CLINIC_NAME)}</div>
+              <div style="font-size:13px;color:#475569;font-weight:500;">Therapeutic &amp; Rehabilitation Services</div>
+              <div style="font-size:13px;color:#475569;margin-top:2px;">Phone: ${escapeHtml(CLINIC_PHONE)}</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:28px;font-weight:800;color:#cbd5e1;letter-spacing:1px;font-family:'Poppins',sans-serif;text-transform:uppercase;">Invoice</div>
+            <div style="font-size:14px;color:#334155;margin-top:4px;font-weight:600;">${escapeHtml(invoice.id)}</div>
+            <div style="font-size:13px;color:#64748b;">Date: ${formatDate(invoice.date)}</div>
+          </div>
+        </div>
+
+        <!-- Bill To -->
+        <div style="background:#f8fafc;padding:16px;border-radius:12px;margin-bottom:24px;border:1px solid #f1f5f9;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#64748b;font-weight:700;margin-bottom:8px;">Billed To</div>
+          <div style="font-size:16px;font-weight:700;color:#0f172a;">${escapeHtml(invoice.patientName)}</div>
+          ${invoice.patientPhone ? `<div style="font-size:13px;color:#475569;margin-top:4px;">Phone: ${escapeHtml(invoice.patientPhone)}</div>` : ""}
+        </div>
+
+        <!-- Table -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+          <thead>
+            <tr style="background:#f0fdfa;">
+              <th style="padding:10px 8px;text-align:left;border-bottom:2px solid #0f766e;color:#0f766e;font-size:12px;text-transform:uppercase;width:30px;">#</th>
+              <th style="padding:10px 8px;text-align:left;border-bottom:2px solid #0f766e;color:#0f766e;font-size:12px;text-transform:uppercase;">Description</th>
+              <th style="padding:10px 8px;text-align:center;border-bottom:2px solid #0f766e;color:#0f766e;font-size:12px;text-transform:uppercase;width:60px;">Qty</th>
+              <th style="padding:10px 8px;text-align:right;border-bottom:2px solid #0f766e;color:#0f766e;font-size:12px;text-transform:uppercase;width:100px;">Rate</th>
+              <th style="padding:10px 8px;text-align:right;border-bottom:2px solid #0f766e;color:#0f766e;font-size:12px;text-transform:uppercase;width:120px;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
         </table>
 
-        <!-- Print Totals -->
-        <div class="flex justify-end mb-8">
-            <div class="w-1/2">
-                <div class="flex justify-between py-1 text-gray-600">
-                    <span>Subtotal:</span>
-                    <span id="print-subtotal">₹0.00</span>
-                </div>
-                <div class="flex justify-between py-1 text-gray-600 border-b border-gray-300 pb-2 mb-2">
-                    <span>Discount (<span id="print-discount-percent">0</span>%):</span>
-                    <span id="print-discount-amount">-₹0.00</span>
-                </div>
-                <div class="flex justify-between py-2 text-xl font-bold text-teal-800">
-                    <span>Grand Total:</span>
-                    <span id="print-total">₹0.00</span>
-                </div>
-            </div>
+        <!-- Summary -->
+        <div style="display:flex;justify-content:flex-end;margin-bottom:24px;">
+          <table style="width:300px;font-size:14px;">
+            <tr>
+              <td style="padding:6px 8px;color:#64748b;font-weight:500;">Subtotal</td>
+              <td style="padding:6px 8px;text-align:right;font-weight:600;color:#1e293b;">${money(invoice.subtotal)}</td>
+            </tr>
+            ${invoice.discountPct > 0 ? `
+            <tr>
+              <td style="padding:6px 8px;color:#64748b;font-weight:500;">Discount (${invoice.discountPct}%)</td>
+              <td style="padding:6px 8px;text-align:right;font-weight:600;color:#ef4444;">- ${money(invoice.discountAmt)}</td>
+            </tr>
+            ` : ""}
+            <tr>
+              <td style="padding:12px 8px;font-weight:800;font-size:18px;color:#0f766e;border-top:2px solid #e2e8f0;margin-top:6px;display:block;">Total Due</td>
+              <td style="padding:12px 8px;text-align:right;font-weight:800;font-size:18px;color:#0f766e;border-top:2px solid #e2e8f0;">${money(invoice.total)}</td>
+            </tr>
+          </table>
         </div>
 
+        ${invoice.notes ? `
         <!-- Notes -->
-        <div id="print-notes-container" class="border-t border-gray-200 pt-4 mt-8">
-            <h3 class="font-bold text-gray-800 mb-1">Notes / Instructions:</h3>
-            <p id="print-notes" class="text-gray-600 whitespace-pre-wrap"></p>
+        <div style="font-size:13px;background:#f0fdfa;border:1px solid #ccfbf1;border-radius:12px;padding:16px;margin-bottom:24px;">
+          <div style="font-weight:700;color:#0f766e;margin-bottom:4px;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;">Notes / Next Appointment</div>
+          <div style="color:#334155;">${escapeHtml(invoice.notes)}</div>
+        </div>` : ""}
+
+        <!-- Footer -->
+        <div style="text-align:center;font-size:12px;color:#94a3b8;border-top:1px solid #f1f5f9;padding-top:20px;margin-top:40px;font-weight:500;">
+          Thank you for choosing ${escapeHtml(CLINIC_NAME)}. Wishing you a quick and complete recovery!
         </div>
-        
-        <div class="text-center mt-12 text-sm text-gray-500">
-            Thank you for choosing TherapeuticHub. Wishing you a quick recovery!
-        </div>
-    </div>
+      </div>
+    `;
+    document.getElementById("print-view").innerHTML = html;
+  }
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        // Data Store
-        let invoices = JSON.parse(localStorage.getItem('therapeuticHub_invoices')) || [];
+  // ---------- Billing History ----------
+  function renderHistory(){
+    const invoices = [...loadInvoices()].sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+    const query = document.getElementById("inp-search").value.trim().toLowerCase();
+    const filtered = query
+      ? invoices.filter(inv =>
+          inv.patientName.toLowerCase().includes(query) ||
+          inv.id.toLowerCase().includes(query))
+      : invoices;
 
-        // Formatting Helpers
-        const formatCurrency = (amount) => '₹' + parseFloat(amount).toFixed(2);
-        const formatDate = (isoString) => {
-            const date = new Date(isoString);
-            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        };
-        const generateInvoiceID = () => {
-            const now = new Date();
-            return `INV-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
-        };
+    const body = document.getElementById("history-body");
+    body.innerHTML = "";
+    document.getElementById("history-empty").classList.toggle("hidden", filtered.length > 0);
 
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            addInvoiceRow(); // Add first empty row
-            renderDashboard();
-            
-            // Setup Form Submit listener
-            document.getElementById('invoice-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveAndPrintInvoice();
-            });
-        });
+    filtered.forEach(inv => {
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-slate-50 transition-colors group";
+      tr.innerHTML = `
+        <td class="px-6 py-4 font-bold text-teal-700">${escapeHtml(inv.id)}</td>
+        <td class="px-6 py-4 font-semibold text-slate-800">${escapeHtml(inv.patientName)}</td>
+        <td class="px-6 py-4 text-slate-500 font-medium">${escapeHtml(inv.patientPhone || "—")}</td>
+        <td class="px-6 py-4 text-slate-500 font-medium">${formatDate(inv.date)}</td>
+        <td class="px-6 py-4 text-right font-bold text-slate-800">${money(inv.total)}</td>
+        <td class="px-6 py-4 text-center">
+          <button class="btn-reprint inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-teal-50 text-slate-600 hover:text-teal-700 rounded-lg text-xs font-bold transition-colors" data-id="${escapeHtml(inv.id)}">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print
+          </button>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+    
+    lucide.createIcons();
 
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // Reset Nav styling
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('bg-teal-700', 'text-white');
-                el.classList.add('text-teal-100');
-            });
-            
-            // Show target tab
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('block');
-            
-            // Update nav styling
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            if(activeNav) {
-                activeNav.classList.remove('text-teal-100');
-                activeNav.classList.add('bg-teal-700', 'text-white');
-            }
-
-            // Trigger specific renders
-            if(tabId === 'dashboard') renderDashboard();
-            if(tabId === 'history') renderHistoryTable();
+    document.querySelectorAll(".btn-reprint").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const inv = loadInvoices().find(i => i.id === btn.dataset.id);
+        if(inv){
+          generatePrintView(inv);
+          setTimeout(() => window.print(), 100);
         }
+      });
+    });
+  }
+  document.getElementById("inp-search").addEventListener("input", renderHistory);
 
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+  document.getElementById("btn-delete-all").addEventListener("click", () => {
+    if(confirm("This will permanently delete ALL billing history from this device. Consider backing up first. Continue?")){
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(COUNTER_KEY);
+      renderHistory();
+      renderDashboard();
+    }
+  });
+
+  // ---------- Backup / Restore ----------
+  document.getElementById("btn-backup").addEventListener("click", () => {
+    const data = {
+      exportedAt: new Date().toISOString(),
+      clinic: CLINIC_NAME,
+      invoices: loadInvoices(),
+      counter: localStorage.getItem(COUNTER_KEY) || "0",
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `therapeutichub-backup-${todayISO()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("inp-restore").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if(!Array.isArray(data.invoices)) throw new Error("Invalid file format");
+        const mode = confirm("Click OK to MERGE with existing data, or Cancel to REPLACE all existing data with this backup.");
+        let finalList;
+        if(mode){
+          const existing = loadInvoices();
+          const existingIds = new Set(existing.map(i => i.id));
+          const merged = [...existing, ...data.invoices.filter(i => !existingIds.has(i.id))];
+          finalList = merged;
+        } else {
+          finalList = data.invoices;
         }
+        saveInvoices(finalList);
+        if(data.counter) localStorage.setItem(COUNTER_KEY, String(data.counter));
+        alert(`Restored ${data.invoices.length} invoice(s) successfully.`);
+        renderHistory();
+        renderDashboard();
+      } catch(err){
+        alert("Could not read this backup file. Please make sure it's a valid TherapeuticHub backup JSON.");
+      }
+      e.target.value = "";
+    };
+    reader.readAsText(file);
+  });
 
-        // ================= INVOICE LOGIC =================
-
-        function addInvoiceRow() {
-            const tbody = document.getElementById('invoice-items-body');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="px-4 py-2">
-                    <input type="text" list="services-list" required class="item-service w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-teal-500 focus:border-teal-500 outline-none text-sm" placeholder="Treatment">
-                </td>
-                <td class="px-4 py-2">
-                    <input type="number" min="1" value="1" required class="item-qty w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-teal-500 focus:border-teal-500 outline-none text-sm" oninput="calculateRow(this)">
-                </td>
-                <td class="px-4 py-2">
-                    <input type="number" min="0" step="0.01" required class="item-rate w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-teal-500 focus:border-teal-500 outline-none text-sm" oninput="calculateRow(this)">
-                </td>
-                <td class="px-4 py-2 text-right font-medium text-slate-700">
-                    <span class="item-amount">₹0.00</span>
-                </td>
-                <td class="px-4 py-2 text-center">
-                    <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 transition-colors">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        }
-
-        function removeRow(btn) {
-            const tbody = document.getElementById('invoice-items-body');
-            if (tbody.children.length > 1) {
-                btn.closest('tr').remove();
-                calculateTotals();
-            } else {
-                alert("You must have at least one item in the invoice.");
-            }
-        }
-
-        function calculateRow(inputElement) {
-            const row = inputElement.closest('tr');
-            const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-            const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
-            const amount = qty * rate;
-            row.querySelector('.item-amount').innerText = formatCurrency(amount);
-            row.dataset.rawAmount = amount; // Store raw number for totals
-            calculateTotals();
-        }
-
-        function calculateTotals() {
-            let subtotal = 0;
-            const rows = document.querySelectorAll('#invoice-items-body tr');
-            
-            rows.forEach(row => {
-                const amount = parseFloat(row.dataset.rawAmount) || 0;
-                subtotal += amount;
-            });
-
-            const discountPercent = parseFloat(document.getElementById('inv-discount').value) || 0;
-            const discountAmount = subtotal * (discountPercent / 100);
-            const total = subtotal - discountAmount;
-
-            document.getElementById('inv-subtotal').innerText = formatCurrency(subtotal);
-            document.getElementById('inv-total').innerText = formatCurrency(Math.max(0, total));
-            
-            return { subtotal, discountPercent, discountAmount, total: Math.max(0, total) };
-        }
-
-        function resetForm() {
-            document.getElementById('invoice-form').reset();
-            document.getElementById('invoice-items-body').innerHTML = '';
-            addInvoiceRow();
-            calculateTotals();
-        }
-
-        // ================= SAVE AND PRINT STRATEGY (CRITICAL) =================
-
-        function saveAndPrintInvoice() {
-            // 1. Gather Data
-            const patientName = document.getElementById('inv-patient-name').value.trim();
-            const phone = document.getElementById('inv-phone').value.trim();
-            const notes = document.getElementById('inv-notes').value.trim();
-            const totals = calculateTotals();
-            
-            const items = [];
-            document.querySelectorAll('#invoice-items-body tr').forEach(row => {
-                items.push({
-                    service: row.querySelector('.item-service').value,
-                    qty: parseFloat(row.querySelector('.item-qty').value) || 0,
-                    rate: parseFloat(row.querySelector('.item-rate').value) || 0,
-                    amount: parseFloat(row.dataset.rawAmount) || 0
-                });
-            });
-
-            // 2. Create Object
-            const invoice = {
-                id: generateInvoiceID(),
-                date: new Date().toISOString(),
-                patientName,
-                phone,
-                notes,
-                items,
-                ...totals
-            };
-
-            // 3. Save to DB
-            invoices.push(invoice);
-            saveToDB();
-
-            // 4. PREPARE TEXT-ONLY PRINT VIEW
-            preparePrintView(invoice);
-
-            // 5. Trigger Print (Browser handles hiding main app and showing print view via CSS)
-            setTimeout(() => {
-                window.print();
-                
-                // 6. Post-print cleanup
-                resetForm();
-                switchTab('history');
-            }, 300); // Slight delay ensures DOM paints the text inside the print div
-        }
-
-        // Specifically populates the plain-text hidden DIV to bypass mobile input print bugs
-        function preparePrintView(invoice) {
-            document.getElementById('print-invoice-id').innerText = invoice.id;
-            document.getElementById('print-date').innerText = new Date(invoice.date).toLocaleDateString('en-IN');
-            document.getElementById('print-patient-name').innerText = invoice.patientName;
-            document.getElementById('print-phone').innerText = invoice.phone;
-            
-            const tbody = document.getElementById('print-items-body');
-            tbody.innerHTML = ''; // Clear previous
-
-            invoice.items.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-100";
-                tr.innerHTML = `
-                    <td class="py-2 px-2 text-left text-gray-800">${item.service}</td>
-                    <td class="py-2 px-2 text-center text-gray-800">${item.qty}</td>
-                    <td class="py-2 px-2 text-right text-gray-800">${formatCurrency(item.rate)}</td>
-                    <td class="py-2 px-2 text-right text-gray-800">${formatCurrency(item.amount)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('print-subtotal').innerText = formatCurrency(invoice.subtotal);
-            document.getElementById('print-discount-percent').innerText = invoice.discountPercent;
-            document.getElementById('print-discount-amount').innerText = '-' + formatCurrency(invoice.discountAmount);
-            document.getElementById('print-total').innerText = formatCurrency(invoice.total);
-
-            const notesContainer = document.getElementById('print-notes-container');
-            const notesEl = document.getElementById('print-notes');
-            if (invoice.notes) {
-                notesEl.innerText = invoice.notes;
-                notesContainer.style.display = 'block';
-            } else {
-                notesContainer.style.display = 'none';
-            }
-        }
-
-        // Directly print from history
-        function printHistoricalInvoice(id) {
-            const invoice = invoices.find(inv => inv.id === id);
-            if(invoice) {
-                preparePrintView(invoice);
-                window.print();
-            }
-        }
-
-        function deleteInvoice(id) {
-            if(confirm("Are you sure you want to delete this invoice?")) {
-                invoices = invoices.filter(inv => inv.id !== id);
-                saveToDB();
-                renderHistoryTable();
-                if(!document.getElementById('tab-dashboard').classList.contains('hidden')){
-                    renderDashboard();
-                }
-            }
-        }
-
-
-        // ================= DASHBOARD & HISTORY RENDERING =================
-
-        function renderDashboard() {
-            const todayStr = new Date().toDateString();
-            let todayRevenue = 0;
-            let todayCount = 0;
-            const uniquePatients = new Set();
-            
-            // Sort invoices newest first
-            const sortedInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date));
-            const recentTable = document.getElementById('dash-recent-table');
-            recentTable.innerHTML = '';
-
-            sortedInvoices.forEach((inv, index) => {
-                // Calculate today stats
-                if (new Date(inv.date).toDateString() === todayStr) {
-                    todayRevenue += inv.total;
-                    todayCount++;
-                    uniquePatients.add(inv.phone); // Use phone as unique identifier
-                }
-
-                // Render top 5
-                if (index < 5) {
-                    recentTable.innerHTML += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-teal-600">${inv.id}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800">${inv.patientName}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${formatDate(inv.date)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800 text-right">${formatCurrency(inv.total)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <button onclick="printHistoricalInvoice('${inv.id}')" class="text-teal-600 hover:text-teal-800" title="Print"><i class="fa-solid fa-print"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-
-            if (sortedInvoices.length === 0) {
-                recentTable.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-slate-500">No invoices yet.</td></tr>`;
-            }
-
-            // Update UI Stats
-            document.getElementById('dash-revenue').innerText = formatCurrency(todayRevenue);
-            document.getElementById('dash-invoices').innerText = todayCount;
-            document.getElementById('dash-patients').innerText = uniquePatients.size;
-        }
-
-        function renderHistoryTable() {
-            const searchTerm = document.getElementById('search-history').value.toLowerCase();
-            const tbody = document.getElementById('history-table-body');
-            const emptyState = document.getElementById('history-empty');
-            
-            tbody.innerHTML = '';
-            
-            // Filter and Sort
-            const filtered = invoices.filter(inv => 
-                inv.patientName.toLowerCase().includes(searchTerm) || 
-                inv.id.toLowerCase().includes(searchTerm) ||
-                inv.phone.includes(searchTerm)
-            ).sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                filtered.forEach(inv => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-teal-600">${inv.id}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${formatDate(inv.date)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-slate-800 font-medium">${inv.patientName}</div>
-                                <div class="text-xs text-slate-500">${inv.phone}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800 text-right">${formatCurrency(inv.total)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center space-x-3">
-                                <button onclick="printHistoricalInvoice('${inv.id}')" class="text-teal-600 hover:text-teal-800" title="Print Invoice">
-                                    <i class="fa-solid fa-print"></i>
-                                </button>
-                                <button onclick="deleteInvoice('${inv.id}')" class="text-red-500 hover:text-red-700" title="Delete Invoice">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-        }
-
-        // ================= DATA MANAGEMENT =================
-        
-        function saveToDB() {
-            localStorage.setItem('therapeuticHub_invoices', JSON.stringify(invoices));
-        }
-
-        function exportData() {
-            if(invoices.length === 0) {
-                alert("No data to backup.");
-                return;
-            }
-            const dataStr = JSON.stringify(invoices, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `TherapeuticHub_Backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (Array.isArray(importedData)) {
-                        invoices = importedData;
-                        saveToDB();
-                        renderHistoryTable();
-                        alert("Data successfully restored!");
-                    } else {
-                        alert("Invalid backup file format.");
-                    }
-                } catch (error) {
-                    alert("Error reading file: " + error.message);
-                }
-                event.target.value = ''; // Reset input
-            };
-            reader.readAsText(file);
-        }
-
-        function clearHistory() {
-            if(confirm("CRITICAL WARNING: This will delete ALL invoice history from this device. Did you backup your data? Are you absolutely sure?")) {
-                invoices = [];
-                saveToDB();
-                renderHistoryTable();
-                renderDashboard();
-            }
-        }
-
-    </script>
+  // ---------- Init ----------
+  addItemRow();
+  calcTotals();
+  document.getElementById("next-invoice-id").textContent = peekNextId();
+  renderDashboard();
+})();
+</script>
 </body>
 </html>
 
